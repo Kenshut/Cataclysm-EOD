@@ -153,7 +153,7 @@ std::string generate( bool is_male )
         return string_format( full_name_format,
                               get( baseSearchFlags | nameFlags::IsGivenName ).c_str(),
                               get( baseSearchFlags | nameFlags::IsFamilyName ).c_str(),
-                              get( nameFlags::IsNickName ).c_str()
+                              get( baseSearchFlags | nameFlags::IsNickName ).c_str()
                             );
     }
 }
