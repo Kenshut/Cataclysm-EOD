@@ -2471,7 +2471,7 @@ void Item_factory::load_ammo( const JsonObject &jo, const std::string &src )
 {
     itype def;
     if( load_definition( jo, src, def ) ) {
-        assign( jo, "stack_size", def.stack_size, src == "dda", 1 );
+        assign( jo, "stack_size", def.stack_size, src == "rc", 1 );
         if( def.was_loaded ) {
             if( def.ammo ) {
                 def.ammo->was_loaded = true;
@@ -2568,7 +2568,7 @@ void itype_variant_data::load( const JsonObject &jo )
 
 void Item_factory::load( islot_gun &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
     assign( jo, "skill", slot.skill_used, strict );
     assign( jo, "ammo", slot.ammo, strict );
     assign( jo, "range", slot.range, strict );
@@ -2862,7 +2862,7 @@ void islot_pet_armor::deserialize( const JsonObject &jo )
 
 void Item_factory::load( islot_tool &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     assign( jo, "ammo", slot.ammo_id, strict );
     assign( jo, "max_charges", slot.max_charges, strict, 0 );
@@ -2914,7 +2914,7 @@ void Item_factory::load( relic &slot, const JsonObject &jo, const std::string & 
 
 void Item_factory::load( islot_mod &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     if( jo.has_array( "ammo_modifier" ) ) {
         for( const std::string id : jo.get_array( "ammo_modifier" ) ) {
@@ -3019,7 +3019,7 @@ void Item_factory::load_book( const JsonObject &jo, const std::string &src )
 
 void Item_factory::load( islot_comestible &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     JsonObject relative = jo.get_object( "relative" );
     JsonObject proportional = jo.get_object( "proportional" );
@@ -3162,7 +3162,7 @@ void Item_factory::load_comestible( const JsonObject &jo, const std::string &src
 {
     itype def;
     if( load_definition( jo, src, def ) ) {
-        assign( jo, "stack_size", def.stack_size, src == "dda", 1 );
+        assign( jo, "stack_size", def.stack_size, src == "rc", 1 );
         load_slot( def.comestible, jo, src );
         load_basic_info( jo, def, src );
     }
@@ -3186,7 +3186,7 @@ void islot_seed::deserialize( const JsonObject &jo )
 
 void Item_factory::load( islot_gunmod &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     assign( jo, "damage_modifier", slot.damage, strict, damage_instance( damage_type::NONE, -20, -20,
             -20,
@@ -3259,7 +3259,7 @@ void Item_factory::load_gunmod( const JsonObject &jo, const std::string &src )
 
 void Item_factory::load( islot_magazine &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
     assign( jo, "ammo_type", slot.type, strict );
     assign( jo, "capacity", slot.capacity, strict, 0 );
     assign( jo, "count", slot.count, strict, 0 );
@@ -3308,7 +3308,7 @@ void Item_factory::load_battery( const JsonObject &jo, const std::string &src )
 
 void Item_factory::load( islot_bionic &slot, const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     if( jo.has_member( "bionic_id" ) ) {
         assign( jo, "bionic_id", slot.id, strict );
@@ -3743,7 +3743,7 @@ static void migrate_mag_from_pockets( itype &def )
 
 void Item_factory::load_basic_info( const JsonObject &jo, itype &def, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     restore_on_out_of_scope<check_plural_t> restore_check_plural( check_plural );
     if( jo.has_string( "abstract" ) ) {
@@ -4020,16 +4020,16 @@ void Item_factory::load_basic_info( const JsonObject &jo, itype &def, const std:
         }
     }
 
-    assign( jo, "armor_data", def.armor, src == "dda" );
-    assign( jo, "pet_armor_data", def.pet_armor, src == "dda" );
-    assign( jo, "book_data", def.book, src == "dda" );
+    assign( jo, "armor_data", def.armor, src == "rc" );
+    assign( jo, "pet_armor_data", def.pet_armor, src == "rc" );
+    assign( jo, "book_data", def.book, src == "rc" );
     load_slot_optional( def.gun, jo, "gun_data", src );
     load_slot_optional( def.bionic, jo, "bionic_data", src );
-    assign( jo, "ammo_data", def.ammo, src == "dda" );
-    assign( jo, "seed_data", def.seed, src == "dda" );
-    assign( jo, "brewable", def.brewable, src == "dda" );
+    assign( jo, "ammo_data", def.ammo, src == "rc" );
+    assign( jo, "seed_data", def.seed, src == "rc" );
+    assign( jo, "brewable", def.brewable, src == "rc" );
     load_slot_optional( def.relic_data, jo, "relic_data", src );
-    assign( jo, "milling", def.milling_data, src == "dda" );
+    assign( jo, "milling", def.milling_data, src == "rc" );
 
     // optional gunmod slot may also specify mod data
     if( jo.has_member( "gunmod_data" ) ) {

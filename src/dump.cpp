@@ -38,7 +38,7 @@ static const itype_id itype_223( "223" );
 static const itype_id itype_270( "270" );
 static const itype_id itype_9mm( "9mm" );
 
-static const mod_id MOD_INFORMATION_dda( "dda" );
+static const mod_id MOD_INFORMATION_dda( "rc" );
 
 bool game::dump_stats( const std::string &what, dump_mode mode,
                        const std::vector<std::string> &opts )

@@ -690,7 +690,7 @@ void mon_effect_data::load( const JsonObject &jo )
 
 void mtype::load( const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     MonsterGenerator &gen = MonsterGenerator::generator();
 
@@ -1264,7 +1264,7 @@ mtype_special_attack MonsterGenerator::create_actor( const JsonObject &obj,
 
 void mattack_actor::load( const JsonObject &jo, const std::string &src )
 {
-    bool strict = src == "dda";
+    bool strict = src == "rc";
 
     // Legacy support
     if( !jo.has_string( "id" ) ) {

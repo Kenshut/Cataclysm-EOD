@@ -26,7 +26,7 @@ A barebones `modinfo.json` file looks like this:
     "authors": [ "Your name here", "Your friend's name if you want" ],
     "description": "Your description here",
     "category": "content",
-    "dependencies": [ "dda" ]
+    "dependencies": [ "rc" ]
   }
 ]
 ````

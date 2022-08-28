@@ -316,7 +316,7 @@ static DynamicDataLoader::deferred_json deferred;
 
 void mission_type::load( const JsonObject &jo, const std::string &src )
 {
-    const bool strict = src == "dda";
+    const bool strict = src == "rc";
 
     mandatory( jo, was_loaded, "name", name );
 

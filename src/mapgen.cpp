@@ -4141,7 +4141,7 @@ bool mapgen_function_json_base::setup_common( const JsonObject &jo )
 
     // just like mapf::basic_bind("stuff",blargle("foo", etc) ), only json input and faster when applying
     if( jo.has_array( "rows" ) ) {
-        mapgen_palette palette = mapgen_palette::load_temp( jo, "dda", context_ );
+        mapgen_palette palette = mapgen_palette::load_temp( jo, "rc", context_ );
         auto &keys_with_terrain = palette.keys_with_terrain;
         mapgen_palette::placing_map &format_placings = palette.format_placings;
 

@@ -1369,7 +1369,7 @@ void ter_t::load( const JsonObject &jo, const std::string &src )
     mandatory( jo, was_loaded, "name", name_ );
     mandatory( jo, was_loaded, "move_cost", movecost );
     optional( jo, was_loaded, "coverage", coverage );
-    assign( jo, "max_volume", max_volume, src == "dda" );
+    assign( jo, "max_volume", max_volume, src == "rc" );
     optional( jo, was_loaded, "trap", trap_id_str );
     optional( jo, was_loaded, "heat_radiation", heat_radiation );
     optional( jo, was_loaded, "light_emitted", light_emitted );

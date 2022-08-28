@@ -94,7 +94,7 @@ const std::set<std::string> &start_location::flags() const
 
 void start_location::load( const JsonObject &jo, const std::string &src )
 {
-    const bool strict = src == "dda";
+    const bool strict = src == "rc";
 
     mandatory( jo, was_loaded, "name", _name );
     std::string ter;
