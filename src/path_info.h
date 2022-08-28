@@ -76,6 +76,9 @@ std::string soundpack_conf();
 std::string credits();
 std::string motd();
 std::string title( holiday current_holiday );
+std::string anim();
+std::string anim_small();
+std::string anim_tiny();
 std::string names();
 
 void set_datadir( const std::string &datadir );

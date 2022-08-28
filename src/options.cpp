@@ -1969,6 +1969,15 @@ void options_manager::add_options_graphics()
 
     get_option( "ALT_TITLE" ).setPrerequisite( "ENABLE_ASCII_TITLE" );
 
+    add("TITLE_ANIMATION", "graphics", to_translation("Title screen animation"),
+        to_translation("If true, will enable animations for the title screen."),
+        true
+    );
+
+    add("TITLE_ANIM_DELAY", "graphics", to_translation("Title screen animation speed"),
+        to_translation("The amount of time to pause between title screen animation frames in ms."), 0, 300, 10
+    );
+
     add_empty_line();
 
     add( "TERMINAL_X", "graphics", to_translation( "Terminal width" ),

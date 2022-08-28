@@ -1,0 +1,435 @@
+﻿# The ASCII art must be 18 lines in height (6 lines per ascii art text line).
+# Max length of a line is 80 characters; the following line is for reference.
+################################################################################
+param
+$
+frame
+@
+anim
+&
+$l 0
+$s 1
+$x 0
+$y 0
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+@
+&
+$l 0
+$s 10
+$x 0
+$y 0
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_pink>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_pink>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_pink>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_pink>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_pink>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_pink>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_pink>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_pink>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_pink>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_pink>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_pink>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_pink>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_pink>   _________            __                   .__                                </color>
+<color_pink>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_pink>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_pink>   _________            __                   .__                                </color>
+<color_pink>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_pink>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_pink>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_pink>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_pink>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_pink>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_pink>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_pink>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_pink>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_pink>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_pink>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_pink>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_pink>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_pink>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_pink>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_pink>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_pink>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_pink>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_pink>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_pink>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_pink>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_pink>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_pink>                                                          </color><color_white>         </color>
+<color_white>           </color><color_pink>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_pink>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_pink>                                                          </color><color_white>         </color>
+<color_white>           </color><color_pink>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_pink>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+<color_white>           </color><color_magenta>                                                          </color><color_white>         </color>
+<color_white>           </color><color_magenta>         _____                 _     _     _              </color><color_white>         </color>
+<color_white>         /\</color><color_magenta>        |  __ \               | |   (_)   | |             </color><color_white>/\      </color>
+<color_white>         \/</color><color_magenta>        | |__) |___   __ _  __| |___ _  __| | ___         <color_white>\/         </color>
+<color_white>      < >  < ></color><color_magenta>     |  _  // _ \ / _` |/ _` / __| |/ _` |/ _ \     <color_white>< >  < >         </color>
+<color_white>         /\</color><color_magenta>        | | \ \ (_) | (_| | (_| \__ \ | (_| |  __/        </color><color_white>/\       </color>
+<color_white>        /  \</color><color_magenta>       |_|  \_\___/ \__,_|\__,_|___/_|\__,_|\___|       </color><color_white>/  \      </color>
+<color_white>       /_  _\</color><color_magenta>                                                      </color><color_white>/_  _\       </color>
+<color_white>         \/</color><color_magenta>                                                          </color><color_white>\/         </color>
+<color_magenta>   _________            __                   .__                                </color>
+<color_magenta>   \_   ___ \ _____   _/  |_ _____     ____  |  |   ___.__   ______  _____      </color>
+<color_magenta>   /    \  \/ \__  \  \   __\\__  \  _/ ___\ |  |  <   |  | /  ___/ /     \     </color>
+<color_magenta>   \     \____ / __ \_ |  |   / __ \_\  \___ |  |__ \___  | \___ \ |  Y Y  \    </color>
+<color_magenta>    \______  /(____  / |__|  (____  / \___  >|____/ / ____|/____  >|__|_|  /    </color>
+<color_magenta>           \/      \/             \/      \/        \/          \/       \/     </color>
+@
+&

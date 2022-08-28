@@ -2,6 +2,7 @@
 #ifndef CATA_SRC_MAIN_MENU_H
 #define CATA_SRC_MAIN_MENU_H
 
+#include <chrono>
 #include <cstddef>
 #include <iosfwd>
 #include <vector>
@@ -13,6 +14,23 @@
 #include "point.h"
 #include "worldfactory.h"
 
+struct ascii_anim {
+    // Modifier to the base animation speed
+    double speed_mod;
+    // Number of frames in the animation
+    size_t nb_frames;
+    // Coordinates of the upper left corner, used when combining
+    size_t x, y;
+    // Layer of the animation, used when combining
+    size_t layer;
+
+    size_t current_frame;
+    std::chrono::time_point<std::chrono::steady_clock> last_frame;
+
+    // Vector of frames, which are vectors of strings
+    std::vector<std::vector<std::string>> frames;
+};
+
 class main_menu
 {
     public:
@@ -21,7 +39,7 @@ class main_menu
         bool opening_screen();
 
     private:
-        // ASCII art that says "Cataclysm Dark Days Ahead"
+        // ASCII art that says "Roadside Cataclysm"
         std::vector<std::string> mmenu_title;
         std::string mmenu_motd;
         std::string mmenu_credits;
@@ -43,9 +61,13 @@ class main_menu
          * the case where the player goes to the 'Settings' tab and changes the language.
         */
         void init_strings();
+        void load_animation();
         /** Helper function for @ref init_strings */
         std::vector<std::string> load_file( const std::string &path,
                                             const std::string &alt_text ) const;
+
+        // Creates the title buffer for this frame
+        void compose_title();
 
         // Play a sound whenever the user moves left or right in the main menu or its tabs
         void on_move() const;
@@ -77,6 +99,10 @@ class main_menu
         std::vector<save_t> savegames;
         std::vector<std::pair<inclusive_rectangle<point>, std::pair<int, int>>> main_menu_sub_button_map;
         std::vector<std::pair<inclusive_rectangle<point>, int>> main_menu_button_map;
+
+        std::vector<ascii_anim> title_anim;
+        bool animate_title;
+        int animation_delay;
 
         /**
          * Prints a horizontal list of options

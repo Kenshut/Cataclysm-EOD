@@ -66,6 +66,32 @@ static int getopt( main_menu_opts o )
     return static_cast<int>( o );
 }
 
+#define dbg(x) DebugLog((x),D_MAIN) << __FILE__ << ":" << __LINE__ << ": "
+
+void main_menu::compose_title()
+{
+    // No animation due to loading errors
+    if (title_anim.size()) {
+        mmenu_title.push_back("Roadside Cataclysm");
+    }
+
+    // Sets background to the very first loaded frame
+    // TODO: Use layer 0 animation instead
+    std::vector<std::string> bg = title_anim[0].frames[title_anim[0].current_frame];
+
+    for (int i = 0; i < title_anim.size(); i++) {
+        size_t current_frame = title_anim[i].current_frame;
+        size_t x = title_anim[i].x;
+        size_t y = title_anim[i].y;
+
+        // Animations can be given offsets on the y and x axis
+        // TODO: Handle x axis
+        for (int j = y; j < bg.size() && (j - y) < title_anim[i].frames[current_frame].size(); j++)
+            bg[j] = title_anim[i].frames[current_frame][j - y];
+    }
+    mmenu_title = bg;
+}
+
 void main_menu::on_move() const
 {
     sfx::play_variant_sound( "menu_move", "default", 100 );
@@ -259,6 +285,25 @@ void main_menu::print_menu( const catacurses::window &w_open, int iSel, const po
     int window_width = getmaxx( w_open );
     int window_height = getmaxy( w_open );
 
+    if (animate_title)
+    {
+        std::chrono::time_point<std::chrono::steady_clock> now = std::chrono::steady_clock::now();
+
+        // Update each animation at its own rate
+        for (int i = 0; i < title_anim.size(); i++) {
+            if (now > title_anim[i].last_frame + std::chrono::milliseconds((int)(animation_delay * title_anim[i].speed_mod))) {
+
+                title_anim[i].current_frame++;
+
+                if (title_anim[i].current_frame >= title_anim[i].nb_frames)
+                    title_anim[i].current_frame = 0;
+
+                title_anim[i].last_frame = now;
+            }
+        }
+        compose_title();
+    }
+
     // Draw horizontal line
     for( int i = 1; i < window_width - 1; ++i ) {
         mvwputch( w_open, point( i, window_height - 4 ), c_white, LINE_OXOX );
@@ -296,7 +341,7 @@ void main_menu::print_menu( const catacurses::window &w_open, int iSel, const po
         }
     }
 
-    if( mmenu_title.size() > 1 ) {
+    if( mmenu_title.size() > 0 ) {
         for( const std::string &i_title : mmenu_title ) {
             nc_color cur_color = c_white;
             nc_color base_color = c_white;
@@ -386,8 +431,13 @@ void main_menu::init_windows()
 
 void main_menu::init_strings()
 {
+
+    // ASCII Art animation
+    load_animation();
+
     // ASCII Art
-    mmenu_title = load_file( PATH_INFO::title( current_holiday ), _( "Roadside Cataclysm" ) );
+    //mmenu_title = load_file( PATH_INFO::title( current_holiday ), _( "Roadside Cataclysm" ) );
+
     // MOTD
     auto motd = load_file( PATH_INFO::motd(), _( "No message today." ) );
 
@@ -492,6 +542,84 @@ void main_menu::init_strings()
     vdaytip = SNIPPET.random_from_category( "tip" ).value_or( translation() ).translated();
 }
 
+void main_menu::load_animation()
+{
+    title_anim.clear();
+
+    std::vector<std::string> animation_raw;
+
+    // Pick different files depending on terminal size
+    if (TERMX <= 80)
+        animation_raw = load_file(PATH_INFO::anim_tiny(), _("Roadside Cataclysm"));
+    else if (TERMY < 60)
+        animation_raw = load_file(PATH_INFO::anim_small(), _("Roadside Cataclysm"));
+    else
+        animation_raw = load_file(PATH_INFO::anim(), _("Roadside Cataclysm"));
+
+    // Characters used as prefixes for parameters or separators between frames and animations
+    int param_separator = '\0';
+    int frame_separator = '\0';
+    int anim_separator = '\0';
+
+    size_t i;
+
+    // Find separator definitions
+    for (i = 0; (param_separator == '\0' || frame_separator == '\0' || anim_separator == '\0') && i < animation_raw.size(); i++) {
+        if (animation_raw[i].rfind("param", 0) == 0 && i < animation_raw.size() - 1 && animation_raw[i + 1].size() > 0)
+            param_separator = animation_raw[i + 1][0];
+        else if (animation_raw[i].rfind("frame", 0) == 0 && i < animation_raw.size() - 1 && animation_raw[i + 1].size() > 0)
+            frame_separator = animation_raw[i + 1][0];
+        else if (animation_raw[i].rfind("anim", 0) == 0 && i < animation_raw.size() - 1 && animation_raw[i + 1].size() > 0)
+            anim_separator = animation_raw[i + 1][0];
+    }
+
+    // Error: no properly defined separators, the animation file cannot be processed
+    if (param_separator == '\0' || frame_separator == '\0' || anim_separator == '\0') {
+        dbg(D_ERROR) << "Error: No properly defined separators!";
+        return;
+    }
+
+    ascii_anim anim = ascii_anim();
+    std::vector<std::string> frame;
+
+    for (i++; i < animation_raw.size(); i++) {
+        if (animation_raw[i].size() >= 3 && animation_raw[i][0] == param_separator) {
+            switch (animation_raw[i][1]) {
+            case 'l':
+                anim.layer = std::stoi(animation_raw[i].erase(0, 3));
+                break;
+            case 's':
+                anim.speed_mod = std::stod(animation_raw[i].erase(0, 3));
+                break;
+            case 'x':
+                anim.x = std::stoi(animation_raw[i].erase(0, 3));
+                break;
+            case 'y':
+                anim.y = std::stoi(animation_raw[i].erase(0, 3));
+                break;
+            default:
+                break;
+            }
+        }
+        else if (animation_raw[i][0] == frame_separator) {
+            // End of this frame, push it
+            anim.frames.push_back(frame);
+            frame.clear();
+        }
+        else if (animation_raw[i][0] == anim_separator) {
+            // End of this animation, push it
+            anim.last_frame = std::chrono::steady_clock::now();
+            anim.nb_frames = anim.frames.size();
+            title_anim.push_back(anim);
+            anim = ascii_anim();
+        }
+        else {
+            // Push the current line into this frame's definition
+            frame.push_back(animation_raw[i]);
+        }
+    }
+}
+
 void main_menu::display_text( const std::string &text, const std::string &title, int &selected )
 {
     const int w_open_height = getmaxy( w_open );
@@ -575,6 +703,9 @@ bool main_menu::opening_screen()
     int sel_line = 0;
     size_t last_world_pos = 0;
 
+    animate_title = get_option<bool>("TITLE_ANIMATION");
+    animation_delay = get_option<int>("TITLE_ANIM_DELAY");
+
     // Make [Load Game] the default cursor position if there's game save available
     if( !world_generator->all_worldnames().empty() ) {
         std::vector<std::string> worlds = world_generator->all_worldnames();
@@ -601,7 +732,7 @@ bool main_menu::opening_screen()
 
     while( !start ) {
         ui_manager::redraw();
-        std::string action = ctxt.handle_input();
+        std::string action = ctxt.handle_input( animation_delay );
         input_event sInput = ctxt.get_raw_input();
 
         // check automatic menu shortcuts
@@ -800,6 +931,11 @@ bool main_menu::opening_screen()
                         get_options().show( false );
                         // The language may have changed- gracefully handle this.
                         init_strings();
+
+                        // The title animation options may have changed
+                        animate_title = get_option<bool>("TITLE_ANIMATION");
+                        animation_delay = get_option<int>("TITLE_ANIM_DELAY");
+
                     } else if( sel2 == 1 ) { /// Keybindings
                         input_context ctxt_default = get_default_mode_input_context();
                         ctxt_default.display_menu();
