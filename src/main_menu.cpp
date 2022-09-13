@@ -726,6 +726,7 @@ bool main_menu::opening_screen()
     } );
     ui.on_screen_resize( [this]( ui_adaptor & ui ) {
         init_windows();
+        load_animation();
         ui.position_from_window( w_open );
     } );
     ui.mark_resize();
