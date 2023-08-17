@@ -105,6 +105,8 @@ static const itype_id fuel_type_animal( "animal" );
 static const itype_id itype_foodperson_mask( "foodperson_mask" );
 static const itype_id itype_foodperson_mask_on( "foodperson_mask_on" );
 
+static const mon_flag_str_id mon_flag_CONVERSATION( "CONVERSATION" );
+
 static const skill_id skill_firstaid( "firstaid" );
 
 static const skill_id skill_speech( "speech" );
@@ -336,11 +338,13 @@ enum npc_chat_menu {
     NPC_CHAT_ACTIVITIES_CHOP_PLANKS,
     NPC_CHAT_ACTIVITIES_CHOP_TREES,
     NPC_CHAT_ACTIVITIES_CONSTRUCTION,
+    NPC_CHAT_ACTIVITIES_CRAFT,
     NPC_CHAT_ACTIVITIES_DISASSEMBLY,
     NPC_CHAT_ACTIVITIES_FARMING,
     NPC_CHAT_ACTIVITIES_FISHING,
     NPC_CHAT_ACTIVITIES_MINING,
     NPC_CHAT_ACTIVITIES_MOPPING,
+    NPC_CHAT_ACTIVITIES_READ_REPEATEDLY,
     NPC_CHAT_ACTIVITIES_VEHICLE_DECONSTRUCTION,
     NPC_CHAT_ACTIVITIES_VEHICLE_REPAIR,
     NPC_CHAT_ACTIVITIES_UNASSIGN
@@ -584,11 +588,14 @@ static int npc_activities_menu()
     nmenu.addentry( NPC_CHAT_ACTIVITIES_CHOP_TREES, true, 't', _( "Chopping down trees" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_CHOP_PLANKS, true, 'p', _( "Chopping logs into planks" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_CONSTRUCTION, true, 'c', _( "Constructing blueprints" ) );
+    nmenu.addentry( NPC_CHAT_ACTIVITIES_CRAFT, true, 'C', _( "Crafting item" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_DISASSEMBLY, true, 'd', _( "Disassembly of items" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_FARMING, true, 'f', _( "Farming plots" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_FISHING, true, 'F', _( "Fishing in a zone" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_MINING, true, 'M', _( "Mining out tiles" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_MOPPING, true, 'm', _( "Mopping up stains" ) );
+    nmenu.addentry( NPC_CHAT_ACTIVITIES_READ_REPEATEDLY, true, 'R',
+                    _( "Study from books you have in order" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_VEHICLE_DECONSTRUCTION, true, 'v',
                     _( "Deconstructing vehicles" ) );
     nmenu.addentry( NPC_CHAT_ACTIVITIES_VEHICLE_REPAIR, true, 'V', _( "Repairing vehicles" ) );
@@ -664,7 +671,8 @@ void game::chat()
 
     const std::vector<Creature *> available = get_creatures_if( [&]( const Creature & guy ) {
         // TODO: Get rid of the z-level check when z-level vision gets "better"
-        return ( guy.is_npc() || ( guy.is_monster() && guy.as_monster()->has_flag( MF_CONVERSATION ) &&
+        return ( guy.is_npc() || ( guy.is_monster() &&
+                                   guy.as_monster()->has_flag( mon_flag_CONVERSATION ) &&
                                    !guy.as_monster()->type->chat_topics.empty() ) ) && u.posz() == guy.posz() && u.sees( guy.pos() ) &&
                rl_dist( u.pos(), guy.pos() ) <= SEEX * 2;
     } );
@@ -1023,6 +1031,10 @@ void game::chat()
                         talk_function::do_construction( *selected_npc );
                         break;
                     }
+                    case NPC_CHAT_ACTIVITIES_CRAFT: {
+                        talk_function::do_craft( *selected_npc );
+                        break;
+                    }
                     case NPC_CHAT_ACTIVITIES_DISASSEMBLY: {
                         talk_function::do_disassembly( *selected_npc );
                         break;
@@ -1033,6 +1045,10 @@ void game::chat()
                     }
                     case NPC_CHAT_ACTIVITIES_FISHING: {
                         talk_function::do_fishing( *selected_npc );
+                        break;
+                    }
+                    case NPC_CHAT_ACTIVITIES_READ_REPEATEDLY: {
+                        talk_function::do_read_repeatedly( *selected_npc );
                         break;
                     }
                     case NPC_CHAT_ACTIVITIES_MINING: {
@@ -3023,11 +3039,13 @@ void talk_effect_fun_t::set_location_variable( const JsonObject &jo, const std::
                                    project_to<coords::ms>( omt_pos ).z() );
         }
         const tripoint_abs_ms abs_ms( target_pos );
-        map distant_map;
-        distant_map.load( project_to<coords::sm>( abs_ms ), false );
-
-        map &here = get_map().inbounds( abs_ms ) ? get_map() : distant_map;
-
+        map *here_ptr = &get_map();
+        std::unique_ptr<map> distant_map = std::make_unique<map>();
+        if( !get_map().inbounds( abs_ms ) ) {
+            distant_map->load( project_to<coords::sm>( abs_ms ), false );
+            here_ptr = distant_map.get();
+        }
+        map &here = *here_ptr;
         if( search_target.has_value() ) {
             if( search_type.value() == "monster" && !get_map().inbounds( abs_ms ) ) {
                 here.spawn_monsters( true, true );
@@ -3208,9 +3226,16 @@ void talk_effect_fun_t::set_transform_radius( const JsonObject &jo, const std::s
                                     //Timed events happen before the player turn and eocs are during so we add a second here to sync them up using the same variable
                                     -1, target_pos, radius, transform.evaluate( d ), key.evaluate( d ) );
         } else {
-            map tm;
-            tm.load( project_to<coords::sm>( target_pos - point{ radius, radius} ), false );
-            tm.transform_radius( ter_furn_transform_id( transform.evaluate( d ) ), radius, target_pos );
+            // Use the main map when possible to reduce performance overhead.
+            if( get_map().inbounds( target_pos - point{ radius, radius} ) &&
+                get_map().inbounds( target_pos + point{ radius, radius} ) ) {
+                get_map().transform_radius( ter_furn_transform_id( transform.evaluate( d ) ), radius, target_pos );
+            } else {
+                map tm;
+                tm.load( project_to<coords::sm>( target_pos - point{ radius, radius} ), false );
+                tm.transform_radius( ter_furn_transform_id( transform.evaluate( d ) ), radius, target_pos );
+            }
+
         }
     };
 }
@@ -4126,6 +4151,38 @@ void talk_effect_fun_t::set_run_eocs( const JsonObject &jo, const std::string_vi
         for( const effect_on_condition_id &eoc : eocs ) {
             dialogue newDialog( d );
             eoc->activate( newDialog );
+        }
+    };
+}
+
+void talk_effect_fun_t::set_run_eoc_until( const JsonObject &jo, const std::string_view member )
+{
+    effect_on_condition_id eoc = effect_on_conditions::load_inline_eoc( jo.get_member( member ), "" );
+
+    str_or_var condition = get_str_or_var( jo.get_member( "condition" ), "condition" );
+
+    dbl_or_var iteration_count = get_dbl_or_var( jo, "iteration_count", false, 100 );
+
+
+    function = [eoc, condition, iteration_count]( dialogue & d ) {
+        auto itt = d.get_conditionals().find( condition.evaluate( d ) );
+        if( itt == d.get_conditionals().end() ) {
+            debugmsg( string_format( "No condition with the name %s", condition.evaluate( d ) ) );
+            return;
+        }
+
+        int max_iteration = iteration_count.evaluate( d );
+
+        int curr_iteration = 0;
+
+        while( itt->second( d ) ) {
+            curr_iteration++;
+            if( curr_iteration > max_iteration ) {
+                debugmsg( string_format( "EOC loop ran for more instances than the max allowed: %d. Exiting loop.",
+                                         max_iteration ) );
+                break;
+            }
+            eoc->activate( d );
         }
     };
 }
@@ -5238,6 +5295,8 @@ void talk_effect_t::parse_sub_effect( const JsonObject &jo )
             subeffect_fun.set_make_sound( jo, "npc_make_sound", true );
         } else if( jo.has_array( "run_eocs" ) || jo.has_member( "run_eocs" ) ) {
             subeffect_fun.set_run_eocs( jo, "run_eocs" );
+        } else if( jo.has_member( "run_eoc_until" ) ) {
+            subeffect_fun.set_run_eoc_until( jo, "run_eoc_until" );
         } else if( jo.has_member( "run_eoc_with" ) ) {
             subeffect_fun.set_run_eoc_with( jo, "run_eoc_with" );
         } else if( jo.has_member( "run_eoc_selector" ) ) {
@@ -5361,6 +5420,8 @@ void talk_effect_t::parse_string_effect( const std::string &effect_id, const Jso
             WRAP( do_mopping ),
             WRAP( do_read ),
             WRAP( do_eread ),
+            WRAP( do_read_repeatedly ),
+            WRAP( do_craft ),
             WRAP( do_butcher ),
             WRAP( do_farming ),
             WRAP( assign_guard ),
@@ -5420,6 +5481,7 @@ void talk_effect_t::parse_string_effect( const std::string &effect_id, const Jso
             WRAP( npc_die ),
             WRAP( npc_thankful ),
             WRAP( clear_overrides ),
+            WRAP( pick_style ),
             WRAP( do_disassembly ),
             WRAP( nothing )
 #undef WRAP

@@ -3344,6 +3344,8 @@ void craft_activity_actor::do_turn( player_activity &act, Character &crafter )
         cached_crafting_speed = 0;
         // Also reset the multiplier
         use_cached_workbench_multiplier = false;
+		act.targets.clear();
+        act.targets.push_back( craft_item );
     }
 
     // Unlike skill, tools are consumed once at the start and should not be consumed at the end
@@ -3405,7 +3407,7 @@ void craft_activity_actor::canceled( player_activity &/*act*/, Character &/*who*
 {
     item *craft = craft_item.get_item();
     // item_location::get_item() will return nullptr if the item is lost
-    if( !craft ) {
+    if( !craft || square_dist( craft_item.pos_bub(), crafter.pos_bub() ) > 1 ) {
         return;
     }
     const recipe item_recipe = craft->get_making();

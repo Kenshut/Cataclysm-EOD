@@ -28,7 +28,6 @@
 #include "json.h"
 #include "mapgen_functions.h"
 #include "npc.h"
-#include "options.h"
 #include "output.h"
 #include "proficiency.h"
 #include "recipe_dictionary.h"
@@ -105,7 +104,7 @@ int64_t recipe::batch_time( const Character &guy, int batch, float multiplier,
     // 0.33f is 1/3 speed
     if( multiplier == 0.0f ) {
         // If an item isn't craftable in the dark, show the time to complete as if you could craft it
-        multiplier = 1.0f * get_mult_from_options();
+        multiplier = 1.0f;
     }
 
     const double local_time = static_cast<double>( time_to_craft_moves( guy ) ) / multiplier;
@@ -141,23 +140,6 @@ int64_t recipe::batch_time( const Character &guy, int batch, float multiplier,
     }
 
     return static_cast<int64_t>( total_time );
-}
-
-float recipe::get_mult_from_options() const
-{
-    float option_multi = get_option<float>( "CRAFT_FAST_MOD" );
-
-    const time_duration basetime = time_duration::from_moves( time );
-    const time_duration timesoftcap = time_duration::from_minutes(
-                                          get_option<int>( "CRAFTTIME_SOFTCAP" ) );
-
-    if( timesoftcap > 0_minutes && basetime > timesoftcap ) {
-        // Regarding the math here: resulting time that should be the result of having a given multiplier is calculated via R = T-C*(T-B), where R is resulting time (in minutes), T is base time (in minutes), B is crafting time soft cap, C is speed multiplier for long recipes specified in options. A multiplier for the base time is calculated via N = T/R, where N is actual multiplier that is applied to the recipe. Final formula is N = T/(T-C*(T-B))
-        const float longmult = get_option<float>( "CRAFT_SLOW_MOD" );
-        option_multi = basetime / ( basetime - longmult * ( basetime - timesoftcap ) );
-    }
-
-    return option_multi;
 }
 
 bool recipe::has_flag( const std::string &flag_name ) const
@@ -213,11 +195,17 @@ void recipe::load( const JsonObject &jo, const std::string &src )
         }
     }
 
-    if( type == "recipe" && jo.has_string( "id_suffix" ) ) {
-        if( abstract ) {
-            jo.throw_error_at( "id_suffix", "abstract recipe cannot specify id_suffix" );
+    if( type == "recipe" ) {
+        optional( jo, was_loaded, "variant", variant_ );
+        if( !variant_.empty() && !abstract ) {
+            ident_ = recipe_id( ident_.str() + "_" + variant_ );
         }
-        ident_ = recipe_id( ident_.str() + "_" + jo.get_string( "id_suffix" ) );
+        if( jo.has_string( "id_suffix" ) ) {
+            if( abstract ) {
+                jo.throw_error_at( "id_suffix", "abstract recipe cannot specify id_suffix" );
+            }
+            ident_ = recipe_id( ident_.str() + "_" + jo.get_string( "id_suffix" ) );
+        }
     }
 
     if( jo.has_bool( "obsolete" ) ) {
@@ -637,8 +625,6 @@ void recipe::finalize()
             rpof.time_multiplier = rpof.id->default_time_multiplier();
         }
 
-        rpof.time_multiplier = ( ( rpof.time_multiplier - 1 ) * get_option<float>( "PROF_TIME_MOD" ) ) + 1;
-
         if( !rpof._skill_penalty_assigned ) {
             rpof.skill_penalty = rpof.id->default_skill_penalty();
         }
@@ -647,8 +633,6 @@ void recipe::finalize()
             debugmsg( "proficiency %s provides a skill bonus for not being known in recipe %s skill penalty: %g default multiplier: %g",
                       rpof.id.str(), ident_.str(), rpof.skill_penalty, rpof.id->default_skill_penalty() );
         }
-
-        rpof.skill_penalty = rpof.skill_penalty * get_option<float>( "PROF_FAIL_MOD" );
 
         // Now that we've done the error checking, log that a proficiency with this id is used
         if( rpof.required ) {
@@ -682,10 +666,6 @@ std::string recipe::get_consistency_error() const
 
     if( !item::type_is_defined( result_ ) ) {
         return "defines invalid result";
-    }
-
-    if( charges && !item::count_by_charges( result_ ) ) {
-        return "specifies charges but result is not counted by charges";
     }
 
     const auto is_invalid_bp = []( const std::pair<itype_id, int> &elem ) {
@@ -728,6 +708,10 @@ std::vector<item> recipe::create_result( bool set_components, bool is_food,
         item_components *used ) const
 {
     item newit( result_, calendar::turn, item::default_charges_tag{} );
+
+    if( !variant().empty() ) {
+        newit.set_itype_variant( variant() );
+    }
 
     if( newit.has_flag( flag_VARSIZE ) ) {
         newit.set_flag( flag_FIT );
@@ -797,15 +781,20 @@ std::vector<item> recipe::create_results( int batch, item_components *used ) con
             item_components mult_comps = batch_comps.split( result_mult, j, is_cooked );
             std::vector<item> newits = create_result( set_components, temp.is_food(), &mult_comps );
 
-            for( const item &it : newits ) {
-                // try to combine batch results for liquid handling
-                auto found = std::find_if( items.begin(), items.end(), [it]( const item & rhs ) {
-                    return it.can_combine( rhs );
-                } );
-                if( found != items.end() ) {
-                    found->combine( it );
-                } else {
-                    items.emplace_back( it );
+            if( !result_->count_by_charges() ) {
+                items.reserve( items.size() + newits.size() );
+                items.insert( items.end(), newits.begin(), newits.end() );
+            } else {
+                for( const item &it : newits ) {
+                    // try to combine batch results for liquid handling
+                    auto found = std::find_if( items.begin(), items.end(), [it]( const item & rhs ) {
+                        return it.can_combine( rhs );
+                    } );
+                    if( found != items.end() ) {
+                        found->combine( it );
+                    } else {
+                        items.emplace_back( it );
+                    }
                 }
             }
         }
@@ -1207,6 +1196,14 @@ std::string recipe::result_name( const bool decorated ) const
     std::string name;
     if( !name_.empty() ) {
         name = name_.translated();
+    } else if( !variant().empty() ) {
+        auto iter_var = std::find_if( result_->variants.begin(), result_->variants.end(),
+        [this]( const itype_variant_data & itvar ) {
+            return itvar.id == variant();
+        } );
+        if( iter_var != result_->variants.end() ) {
+            name = iter_var->alt_name.translated();
+        }
     } else {
         name = item::nname( result_ );
     }
@@ -1268,8 +1265,7 @@ std::function<bool( const item & )> recipe::get_component_filter(
     std::function<bool( const item & )> frozen_filter = return_true<item>;
     if( result.has_temperature() && !hot_result() ) {
         frozen_filter = []( const item & component ) {
-            return !component.has_flag( flag_FROZEN ) || component.has_flag( flag_EDIBLE_FROZEN ) ||
-                   get_option<bool>( "EAT_FROZEN" );
+            return !component.has_flag( flag_FROZEN ) || component.has_flag( flag_EDIBLE_FROZEN );
         };
     }
 
@@ -1294,6 +1290,27 @@ std::function<bool( const item & )> recipe::get_component_filter(
                frozen_filter( component ) &&
                magazine_filter( component );
     };
+}
+
+bool recipe::npc_can_craft( std::string &reason ) const
+{
+    if( is_practice() ) {
+        reason = _( "Ordering practice to NPC is not implemented yet." );
+        return false;
+    }
+    if( result()->phase != phase_id::SOLID ) {
+        reason = _( "Ordering no solid item to NPC is not implemented yet." );
+        return false;
+    }
+    if( !get_byproducts().empty() ) {
+        for( const std::pair<const itype_id, int> &bp : get_byproducts() ) {
+            if( bp.first->phase != phase_id::SOLID ) {
+                reason = _( "Ordering no solid item to NPC is not implemented yet." );
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 bool recipe::is_practice() const
