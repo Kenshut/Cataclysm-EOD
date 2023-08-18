@@ -103,6 +103,7 @@ enum class debug_menu_index : int {
     ACTIVATE_EOC,
     WRITE_TIMED_EVENTS,
     QUICKLOAD,
+    QUICK_SETUP,
     last
 };
 
