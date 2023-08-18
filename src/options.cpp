@@ -1427,14 +1427,14 @@ void options_manager::add_options_general()
 
     add( "PROMPT_ON_CHARACTER_DEATH", "general", to_translation( "Prompt on character death" ),
          to_translation( "If false, when your character dies, it's unavoidable: savefile is automatically deleted and character is put into the graveyard.  If true, on character death you will be prompted to cancel savefile deletion and return to main menu instead." ),
-         false
+         true
        );
 
     add_empty_line();
 
     add( "DEF_CHAR_NAME", "general", to_translation( "Default character name" ),
          to_translation( "Set a default character name that will be used instead of a random name on character creation." ),
-         "", 30
+         "Kenshut", 30
        );
 
     add_empty_line();
@@ -1565,7 +1565,7 @@ void options_manager::add_options_general()
     [&]( const std::string & page_id ) {
         add( "SAFEMODE", page_id, to_translation( "Safe mode" ),
              to_translation( "If true, will hold the game and display a warning if a hostile monster/NPC is approaching." ),
-             true
+             false
            );
 
         add( "SAFEMODEPROXIMITY", page_id, to_translation( "Safe mode proximity distance" ),
@@ -1608,7 +1608,7 @@ void options_manager::add_options_general()
     [&]( const std::string & page_id ) {
         add( "AUTOSAVE", page_id, to_translation( "Autosave" ),
              to_translation( "If true, game will periodically save the map.  Autosaves occur based on in-game turns or realtime minutes, whichever is larger." ),
-             true
+             false
            );
 
         add( "AUTOSAVE_TURNS", page_id, to_translation( "Game turns between autosaves" ),
@@ -1633,26 +1633,26 @@ void options_manager::add_options_general()
     [&]( const std::string & page_id ) {
         add( "AUTO_NOTES", page_id, to_translation( "Auto notes" ),
              to_translation( "If true, automatically sets notes." ),
-             false
+             true
            );
 
         add( "AUTO_NOTES_STAIRS", page_id, to_translation( "Auto notes (stairs)" ),
              to_translation( "If true, automatically sets notes on places that have stairs that go up or down." ),
-             false
+             true
            );
 
         get_option( "AUTO_NOTES_STAIRS" ).setPrerequisite( "AUTO_NOTES" );
 
         add( "AUTO_NOTES_MAP_EXTRAS", page_id, to_translation( "Auto notes (map extras)" ),
              to_translation( "If true, automatically sets notes on places that contain various map extras." ),
-             false
+             true
            );
 
         get_option( "AUTO_NOTES_MAP_EXTRAS" ).setPrerequisite( "AUTO_NOTES" );
 
         add( "AUTO_NOTES_DROPPED_FAVORITES", page_id, to_translation( "Auto notes (dropped favorites)" ),
              to_translation( "If true, automatically sets notes when player drops favorited items." ),
-             false
+             true
            );
 
         get_option( "AUTO_NOTES_DROPPED_FAVORITES" ).setPrerequisite( "AUTO_NOTES" );
@@ -1693,7 +1693,7 @@ void options_manager::add_options_general()
     [&]( const std::string & page_id ) {
         add( "SOUND_ENABLED", page_id, to_translation( "Sound enabled" ),
              to_translation( "If true, music and sound are enabled." ),
-             true, COPT_NO_SOUND_HIDE
+             false, COPT_NO_SOUND_HIDE
            );
 
         add( "SOUNDPACKS", page_id, to_translation( "Choose soundpack" ),
@@ -2150,7 +2150,7 @@ void options_manager::add_options_interface()
     [&]( const std::string & page_id ) {
         add( "ENABLE_JOYSTICK", page_id, to_translation( "Enable joystick" ),
              to_translation( "If true, enable input from joystick." ),
-             true, COPT_CURSES_HIDE
+             false, COPT_CURSES_HIDE
            );
 
         add( "HIDE_CURSOR", page_id, to_translation( "Hide mouse cursor" ),
@@ -2162,7 +2162,7 @@ void options_manager::add_options_interface()
             //~ hide mouse cursor when keyboard is used
             { "hidekb", to_translation( "HideKB" ) }
         },
-        "show", COPT_CURSES_HIDE );
+        "hide", COPT_CURSES_HIDE );
 
         add( "EDGE_SCROLL", page_id, to_translation( "Edge scrolling" ),
         to_translation( "Edge scrolling with the mouse." ), {
@@ -2377,7 +2377,7 @@ void options_manager::add_options_graphics()
 
         add( "TILES", page_id, to_translation( "Choose tileset" ),
              to_translation( "Choose the tileset you want to use." ),
-             build_tilesets_list(), "UltimateCataclysm", COPT_CURSES_HIDE
+             build_tilesets_list(), "MshockXotto+", COPT_CURSES_HIDE
            ); // populate the options dynamically
 
         add( "USE_DISTANT_TILES", page_id, to_translation( "Use separate tileset for far" ),
@@ -2402,7 +2402,7 @@ void options_manager::add_options_graphics()
 
         add( "USE_OVERMAP_TILES", page_id, to_translation( "Use tiles to display overmap" ),
              to_translation( "If true, replaces some TTF-rendered text with tiles for overmap display." ),
-             true, COPT_CURSES_HIDE
+             false, COPT_CURSES_HIDE
            );
 
         get_option( "USE_OVERMAP_TILES" ).setPrerequisite( "USE_TILES" );
@@ -3099,7 +3099,7 @@ void options_manager::add_options_world_default()
     add( "SKILL_RUST", "world_default",
          to_translation( "Enable skill rust" ),
          to_translation( "If true, practical experience gained in skills may be lost if those skills are not regularly practiced, unless max skill level is reached.  If false, this feature is disabled." ),
-         true
+         false
        );
 
     add( "SKILL_RUST_DROPS_LEVELS", "world_default",
