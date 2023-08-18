@@ -3099,7 +3099,7 @@ void options_manager::add_options_world_default()
     add( "SKILL_RUST", "world_default",
          to_translation( "Enable skill rust" ),
          to_translation( "If true, practical experience gained in skills may be lost if those skills are not regularly practiced, unless max skill level is reached.  If false, this feature is disabled." ),
-         true
+         false
        );
 
     add( "SKILL_RUST_DROPS_LEVELS", "world_default",
