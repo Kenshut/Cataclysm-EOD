@@ -133,6 +133,21 @@ static const matype_id style_none( "style_none" );
 static const mtype_id mon_generator( "mon_generator" );
 
 static const trait_id trait_ASTHMA( "ASTHMA" );
+static const trait_id trait_DEBUG_BIONICS( "DEBUG_BIONICS" );
+static const trait_id trait_DEBUG_NIGHTVISION( "DEBUG_NIGHTVISION" );
+static const trait_id trait_DEBUG_CLAIRVOYANCE_PLUS( "DEBUG_CLAIRVOYANCE_PLUS" );
+static const trait_id trait_DEBUG_CLAIRVOYANCE( "DEBUG_CLAIRVOYANCE" );
+static const trait_id trait_DEBUG_CLOAK( "DEBUG_CLOAK" );
+static const trait_id trait_DEBUG_LS( "DEBUG_LS" );
+static const trait_id trait_DEBUG_CARDIO( "DEBUG_CARDIO" );
+static const trait_id trait_DEBUG_NOSCENT( "DEBUG_NOSCENT" );
+static const trait_id trait_DEBUG_SILENT( "DEBUG_SILENT" );
+static const trait_id trait_DEBUG_MANA( "DEBUG_MANA" );
+static const trait_id trait_DEBUG_NOTEMP( "DEBUG_NOTEMP" );
+static const trait_id trait_DEBUG_NODMG( "DEBUG_NODMG" );
+static const trait_id trait_DEBUG_HS( "DEBUG_HS" );
+static const trait_id trait_DEBUG_CNF( "DEBUG_CNF" );
+static const trait_id trait_DEBUG_MIND_CONTROL( "DEBUG_MIND_CONTROL" );
 static const trait_id trait_NONE( "NONE" );
 
 #if defined(TILES)
@@ -230,6 +245,7 @@ std::string enum_to_string<debug_menu::debug_menu_index>( debug_menu::debug_menu
         case debug_menu::debug_menu_index::VEHICLE_BATTERY_CHARGE: return "VEHICLE_BATTERY_CHARGE";
         case debug_menu::debug_menu_index::GENERATE_EFFECT_LIST: return "GENERATE_EFFECT_LIST";
         case debug_menu::debug_menu_index::ACTIVATE_EOC: return "ACTIVATE_EOC";
+        case debug_menu::debug_menu_index::QUICK_SETUP: return "QUICK_SETUP";
         // *INDENT-ON*
         case debug_menu::debug_menu_index::last:
             break;
@@ -493,6 +509,7 @@ static int game_uilist()
         { uilist_entry( debug_menu_index::ACTIVATE_EOC, true, 'E', _( "Activate EOC" ) ) },
         { uilist_entry( debug_menu_index::QUIT_NOSAVE, true, 'Q', _( "Quit to main menu" ) )  },
         { uilist_entry( debug_menu_index::QUICKLOAD, true, 'q', _( "Quickload" ) )  },
+        { uilist_entry( debug_menu_index::QUICK_SETUP, true, 'S', _( "Quick setup…" ) ) },
     };
 
     return uilist( _( "Game…" ), uilist_initializer );
@@ -3414,6 +3431,41 @@ void debug()
             break;
         }
 
+        case debug_menu_index::QUICK_SETUP: {
+            std::vector<trait_id> setup_traits;
+            setup_traits.emplace_back( trait_DEBUG_BIONICS );
+            setup_traits.emplace_back( trait_DEBUG_NIGHTVISION );
+            setup_traits.emplace_back( trait_DEBUG_CLAIRVOYANCE );
+            setup_traits.emplace_back( trait_DEBUG_CLOAK );
+            setup_traits.emplace_back( trait_DEBUG_HS );
+            setup_traits.emplace_back( trait_DEBUG_LS );
+            setup_traits.emplace_back( trait_DEBUG_MANA );
+            setup_traits.emplace_back( trait_DEBUG_NODMG );
+            setup_traits.emplace_back( trait_DEBUG_NOTEMP );
+            setup_traits.emplace_back( trait_DEBUG_MIND_CONTROL );
+            setup_traits.emplace_back( trait_DEBUG_CLAIRVOYANCE_PLUS );
+            setup_traits.emplace_back( trait_DEBUG_CARDIO );
+            setup_traits.emplace_back( trait_DEBUG_NOSCENT );
+            setup_traits.emplace_back( trait_DEBUG_SILENT );
+            setup_traits.emplace_back( trait_DEBUG_CNF );
+            Character &u = get_avatar();
+            u.clear_bionics();
+            u.clear_effects();
+            u.clear_morale();
+            u.clear_mutations();
+            u.clear_vitamins();
+            u.set_all_parts_hp_to_max();
+            u.set_fatigue( 0 );
+            u.set_hunger( 0 );
+            u.set_mutations( setup_traits );
+            u.set_pain( 0 );
+            u.set_rad( 0 );
+            u.set_sleep_deprivation( 0 );
+            u.set_stored_kcal( u.get_healthy_kcal() );
+            u.set_thirst( 0 );
+            break;
+        }
+        
         case debug_menu_index::last:
             return;
     }
