@@ -2970,7 +2970,10 @@ void options_manager::add_options_world_default()
          to_translation( "If true, radiation causes the player to mutate." ),
          false
        );
-
+    add( "SHOW_MUTATION_SELECTOR", "world_default", to_translation( "Mutation Selector" ),
+         to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random.." ),
+         false
+       );
     add_empty_line();
 
     add( "ENABLE_ROBOT_RESPONSE", "world_default", to_translation( "Robot alarm response" ),
