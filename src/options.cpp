@@ -3050,7 +3050,7 @@ void options_manager::add_options_world_default()
 
     add_empty_line();
 
-    add_option_group( "world_default", Group( "game_world_opts", to_translation( "Персонаж" ),
+    add_option_group( "world_default", Group( "game_character", to_translation( "Персонаж" ),
                       to_translation( "Опции связанные с персонажем." ) ),
     [&]( const std::string & page_id ) {
        add( "SKILL_TRAINING_SPEED", "world_default", to_translation( "Skill training multiplier" ),
@@ -3291,7 +3291,7 @@ void options_manager::add_options_world_default()
 
     add_empty_line();
 
-    add_option_group( "world_default", Group( "game_world_opts", to_translation( "Транспорт" ),
+    add_option_group( "world_default", Group( "game_world_transport", to_translation( "Транспорт" ),
                       to_translation( "Опции связанные с транспортом." ) ),
     [&]( const std::string & page_id ) {
        add( "PROF_HELI_FLY", "world_default", to_translation( "Need proficiency to fly aircraft" ),
