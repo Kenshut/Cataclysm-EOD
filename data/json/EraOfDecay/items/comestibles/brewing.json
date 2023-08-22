@@ -1,0 +1,24 @@
+[
+ {
+    "type": "COMESTIBLE",
+    "id": "brew_hb_kvass",
+    "looks_like": "beer",
+    "name": { "str": "kvass wort" },
+    "description": "Unfermented homebrew kvass.  A boiled and chilled mash of malted barley, spiced with some fine hops.",
+    "weight": "255 g",
+    "color": "brown",
+    "container": "jug_plastic",
+    "sealed": false,
+    "flags": [ "TRADER_AVOID", "NUTRIENT_OVERRIDE" ],
+    "symbol": "~",
+    "calories": 35,
+    "quench": 4,
+    "fun": -20,
+    "price": 0,
+    "volume": "250 ml",
+    "price_postapoc": 10,
+    "phase": "liquid",
+    "comestible_type": "DRINK",
+    "brewable": { "time": "7 days", "results": [ "hb_kvass", "yeast" ] }
+  }
+]
