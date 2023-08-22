@@ -2973,7 +2973,19 @@ void options_manager::add_options_world_default()
     add_empty_line();
 	
 	
-
+add_option_group( "world_default", Group( "Mutation", to_translation( "Mutation" ),
+                      to_translation( "Mutation options." ) ),
+    [&]( const std::string & page_id ) {
+       add( "RAD_MUTATION", "world_default", to_translation( "Mutations by radiation" ),
+         to_translation( "If true, radiation causes the player to mutate." ),
+         false
+       );
+    add( "SHOW_MUTATION_SELECTOR", "world_default", to_translation( "Mutation Selector" ),
+         to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random." ),
+         false
+       ); 
+	   
+    } );
     
     add_empty_line();
 
@@ -3054,19 +3066,7 @@ void options_manager::add_options_world_default()
     add_option_group( "world_default", Group( "game_character", to_translation( "Character" ),
                       to_translation( "Option gameplay character." ) ),
     [&]( const std::string & page_id ) {
-       add_option_group( "world_default", Group( "Mutation", to_translation( "Mutation" ),
-                      to_translation( "Mutation options." ) ),
-    [&]( const std::string & page_id ) {
-       add( "RAD_MUTATION", "world_default", to_translation( "Mutations by radiation" ),
-         to_translation( "If true, radiation causes the player to mutate." ),
-         false
-       );
-    add( "SHOW_MUTATION_SELECTOR", "world_default", to_translation( "Mutation Selector" ),
-         to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random." ),
-         false
-       ); 
-	   
-    } );
+       
 	   
 	   add( "SKILL_TRAINING_SPEED", "world_default", to_translation( "Skill training multiplier" ),
          to_translation( "Multiplier for experience gained from practicing skills and reading books.  0.5 is half as fast as default, 2 is twice as fast, 0 disables skill training except for NPC training.  Higher value makes characters train skills faster." ),
