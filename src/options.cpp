@@ -3050,7 +3050,10 @@ void options_manager::add_options_world_default()
 
     add_empty_line();
 
-    add( "SKILL_TRAINING_SPEED", "world_default", to_translation( "Skill training multiplier" ),
+    add_option_group( "world_default", Group( "game_world_opts", to_translation( "Персонаж" ),
+                      to_translation( "Опции связанные с персонажем." ) ),
+    [&]( const std::string & page_id ) {
+       add( "SKILL_TRAINING_SPEED", "world_default", to_translation( "Skill training multiplier" ),
          to_translation( "Multiplier for experience gained from practicing skills and reading books.  0.5 is half as fast as default, 2 is twice as fast, 0 disables skill training except for NPC training.  Higher value makes characters train skills faster." ),
          0.00f, 100.00f, 1.00f, 0.01f
        );
@@ -3284,9 +3287,14 @@ void options_manager::add_options_world_default()
          0.00f, 100.00f, 1.00f, 0.01f
        );
 
+    } );
+
     add_empty_line();
 
-    add( "PROF_HELI_FLY", "world_default", to_translation( "Need proficiency to fly aircraft" ),
+    add_option_group( "world_default", Group( "game_world_opts", to_translation( "Транспорт" ),
+                      to_translation( "Опции связанные с транспортом." ) ),
+    [&]( const std::string & page_id ) {
+       add( "PROF_HELI_FLY", "world_default", to_translation( "Need proficiency to fly aircraft" ),
          to_translation( "If true, helicopter piloting proficiency is necessary to fly aircraft.  If false, any character can fly aircraft." ),
          true
        );
@@ -3384,6 +3392,9 @@ void options_manager::add_options_world_default()
          0, 100, 0
        );
 
+    } );
+
+    
     add( "CORPSES_REVIVE", "world_default", to_translation( "Corpses revive as zombies" ),
          to_translation( "If true, certain corpses (both zombie and non-zombie) can revive as zombies after some time spent dead.  If false, corpses will never revive." ),
          true
