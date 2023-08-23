@@ -1,5 +1,5 @@
 [
-{
+  {
     "type": "COMESTIBLE",
     "id": "vareniki",
     "name": { "str": "vareniki" },
@@ -24,7 +24,7 @@
     "type": "COMESTIBLE",
     "id": "vareniki_mush",
     "name": { "str": "vareniki with mushrooms" },
-	"conditional_names": [ { "type": "COMPONENT_ID_SUBSTRING", "condition": "veggy_tainted", "name": { "str_sp": "Strange vareniki" } } ],
+    "conditional_names": [ { "type": "COMPONENT_ID_SUBSTRING", "condition": "veggy_tainted", "name": { "str_sp": "Strange vareniki" } } ],
     "weight": "151 g",
     "color": "light_red",
     "spoils_in": "2 days",
@@ -77,7 +77,7 @@
     "description": "buckwheat, eggs and mushrooms with onions are just yummy.",
     "price": 350,
     "price_postapoc": 400,
-    "material": [ "veggy", "mushroom","egg" ],
+    "material": [ "veggy", "mushroom", "egg" ],
     "volume": "500 ml",
     "charges": 2,
     "flags": [ "EATEN_HOT" ],
@@ -88,10 +88,10 @@
     "type": "COMESTIBLE",
     "id": "carrot_cutlet",
     "name": { "str": "vegetable patty" },
-	"conditional_names": [
-	{ "type": "COMPONENT_ID_SUBSTRING", "condition": "carrot", "name": { "str_sp": "Carrot patty" } }, 
-	{ "type": "COMPONENT_ID_SUBSTRING", "condition": "zucchini", "name": { "str_sp": "Zucchini patty" } }
-	],
+    "conditional_names": [
+      { "type": "COMPONENT_ID_SUBSTRING", "condition": "carrot", "name": { "str_sp": "Carrot patty" } },
+      { "type": "COMPONENT_ID_SUBSTRING", "condition": "zucchini", "name": { "str_sp": "Zucchini patty" } }
+    ],
     "weight": "151 g",
     "color": "light_red",
     "spoils_in": "2 days",
