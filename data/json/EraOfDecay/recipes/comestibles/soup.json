@@ -9,9 +9,16 @@
     "skill_used": "cooking",
     "difficulty": 2,
     "time": "5 m",
-	"book_learn": [ [ "cookbook_slavic_specialties", 2 ] ],
+    "book_learn": [ [ "cookbook_slavic_specialties", 2 ] ],
     "batch_time_factors": [ 80, 4 ],
     "qualities": [ { "id": "COOK", "level": 3 } ],
-    "components": [ [ [ "hb_kvass", 1 ] ],[ [ "potato_boiled", 1 ] ], [ [ "boiled_egg", 1 ] ], [ [ "cucumber", 1 ],[ "irradiated_cucumber", 1 ] ],[ [ "sausage_cooked", 1 ] ],[ [ "salt", 1 ],[ "seasoning_salt", 1 ] ] ]
+    "components": [
+      [ [ "hb_kvass", 1 ] ],
+      [ [ "potato_boiled", 1 ] ],
+      [ [ "boiled_egg", 1 ] ],
+      [ [ "cucumber", 1 ], [ "irradiated_cucumber", 1 ] ],
+      [ [ "sausage_cooked", 1 ] ],
+      [ [ "salt", 1 ], [ "seasoning_salt", 1 ] ]
+    ]
   }
 ]
