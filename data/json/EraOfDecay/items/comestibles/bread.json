@@ -1,10 +1,10 @@
 [
-{
+  {
     "type": "COMESTIBLE",
     "id": "bread_potato",
     "name": { "str_sp": "bread potato" },
     "description": "Potato dough bread.",
-    "material": [ "wheat","veggy" ],
+    "material": [ "wheat", "veggy" ],
     "weight": "58 g",
     "volume": "400 ml",
     "charges": 2,
@@ -24,7 +24,7 @@
     "id": "kluska",
     "name": { "str_sp": "kluska" },
     "description": "kluska is one of the national dishes of Poland, Czech Republic and Slovakia.",
-    "material": [ "wheat","veggy","milk" ],
+    "material": [ "wheat", "veggy", "milk" ],
     "weight": "58 g",
     "volume": "400 ml",
     "charges": 2,
@@ -35,7 +35,7 @@
     "spoils_in": "10 days",
     "container": "bag_plastic",
     "comestible_type": "FOOD",
-	"flags": [ "EATEN_HOT" ],
+    "flags": [ "EATEN_HOT" ],
     "calories": 200,
     "fun": 8,
     "vitamins": [ [ "calcium", 3 ], [ "iron", 6 ] ]
@@ -45,7 +45,7 @@
     "id": "Knedli_fruit",
     "name": { "str_sp": "Knedli fruit" },
     "description": "Knedli the national dish of Czech and Slovak cuisine.",
-    "material": [ "wheat","veggy","milk" ],
+    "material": [ "wheat", "veggy", "milk" ],
     "weight": "58 g",
     "volume": "400 ml",
     "charges": 2,
@@ -56,7 +56,7 @@
     "spoils_in": "10 days",
     "container": "bag_plastic",
     "comestible_type": "FOOD",
-	"flags": [ "EATEN_HOT" ],
+    "flags": [ "EATEN_HOT" ],
     "calories": 200,
     "fun": 8,
     "vitamins": [ [ "calcium", 3 ], [ "iron", 6 ] ]
@@ -65,12 +65,12 @@
     "type": "COMESTIBLE",
     "id": "Knedli_meat",
     "name": { "str_sp": "Knedli meat" },
-	"conditional_names": [
-	{ "type": "COMPONENT_ID_SUBSTRING", "condition": "human", "name": { "str_sp": "Knedli buddy" } }, 
-	{ "type": "COMPONENT_ID_SUBSTRING", "condition": "mutant", "name": { "str_sp": "Knedli ugly" } }
-	],
+    "conditional_names": [
+      { "type": "COMPONENT_ID_SUBSTRING", "condition": "human", "name": { "str_sp": "Knedli buddy" } },
+      { "type": "COMPONENT_ID_SUBSTRING", "condition": "mutant", "name": { "str_sp": "Knedli ugly" } }
+    ],
     "description": "Knedli the national dish of Czech and Slovak cuisine.",
-    "material": [ "wheat","veggy","milk","flesh" ],
+    "material": [ "wheat", "veggy", "milk", "flesh" ],
     "weight": "58 g",
     "volume": "400 ml",
     "charges": 2,
@@ -81,7 +81,7 @@
     "spoils_in": "5 days",
     "container": "bag_plastic",
     "comestible_type": "FOOD",
-	"flags": [ "EATEN_HOT" ],
+    "flags": [ "EATEN_HOT" ],
     "calories": 200,
     "fun": 8,
     "vitamins": [ [ "calcium", 3 ], [ "iron", 6 ] ]
@@ -91,7 +91,7 @@
     "id": "potato_dough",
     "name": { "str_sp": "Potato dough" },
     "description": "Potato dough.",
-    "material": [ "wheat","veggy" ],
+    "material": [ "wheat", "veggy" ],
     "weight": "58 g",
     "volume": "350 ml",
     "charges": 2,
@@ -103,7 +103,7 @@
     "container": "bag_plastic",
     "comestible_type": "FOOD",
     "calories": 200,
-	"healthy": -1,
+    "healthy": -1,
     "vitamins": [ [ "calcium", 3 ], [ "iron", 6 ] ]
   }
 ]
