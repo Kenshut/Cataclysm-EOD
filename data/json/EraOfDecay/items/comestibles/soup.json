@@ -15,7 +15,7 @@
     "description": "Traditional cold soup of Slavic cuisine.",
     "price": 400,
     "price_postapoc": 25,
-    "material": [ "veggy","alcohol" ],
+    "material": [ "veggy", "alcohol" ],
     "volume": "500 ml",
     "charges": 2,
     "phase": "liquid",
