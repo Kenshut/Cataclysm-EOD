@@ -1175,6 +1175,9 @@ float Character::get_dodge() const
     ret *= get_limb_score( limb_score_reaction );
     add_msg_debug( debugmode::DF_MELEE, "Dodge after reaction score %.1f", ret );
 
+    // бонус от умения
+    ret += p.get_proficiency_bonus( "dodge", proficiency_bonus_type::dexterity );
+
     // Somatic limb dodge multiplier is applied after reaction score
     ret *= get_modifier( character_modifier_limb_dodge_mod );
     add_msg_debug( debugmode::DF_MELEE, "Dodge after limb score modifier %.1f", ret );
