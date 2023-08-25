@@ -70,6 +70,9 @@
 #include "vpart_position.h"
 #include "weakpoint.h"
 #include "weighted_list.h"
+#include "proficiency.cpp"
+#include "proficiency.h"
+
 
 static const anatomy_id anatomy_human_anatomy( "human_anatomy" );
 
