@@ -143,6 +143,9 @@ static const trait_id trait_WEB_WALKER( "WEB_WALKER" );
 static const trait_id trait_WEB_WEAVER( "WEB_WEAVER" );
 static const trait_id trait_WHISKERS( "WHISKERS" );
 static const trait_id trait_WHISKERS_RAT( "WHISKERS_RAT" );
+static const proficiency_id proficiency_prof_dodge_basic( "prof_dodge_basic" );
+static const proficiency_id proficiency_prof_dodge_expert( "prof_dodge_expert" );
+static const proficiency_id proficiency_prof_dodge_master( "prof_dodge_master" );
 
 avatar::avatar()
 {
@@ -1055,6 +1058,15 @@ void avatar::reset_stats()
     mod_dodge_bonus( mabuff_dodge_bonus() );
     // Whiskers don't work so well if they're covered
     if( has_trait( trait_WHISKERS ) && !natural_attack_restricted_on( bodypart_id( "mouth" ) ) ) {
+        mod_dodge_bonus( 1 );
+    }
+    if( p.has_proficiency( proficiency_prof_dodge_basic ) {
+        mod_dodge_bonus( 1 );
+    }
+    if( p.has_proficiency( proficiency_prof_dodge_expert ) {
+        mod_dodge_bonus( 1 );
+    }
+    if( p.has_proficiency( proficiency_prof_dodge_master ) {
         mod_dodge_bonus( 1 );
     }
     if( has_trait( trait_WHISKERS_RAT ) && !natural_attack_restricted_on( bodypart_id( "mouth" ) ) ) {
