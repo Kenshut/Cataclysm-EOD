@@ -1063,11 +1063,7 @@ void avatar::reset_stats()
     if( p.has_proficiency( proficiency_prof_dodge_basic ) {
         mod_dodge_bonus( 1 );
     }
-    if( p.has_proficiency( proficiency_prof_dodge_expert ) {
-        mod_dodge_bonus( 1 );
-    }
-    if( p.has_proficiency( proficiency_prof_dodge_master ) {
-        mod_dodge_bonus( 1 );
+
     }
     if( has_trait( trait_WHISKERS_RAT ) && !natural_attack_restricted_on( bodypart_id( "mouth" ) ) ) {
         mod_dodge_bonus( 2 );
