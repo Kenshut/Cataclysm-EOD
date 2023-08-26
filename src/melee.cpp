@@ -70,8 +70,6 @@
 #include "vpart_position.h"
 #include "weakpoint.h"
 #include "weighted_list.h"
-#include "proficiency.cpp"
-#include "proficiency.h"
 
 
 static const anatomy_id anatomy_human_anatomy( "human_anatomy" );
@@ -1177,9 +1175,6 @@ float Character::get_dodge() const
     // Reaction score of limbs influences dodge chances
     ret *= get_limb_score( limb_score_reaction );
     add_msg_debug( debugmode::DF_MELEE, "Dodge after reaction score %.1f", ret );
-
-    // бонус от умения
-    ret += p.get_proficiency_bonus( "dodge", proficiency_bonus_type::dexterity );
 
     // Somatic limb dodge multiplier is applied after reaction score
     ret *= get_modifier( character_modifier_limb_dodge_mod );
