@@ -1060,7 +1060,7 @@ void avatar::reset_stats()
     if( has_trait( trait_WHISKERS ) && !natural_attack_restricted_on( bodypart_id( "mouth" ) ) ) {
         mod_dodge_bonus( 1 );
     }
-    if( p.has_proficiency( proficiency_prof_dodge_basic ) {
+    if( p.has_proficiency( proficiency_prof_dodge_basic )) {
         mod_dodge_bonus( 1 );
     }
 
