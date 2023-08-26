@@ -83,6 +83,7 @@
 #include "veh_type.h"
 #include "vehicle.h"
 #include "vpart_position.h"
+#include "proficiency.h"
 
 static const bionic_id bio_cloak( "bio_cloak" );
 static const bionic_id bio_soporific( "bio_soporific" );
@@ -143,6 +144,7 @@ static const trait_id trait_WEB_WALKER( "WEB_WALKER" );
 static const trait_id trait_WEB_WEAVER( "WEB_WEAVER" );
 static const trait_id trait_WHISKERS( "WHISKERS" );
 static const trait_id trait_WHISKERS_RAT( "WHISKERS_RAT" );
+static const proficiency_id proficiency_prof_dodge_basic( "prof_dodge_basic" );
 
 avatar::avatar()
 {
@@ -1064,6 +1066,9 @@ void avatar::reset_stats()
     // if they hit the player, the player cannot dodge as effectively.
     if( is_mounted() ) {
         mod_dodge_bonus( -4 );
+    }
+	if( has_proficiency(proficiency_prof_dodge_basic) ) {
+        mod_dodge_bonus( +1 );
     }
     // Spider hair is basically a full-body set of whiskers, once you get the brain for it
     if( has_trait( trait_CHITIN_FUR3 ) ) {
