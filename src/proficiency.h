@@ -84,6 +84,8 @@ class proficiency
         time_duration _time_to_learn = 9999_hours;
         std::set<proficiency_id> _required;
 
+        std::vector<enchantment_id> enchantments;
+
         std::map<std::string, std::vector<proficiency_bonus>> _bonuses;
 
     public:
