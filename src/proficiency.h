@@ -14,7 +14,7 @@
 #include "flat_set.h"
 #include "translations.h"
 #include "type_id.h"
-
+#include "magic_enchantment.h"
 #include "mod_tracker.h"
 
 class JsonArray;
