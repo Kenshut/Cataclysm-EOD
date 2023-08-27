@@ -124,5 +124,18 @@
     "default_skill_penalty": 0.2,
     "required_proficiencies": [ "prof_dodge_expert" ],
     "ignore_focus": true
+  },
+  {
+    "type": "proficiency",
+    "id": "prof_reloader",
+    "category": "prof_archery",
+    "name": { "str": "Basic reloader's Form" },
+    "description": "You have grasped some basic understanding on archery, and find handling bows easier.",
+    "can_learn": true,
+    "time_to_learn": "5 h",
+    "default_time_multiplier": 1.5,
+    "default_skill_penalty": 0.2,
+    "bonuses": { "reloaded": [ { "type": "dexterity", "value": 10 } ] },
+    "ignore_focus": true
   }
 ]
