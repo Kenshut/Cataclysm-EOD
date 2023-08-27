@@ -2265,15 +2265,11 @@ double Character::gun_value( const item &weap, int ammo ) const
         damage_factor += 0.5f * gun_damage.damage_units.front().res_pen;
     }
 
-    const Character &p = get_player_character();
-
     int move_cost = time_to_attack( *this, *weap.type );
     if( gun.clip != 0 && gun.clip < 10 ) {
         // TODO: RELOAD_ONE should get a penalty here
-        
         int reload_cost = gun.reload_time + encumb( bodypart_id( "hand_l" ) ) + encumb(
                               bodypart_id( "hand_r" ) );
-        reload_cost -= p.get_proficiency_bonus( "reloaded", proficiency_bonus_type::dexterity );
         reload_cost /= gun.clip;
         move_cost += reload_cost;
     }
