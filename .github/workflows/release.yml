@@ -7,9 +7,9 @@ on:
     paths:
       - '.github/workflows/release.yml'
       - 'build-data/**'
+      - 'android/**'
       - 'cataclysm-launcher'
       - 'data/**'
-      - 'doc/**'
       - 'gfx/**'
       - 'lang/po/*.po'
       - 'LICENSE*'
