@@ -41,10 +41,7 @@
       "8": "t_floor",
       "9": "t_floor",
       "A": "t_floor",
-      "?": "t_floor",
-      "K": "t_floor",
-      "N": "t_floor",
-      "Y": "t_floor"
+      "?": "t_floor"
     },
     "furniture": {
       "*": "f_centrifuge",
@@ -59,22 +56,19 @@
       "C": "f_counter",
       "S": "f_sofa",
       "s": "f_sink",
-      "o": [ "f_oven", "f_gas_oven_microwave_combo" ],
+      "o": "f_oven",
       "4": "f_rack",
       "r": "f_rack",
       "R": "f_rack",
       "8": "f_locker",
       "l": "f_locker",
       "L": "f_locker",
-      "K": "f_locker",
       "2": "f_table",
       "T": "f_table",
       "9": "f_table",
       "&": "f_toilet",
       "A": "f_autodoc",
-      "?": "f_autodoc_couch",
-      "N": "f_oxygen_concentrator",
-      "Y": "f_hd_compressor_unit"
+      "?": "f_autodoc_couch"
     },
     "toilets": { "&": {  } }
   },

@@ -14,7 +14,7 @@
 #include "translations.h"
 #include "widget.h"
 
-class JsonArray;
+class JsonIn;
 class JsonOut;
 class avatar;
 class Character;
@@ -35,6 +35,7 @@ namespace catacurses
 {
 class window;
 } // namespace catacurses
+
 
 namespace overmap_ui
 {
@@ -149,7 +150,7 @@ class panel_manager
         bool save();
         bool load();
         void serialize( JsonOut &json );
-        void deserialize( const JsonArray &ja );
+        void deserialize( JsonIn &jsin );
         // update the screen offsets so the game knows how to adjust the main window
         void update_offsets( int x );
 

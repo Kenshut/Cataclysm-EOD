@@ -7,7 +7,6 @@
 #include <iosfwd>
 #include <map>
 #include <memory>
-#include <optional>
 #include <string>
 #include <utility>
 #include <vector>
@@ -17,8 +16,8 @@
 #include "input.h"
 #include "inventory.h"
 #include "item_location.h"
-#include "mapdata.h"
 #include "memory_fast.h"
+#include "optional.h"
 #include "player_activity.h"
 #include "point.h"
 #include "type_id.h"
@@ -56,14 +55,16 @@ class veh_interact
         static player_activity run( vehicle &veh, const point &p );
 
         /** Prompt for a part matching the selector function */
-        static std::optional<vpart_reference> select_part( const vehicle &veh, const part_selector &sel,
-                const std::string &title = std::string() );
+        static vehicle_part &select_part( const vehicle &veh, const part_selector &sel,
+                                          const std::string &title = std::string() );
 
         static void complete_vehicle( Character &you );
 
     private:
         explicit veh_interact( vehicle &veh, const point &p = point_zero );
         ~veh_interact();
+
+        item_location target;
 
         point dd = point_zero;
         /* starting offset for vehicle parts description display and max offset for scrolling */
@@ -72,22 +73,19 @@ class veh_interact
         /* starting offset for the overview and the max offset for scrolling */
         int overview_offset = 0;
         int overview_limit = 0;
-        /* starting offset for installation scrolling */
+        // starting offset for installation scrolling
         int w_msg_scroll_offset = 0;
-        /* starting offset for fuels scrolling */
-        int fuel_index = 0;
 
-        // target vehicle tank for refill with liquids
-        item_location refill_target;
+        const vpart_info *sel_vpart_info = nullptr;
+        std::string sel_vpart_variant;
+        //Command currently being run by the player
+        char sel_cmd = ' ';
 
         const vehicle_part *sel_vehicle_part = nullptr;
-        const vpart_info *sel_vpart_info = nullptr;
-
-        // Command currently being run by the player
-        char sel_cmd = ' ';
 
         int cpart = -1;
         int page_size = 0;
+        int fuel_index = 0; /** Starting index of where to start printing fuels from */
         // height of the stats window
         const int stats_h = 8;
         catacurses::window w_border;
@@ -100,12 +98,11 @@ class veh_interact
         catacurses::window w_details;
         catacurses::window w_name;
 
+        bool ui_hidden = false;
         weak_ptr_fast<ui_adaptor> ui;
 
-        std::optional<std::string> title;
-        std::optional<std::string> msg;
-
-        bool ui_hidden = false;
+        cata::optional<std::string> title;
+        cata::optional<std::string> msg;
 
         int highlight_part = -1;
 
@@ -118,7 +115,7 @@ class veh_interact
         std::unique_ptr<remove_info_t> remove_info;
 
         vehicle *veh;
-        const inventory *crafting_inv;
+        inventory crafting_inv;
         input_context main_context;
 
         // maximum weight capacity of available lifting equipment (if any)
@@ -240,8 +237,8 @@ class veh_interact
 
         void count_durability();
 
-        nc_color total_durability_color;
         std::string total_durability_text;
+        nc_color total_durability_color;
 
         /** Returns the most damaged part's index, or -1 if they're all healthy. */
         vehicle_part *get_most_damaged_part() const;
@@ -264,6 +261,14 @@ class veh_interact
          * Updated whenever the cursor moves. */
         std::vector<const vpart_info *> can_mount;
 
+        /* Maps part names to vparts representing different shapes of a part.
+         * Used to slim down installable parts list. Only built once. */
+        std::map< std::string, std::vector<const vpart_info *> > vpart_shapes;
+
+        /* Vector of all wheel types. Used for changing wheels, so it only needs
+         * to be built once. */
+        std::vector<const vpart_info *> wheel_types;
+
         /* Vector of vparts in the current square that can be repaired. Strictly a
          * subset of parts_here.
          * Can probably be removed entirely, otherwise is a vector<vehicle_part>.
@@ -276,9 +281,8 @@ class veh_interact
          * Updated whenever the cursor moves. */
         std::vector<int> parts_here;
 
-        /* Terrain at current square.
-         * Updated whenever the cursor moves. */
-        ter_t terrain_here;
+        /* Refers to the wheel (if any) in the currently selected square. */
+        struct vehicle_part *wheel;
 
         /* called by exec() */
         void cache_tool_availability();
@@ -292,8 +296,5 @@ class veh_interact
 };
 
 void act_vehicle_siphon( vehicle *veh );
-
-void orient_part( vehicle *veh, const vpart_info &vpinfo, int partnum,
-                  const std::optional<point> &part_placement = std::nullopt );
 
 #endif // CATA_SRC_VEH_INTERACT_H

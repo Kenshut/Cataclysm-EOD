@@ -42,7 +42,9 @@ class mdarray_impl_2d
         using Traits = point_traits<Point>;
     public:
         using value_type = T;
-        using column_type = std::array<T, DimY>;
+        // TODO: in C++17 array::operator[] becomes constexpr and we can use
+        // std::array here
+        using column_type = T[DimY];
 
         static constexpr size_t size_x = DimX;
         static constexpr size_t size_y = DimY;
@@ -96,7 +98,6 @@ class mdarray_impl_2d
     private:
         // TODO: in C++17 array::operator[] becomes constexpr and we can use
         // std::array here
-        // NOLINTNEXTLINE(modernize-avoid-c-arrays)
         column_type data_[DimX];
 };
 

@@ -14,8 +14,6 @@
 #include "point.h"
 #include "debug.h"
 
-class JsonValue;
-
 enum class direction : unsigned;
 
 namespace coords
@@ -166,8 +164,8 @@ class coord_point
         void serialize( JsonOut &jsout ) const {
             raw().serialize( jsout );
         }
-        void deserialize( const JsonValue &jv ) {
-            raw().deserialize( jv );
+        void deserialize( JsonIn &jsin ) {
+            raw().deserialize( jsin );
         }
 
         coord_point &operator+=( const coord_point<Point, origin::relative, Scale> &r ) {
@@ -309,13 +307,6 @@ template<typename Point, origin Origin, scale Scale>
 inline std::ostream &operator<<( std::ostream &os, const coord_point<Point, Origin, Scale> &p )
 {
     return os << p.raw();
-}
-
-template <typename Point, origin Origin, scale Scale>
-constexpr inline coord_point<Point, Origin, Scale>
-coord_min( const coord_point<Point, Origin, Scale> &l, const coord_point<Point, Origin, Scale> &r )
-{
-    return { std::min( l.x(), r.x() ), std::min( l.y(), r.y() ), std::min( l.z(), r.z() ) };
 }
 
 template<int ScaleUp, int ScaleDown, scale ResultScale>
@@ -482,14 +473,18 @@ inline auto project_bounds( const coord_point<tripoint, Origin, CoarseScale> &co
 
 } // namespace coords
 
+namespace std
+{
+
 template<typename Point, coords::origin Origin, coords::scale Scale>
-// NOLINTNEXTLINE(cert-dcl58-cpp)
-struct std::hash<coords::coord_point<Point, Origin, Scale>> {
+struct hash<coords::coord_point<Point, Origin, Scale>> {
     std::size_t operator()( const coords::coord_point<Point, Origin, Scale> &p ) const {
         const hash<Point> h{};
         return h( p.raw() );
     }
 };
+
+} // namespace std
 
 /** Typedefs for point types with coordinate mnemonics.
  *

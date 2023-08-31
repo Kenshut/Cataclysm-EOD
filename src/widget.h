@@ -18,7 +18,6 @@
 enum class widget_var : int {
     focus,          // Current focus, integer
     move,           // Current move counter, integer
-    move_remainder, // Current remaining moves, integer
     move_cost,      // Modified base movement cost, integer (from run_cost)
     pain,           // Current perceived pain, integer
     sound,          // Current sound level, integer
@@ -51,7 +50,6 @@ enum class widget_var : int {
     body_graph_temp,     // Body graph showing color-coded body part temperature
     body_graph_encumb,     // Body graph showing color-coded body part encumbrance
     body_graph_status,     // Body graph showing color-coded body part status (bite, bleeding, ...)
-    body_graph_wet,        // Body graph showing color-coded body part wetness
     bp_armor_outer_text, // Outermost armor on body part, with color/damage bars
     carry_weight_text,   // Weight carried, relative to capacity, in %
     compass_text,   // Compass / visible threats by cardinal direction
@@ -166,7 +164,7 @@ struct widget_clause {
 
         // Condition for using this clause
         bool has_condition = false;
-        std::function<bool( dialogue & )> condition;
+        std::function<bool( const dialogue & )> condition;
         bool meets_condition( const std::string &opt_var = "" ) const;
         bool meets_condition( const std::set<bodypart_id> &bps ) const;
 
@@ -289,7 +287,7 @@ class widget
 
         // Load JSON data for a widget (uses generic factory widget_factory)
         static void load_widget( const JsonObject &jo, const std::string &src );
-        void load( const JsonObject &jo, std::string_view src );
+        void load( const JsonObject &jo, const std::string &src );
         // Finalize anything that must wait until all widgets are loaded
         static void finalize();
         // Recursively derive _label_width for nested layouts in this widget

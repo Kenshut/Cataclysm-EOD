@@ -4,7 +4,6 @@
 
 #if defined(LOCALIZE)
 
-#include <cstdint>
 #include <memory>
 #include <string>
 #include <vector>

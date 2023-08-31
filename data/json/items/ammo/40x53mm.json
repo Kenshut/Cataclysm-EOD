@@ -31,8 +31,6 @@
     "name": { "str_sp": "40x53mm M430A1 HEDP" },
     "description": "A high velocity 40x53mm high explosive dual-purpose grenade.  It can penetrate 3 inches of steel armor, and the fragmentation of the projectile body also makes it suitable for use against infantry.",
     "volume": "132 ml",
-    "explode_in_fire": true,
-    "explosion": { "power": 72, "shrapnel": { "casing_mass": 250, "fragment_mass": 0.08 } },
     "damage": { "damage_type": "bullet", "amount": 250, "armor_penetration": 45 },
     "extend": { "effects": [ "EXPLOSIVE_m430a1" ] }
   },

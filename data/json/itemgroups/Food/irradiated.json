@@ -4,7 +4,6 @@
     "id": "pre_irradiated_food",
     "//": "Products valid for irradiation process.",
     "items": [
-      [ "lime", 50 ],
       [ "rose_hips", 50 ],
       [ "elderberries", 50 ],
       [ "mulberries", 50 ],
@@ -47,8 +46,7 @@
       [ "potato", 50 ],
       [ "cucumber", 50 ],
       [ "celery", 50 ],
-      [ "rhubarb", 50 ],
-      [ "eggplant", 50 ]
+      [ "rhubarb", 50 ]
     ]
   },
   {
@@ -56,7 +54,6 @@
     "id": "irradiated_food",
     "//": "Products of irradiation process.",
     "items": [
-      [ "irradiated_lime", 50 ],
       [ "irradiated_rose_hips", 50 ],
       [ "irradiated_elderberries", 50 ],
       [ "irradiated_mulberries", 50 ],
@@ -99,8 +96,7 @@
       [ "irradiated_potato", 50 ],
       [ "irradiated_cucumber", 50 ],
       [ "irradiated_celery", 50 ],
-      [ "irradiated_rhubarb", 50 ],
-      [ "irradiated_eggplant", 50 ]
+      [ "irradiated_rhubarb", 50 ]
     ]
   }
 ]

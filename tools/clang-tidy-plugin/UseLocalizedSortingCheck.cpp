@@ -17,7 +17,6 @@
 #include <clang/Basic/SourceLocation.h>
 #include <clang/Lex/Lexer.h>
 #include <climits>
-#include <iostream>
 #include <llvm/ADT/Twine.h>
 #include <llvm/Support/Casting.h>
 #include <string>
@@ -27,7 +26,11 @@
 
 using namespace clang::ast_matchers;
 
-namespace clang::tidy::cata
+namespace clang
+{
+namespace tidy
+{
+namespace cata
 {
 
 static bool IsStringish( QualType T );
@@ -67,7 +70,7 @@ static bool IsStringish( QualType T )
         const ClassTemplateSpecializationDecl *SpecDecl =
             dyn_cast<ClassTemplateSpecializationDecl>( TTag );
         if( !SpecDecl ) {
-            std::cerr << "Not a spec: " << TTag->getKindName().str() << "\n";
+            fprintf( stderr, "Not a spec: %s\n", TTag->getKindName().str().c_str() );
             return false;
         }
         const TemplateArgumentList &Args = SpecDecl->getTemplateArgs();
@@ -180,4 +183,6 @@ void UseLocalizedSortingCheck::check( const MatchFinder::MatchResult &Result )
     CheckSortCall( *this, Result );
 }
 
-} // namespace clang::tidy::cata
+} // namespace cata
+} // namespace tidy
+} // namespace clang

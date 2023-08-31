@@ -1,8 +1,8 @@
 #ifndef CATA_TOOLS_CLANG_TIDY_PLUGIN_HEADERGUARDCHECK_H
 #define CATA_TOOLS_CLANG_TIDY_PLUGIN_HEADERGUARDCHECK_H
 
-#include <clang-tidy/ClangTidy.h>
-#include <clang-tidy/ClangTidyCheck.h>
+#include "ClangTidy.h"
+#include "ClangTidyCheck.h"
 
 namespace clang
 {

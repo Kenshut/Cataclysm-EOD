@@ -6,8 +6,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <clang-tidy/ClangTidy.h>
-#include <clang-tidy/ClangTidyCheck.h>
+#include "ClangTidy.h"
+#include "ClangTidyCheck.h"
 
 namespace clang
 {

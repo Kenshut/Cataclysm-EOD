@@ -20,7 +20,6 @@
 #include "path_info.h"
 #include "filesystem.h"
 #include "debug.h"
-#include "cata_scope_helpers.h"
 #include "cata_utility.h"
 #include "string_formatter.h"
 #include "color_loader.h"
@@ -656,11 +655,6 @@ void catacurses::init_interface()
     initialized = true;
 }
 
-bool catacurses::supports_256_colors()
-{
-    return COLORS >= 256;
-}
-
 // A very accurate and responsive timer (NEVER use GetTickCount)
 static uint64_t GetPerfCount()
 {
@@ -751,11 +745,10 @@ bool gamepad_available()
     return false;
 }
 
-std::optional<tripoint> input_context::get_coordinates( const catacurses::window &, const point &,
-        bool center_cursor ) const
+cata::optional<tripoint> input_context::get_coordinates( const catacurses::window & )
 {
     // TODO: implement this properly
-    return std::nullopt;
+    return cata::nullopt;
 }
 
 // Ends the terminal, destroy everything

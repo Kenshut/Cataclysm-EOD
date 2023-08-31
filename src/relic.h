@@ -94,7 +94,6 @@ class relic_procgen_data
             int max_attributes = INT_MAX;
 
             bool was_loaded = false;
-            bool resonant = false;
             void load( const JsonObject &jo );
             void deserialize( const JsonObject &jo );
         };
@@ -122,7 +121,7 @@ class relic_procgen_data
         relic_procgen_id id;
         std::vector<std::pair<relic_procgen_id, mod_id>> src;
 
-        int power_level( const enchant_cache &ench ) const;
+        int power_level( const enchantment &ench ) const;
         // power level of the active spell
         int power_level( const fake_spell &sp ) const;
 
@@ -134,7 +133,7 @@ class relic_procgen_data
         static const std::vector<relic_procgen_data> &get_all();
         static void load_relic_procgen_data( const JsonObject &jo, const std::string &src );
         static void reset();
-        void load( const JsonObject &jo, std::string_view = {} );
+        void load( const JsonObject &jo, const std::string & = "" );
         void deserialize( const JsonObject &jobj );
 };
 
@@ -149,8 +148,6 @@ enum class relic_recharge_type : int {
     NONE,
     PERIODIC,
     LUNAR,
-    FULL_MOON,
-    NEW_MOON,
     SOLAR_SUNNY,
     SOLAR_CLOUDY,
     NUM
@@ -202,8 +199,7 @@ class relic
 {
     private:
         std::vector<fake_spell> active_effects;
-        std::vector<enchant_cache> proc_passive_effects;
-        std::vector<enchantment> defined_passive_effects; // NOLINT(cata-serialize)
+        std::vector<enchantment> passive_effects;
 
         // the item's name will be replaced with this if the string is not empty
         translation item_name_override; // NOLINT(cata-serialize)
@@ -212,9 +208,6 @@ class relic
 
         // activating an artifact overrides all spell casting costs
         int moves = 0;
-
-        // passive enchantments to add by id in finalize once we can guarantee that they have loaded
-        std::vector<enchantment_id> passive_enchant_ids; // NOLINT(cata-serialize)
     public:
         std::string name() const;
         // returns number of charges that should be consumed
@@ -233,18 +226,15 @@ class relic
 
         void load( const JsonObject &jo );
 
-        void finalize();
-
         void serialize( JsonOut &jsout ) const;
         void deserialize( const JsonObject &jobj );
 
-        void add_passive_effect( const enchant_cache &ench );
         void add_passive_effect( const enchantment &ench );
         void add_active_effect( const fake_spell &sp );
 
-        std::vector<enchant_cache> get_proc_enchantments() const;
-        std::vector<enchantment> get_defined_enchantments() const;
+        std::vector<enchantment> get_enchantments() const;
 
+        int modify_value( enchant_vals::mod value_type, int value ) const;
         void overwrite_charge( const relic_charge_info &info );
 
         // what is the power level of this artifact, given a specific ruleset

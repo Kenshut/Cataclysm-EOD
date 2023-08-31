@@ -6,7 +6,6 @@
 #include <iterator>
 #include <list>
 #include <new>
-#include <optional>
 #include <ostream>
 #include <set>
 #include <vector>
@@ -30,6 +29,7 @@
 #include "map_iterator.h"
 #include "messages.h"
 #include "monster.h"
+#include "optional.h"
 #include "player_activity.h"
 #include "string_formatter.h"
 #include "translations.h"
@@ -43,7 +43,6 @@
 #define dbg(x) DebugLog((x),D_GAME) << __FILE__ << ":" << __LINE__ << ": "
 
 static const activity_id ACT_FILL_LIQUID( "ACT_FILL_LIQUID" );
-static const flag_id json_flag_FROM_FROZEN_LIQUID( "FROM_FROZEN_LIQUID" );
 
 // All serialize_liquid_source functions should add the same number of elements to the vectors of
 // the activity. This makes it easier to distinguish the values of the source and the values of the target.
@@ -83,7 +82,7 @@ static void serialize_liquid_target( player_activity &act, const vpart_reference
 {
     act.values.push_back( static_cast<int>( liquid_target_type::VEHICLE ) );
     act.values.push_back( 0 ); // dummy
-    act.coords.push_back( vp.vehicle().global_part_pos3( 0 ) );
+    act.coords.push_back( vp.vehicle().global_pos3() );
     act.values.push_back( vp.part_index() ); // tank part index
 }
 
@@ -171,7 +170,7 @@ static bool get_liquid_target( item &liquid, const item *const source, const int
                                const monster *const source_mon,
                                liquid_dest_opt &target )
 {
-    if( !liquid.made_of_from_type( phase_id::LIQUID ) && !liquid.made_of_from_type( phase_id::GAS ) ) {
+    if( !liquid.made_of_from_type( phase_id::LIQUID ) ) {
         dbg( D_ERROR ) << "game:handle_liquid: Tried to handle_liquid a non-liquid!";
         debugmsg( "Tried to handle_liquid a non-liquid!" );
         // "canceled by the user" because we *can* not handle it.
@@ -194,21 +193,20 @@ static bool get_liquid_target( item &liquid, const item *const source, const int
 
     map &here = get_map();
     const std::string liquid_name = liquid.display_name( liquid.charges );
-
     if( source_pos != nullptr ) {
-        // %1$s: liquid name, %2$s: terrain name
+        //~ %1$s: liquid name, %2$s: terrain name
         menu.text = string_format( pgettext( "liquid", "What to do with the %1$s from %2$s?" ), liquid_name,
                                    here.name( *source_pos ) );
     } else if( source_veh != nullptr ) {
-        // %1$s: liquid name, %2$s: vehicle name
+        //~ %1$s: liquid name, %2$s: vehicle name
         menu.text = string_format( pgettext( "liquid", "What to do with the %1$s from %2$s?" ), liquid_name,
                                    source_veh->disp_name() );
     } else if( source_mon != nullptr ) {
-        // %1$s: liquid name, %2$s: monster name
+        //~ %1$s: liquid name, %2$s: monster name
         menu.text = string_format( pgettext( "liquid", "What to do with the %1$s from the %2$s?" ),
                                    liquid_name, source_mon->get_name() );
     } else {
-        // %s: liquid name
+        //~ %s: liquid name
         menu.text = string_format( pgettext( "liquid", "What to do with the %s?" ), liquid_name );
     }
     std::vector<std::function<void()>> actions;
@@ -298,7 +296,7 @@ static bool get_liquid_target( item &liquid, const item *const source, const int
 
         const std::string liqstr = string_format( _( "Pour %s where?" ), liquid_name );
 
-        const std::optional<tripoint> target_pos_ = choose_adjacent( liqstr );
+        const cata::optional<tripoint> target_pos_ = choose_adjacent( liqstr );
         if( !target_pos_ ) {
             return;
         }
@@ -341,7 +339,7 @@ bool perform_liquid_transfer( item &liquid, const tripoint *const source_pos,
                               const vehicle *const source_veh, const int part_num,
                               const monster *const /*source_mon*/, liquid_dest_opt &target )
 {
-    if( !liquid.made_of_from_type( phase_id::LIQUID ) && !liquid.made_of_from_type( phase_id::GAS ) ) {
+    if( !liquid.made_of_from_type( phase_id::LIQUID ) ) {
         dbg( D_ERROR ) << "game:handle_liquid: Tried to handle_liquid a non-liquid!";
         debugmsg( "Tried to handle_liquid a non-liquid!" );
         // "canceled by the user" because we *can* not handle it.
@@ -366,7 +364,7 @@ bool perform_liquid_transfer( item &liquid, const tripoint *const source_pos,
     map &here = get_map();
     switch( target.dest_opt ) {
         case LD_CONSUME:
-            player_character.assign_activity( consume_activity_actor( liquid ) );
+            player_character.assign_activity( player_activity( consume_activity_actor( liquid ) ) );
             liquid.charges--;
             return true;
         case LD_ITEM: {
@@ -375,7 +373,21 @@ bool perform_liquid_transfer( item &liquid, const tripoint *const source_pos,
             if( target.item_loc && create_activity() ) {
                 serialize_liquid_target( player_character.activity, target.item_loc );
             } else if( player_character.pour_into( target.item_loc, liquid, true ) ) {
-                target.item_loc.make_active();
+                if( target.item_loc->needs_processing() ) {
+                    // Polymorphism fail, have to introspect into the type to set the target container as active.
+                    switch( target.item_loc.where() ) {
+                        case item_location::type::map:
+                            here.make_active( target.item_loc );
+                            break;
+                        case item_location::type::vehicle:
+                            here.veh_at( target.item_loc.position() )->vehicle().make_active( target.item_loc );
+                            break;
+                        case item_location::type::container:
+                        case item_location::type::character:
+                        case item_location::type::invalid:
+                            break;
+                    }
+                }
                 player_character.mod_moves( -100 );
             }
             return true;
@@ -394,15 +406,18 @@ bool perform_liquid_transfer( item &liquid, const tripoint *const source_pos,
                                       round_up( to_liter( liquid.charges * stack ), 1 ),
                                       liquid.tname() );
 
-            const std::optional<vpart_reference> vpr = veh_interact::select_part( *target.veh, sel, title );
-            if( !vpr ) {
+            vehicle_part &tank = veh_interact::select_part( *target.veh, sel, title );
+
+            if( !tank ) {
                 return false;
             }
 
+            const vpart_reference vp( *target.veh, target.veh->index_of_part( &tank ) );
+
             if( create_activity() ) {
-                serialize_liquid_target( player_character.activity, *vpr );
+                serialize_liquid_target( player_character.activity, vp );
                 return true;
-            } else if( player_character.pour_into( *vpr, liquid ) ) {
+            } else if( player_character.pour_into( vp, liquid ) ) {
                 // this branch is used in milking and magiclysm butchery blood draining
                 player_character.mod_moves( -1000 ); // consistent with veh_interact::do_refill activity
                 return true;
@@ -439,7 +454,7 @@ bool can_handle_liquid( const item &liquid )
         // "canceled by the user" because we *can* not handle it.
         return false;
     }
-    if( !liquid.made_of( phase_id::LIQUID ) && !liquid.made_of( phase_id::GAS ) ) {
+    if( !liquid.made_of( phase_id::LIQUID ) ) {
         add_msg( _( "The %s froze solid before you could finish." ), liquid.tname() );
         return false;
     }
@@ -451,22 +466,14 @@ bool handle_liquid( item &liquid, const item *const source, const int radius,
                     const vehicle *const source_veh, const int part_num,
                     const monster *const source_mon )
 {
-    bool success = false;
     if( !can_handle_liquid( liquid ) ) {
         return false;
     }
     struct liquid_dest_opt liquid_target;
     if( get_liquid_target( liquid, source, radius, source_pos, source_veh, source_mon,
                            liquid_target ) ) {
-        success = perform_liquid_transfer( liquid, source_pos, source_veh, part_num, source_mon,
-                                           liquid_target );
-        if( success && ( liquid_target.dest_opt == LD_ITEM &&
-                         ( ( ( liquid_target.item_loc->is_watertight_container() || liquid_target.dest_opt == LD_KEG ) &&
-                             liquid.made_of( phase_id::LIQUID ) ) ||
-                           ( liquid_target.item_loc->is_watertight_container() && liquid.made_of( phase_id::GAS ) ) ) ) ) {
-            liquid.unset_flag( flag_id( json_flag_FROM_FROZEN_LIQUID ) );
-        }
-        return success;
+        return perform_liquid_transfer( liquid, source_pos, source_veh, part_num, source_mon,
+                                        liquid_target );
     }
     return false;
 }

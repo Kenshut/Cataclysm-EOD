@@ -10,7 +10,6 @@
 #include <functional>
 #include <iterator>
 #include <memory>
-#include <optional>
 #include <utility>
 #include <vector>
 
@@ -31,6 +30,7 @@
 #include "mapdata.h"
 #include "math_defines.h"
 #include "monster.h"
+#include "optional.h"
 #include "pixel_minimap_projectors.h"
 #include "sdl_utils.h"
 #include "vehicle.h"
@@ -88,11 +88,10 @@ SDL_Color get_map_color_at( const tripoint &p )
 {
     const map &here = get_map();
     if( const optional_vpart_position vp = here.veh_at( p ) ) {
-        const vpart_display vd = vp->vehicle().get_display_of_tile( vp->mount() );
-        return curses_color_to_SDL( vd.color );
+        return curses_color_to_SDL( vp->vehicle().part_color( vp->part_index() ) );
     }
 
-    if( const furn_id furn_id = here.furn( p ) ) {
+    if( const auto furn_id = here.furn( p ) ) {
         return curses_color_to_SDL( furn_id->color() );
     }
 
@@ -215,10 +214,8 @@ pixel_minimap::~pixel_minimap() = default;
 
 void pixel_minimap::set_type( pixel_minimap_type type )
 {
-    if( this->type != type ) {
-        this->type = type;
-        reset();
-    }
+    this->type = type;
+    reset();
 }
 
 void pixel_minimap::set_settings( const pixel_minimap_settings &settings )
@@ -322,7 +319,7 @@ void pixel_minimap::update_cache_at( const tripoint &sm_pos )
 
             if( lighting == lit_level::BLANK || lighting == lit_level::DARK ) {
                 // TODO: Map memory?
-                color = { Uint8( pixel_minimap_r ), Uint8( pixel_minimap_g ), Uint8( pixel_minimap_b ), Uint8( pixel_minimap_a ) };
+                color = { 0x00, 0x00, 0x00, 0xFF };
             } else {
                 color = get_map_color_at( p );
 

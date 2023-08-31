@@ -15,7 +15,6 @@
 #include "character.h"
 #include "colony.h"
 #include "debug.h"
-#include "flag.h"
 #include "inventory.h"
 #include "item.h"
 #include "item_contents.h"
@@ -40,6 +39,7 @@
 static const bionic_id bio_ups( "bio_ups" );
 
 static const itype_id itype_UPS( "UPS" );
+static const itype_id itype_UPS_off( "UPS_off" );
 static const itype_id itype_apparatus( "apparatus" );
 
 static const quality_id qual_BUTCHER( "BUTCHER" );
@@ -374,7 +374,7 @@ VisitResponse item_contents::visit_contents( const std::function<VisitResponse( 
     for( item_pocket &pocket : contents ) {
         if( !pocket.is_type( item_pocket::pocket_type::CONTAINER ) ) {
             // anything that is not CONTAINER is accessible only via its specific accessor
-            continue;
+            return VisitResponse::NEXT;
         }
         switch( pocket.visit_contents( func, parent ) ) {
             case VisitResponse::ABORT:
@@ -514,8 +514,7 @@ VisitResponse map_selector::visit_items(
 VisitResponse vehicle_cursor::visit_items(
     const std::function<VisitResponse( item *, item * )> &func ) const
 {
-    const vehicle_part &vp = veh.part( part );
-    const int idx = veh.part_with_feature( vp.mount, "CARGO", true );
+    int idx = veh.part_with_feature( part, "CARGO", true );
     if( idx >= 0 ) {
         for( item &e : veh.get_items( idx ) ) {
             if( visit_internal( func, &e ) == VisitResponse::ABORT ) {
@@ -695,6 +694,9 @@ std::list<item> map_cursor::remove_items_with( const
 
     for( auto iter = stack.begin(); iter != stack.end(); ) {
         if( filter( *iter ) ) {
+            // remove from the active items cache (if it isn't there does nothing)
+            sub->active_items.remove( &*iter );
+
             // if necessary remove item from the luminosity map
             sub->update_lum_rem( offset, *iter );
 
@@ -703,16 +705,17 @@ std::list<item> map_cursor::remove_items_with( const
             iter = stack.erase( iter );
 
             if( --count == 0 ) {
-                break;
+                return res;
             }
         } else {
             iter->remove_internal( filter, count, res );
             if( count == 0 ) {
-                break;
+                return res;
             }
             ++iter;
         }
     }
+    here.update_submap_active_item_status( pos() );
     return res;
 }
 
@@ -741,17 +744,20 @@ std::list<item> vehicle_cursor::remove_items_with( const
         // nothing to do
         return res;
     }
-    const vehicle_part &vp = veh.part( part );
-    const int idx = veh.part_with_feature( vp.mount, "CARGO", false );
+
+    int idx = veh.part_with_feature( part, "CARGO", false );
     if( idx < 0 ) {
         return res;
     }
 
-    cata::colony<item> &items = veh.part( idx ).items;
-    for( auto iter = items.begin(); iter != items.end(); ) {
+    vehicle_part &p = veh.part( idx );
+    for( auto iter = p.items.begin(); iter != p.items.end(); ) {
         if( filter( *iter ) ) {
+            // remove from the active items cache (if it isn't there does nothing)
+            veh.active_items.remove( &*iter );
+
             res.push_back( *iter );
-            iter = items.erase( iter );
+            iter = p.items.erase( iter );
 
             if( --count == 0 ) {
                 return res;
@@ -798,11 +804,9 @@ static int charges_of_internal( const T &self, const M &main, const itype_id &id
     bool found_tool_with_UPS = false;
     bool found_bionic_tool = false;
     self.visit_items( [&]( const item * e, item * ) {
-        if( filter( *e ) &&
-            ( id == e->typeId() || ( in_tools && id == e->ammo_current() ) ||
-              ( id == itype_UPS && e->has_flag( flag_IS_UPS ) ) ) &&
+        if( filter( *e ) && ( id == e->typeId() || ( in_tools && id == e->ammo_current() ) ) &&
             !e->is_broken() ) {
-            if( id != itype_UPS ) {
+            if( id != itype_UPS_off ) {
                 if( e->count_by_charges() ) {
                     qty = sum_no_wrap( qty, e->charges );
                 } else {
@@ -813,7 +817,7 @@ static int charges_of_internal( const T &self, const M &main, const itype_id &id
                 } else if( e->has_flag( STATIC( flag_id( "USES_BIONIC_POWER" ) ) ) ) {
                     found_bionic_tool = true;
                 }
-            } else if( id == itype_UPS && e->has_flag( flag_IS_UPS ) ) {
+            } else if( id == itype_UPS_off && e->has_flag( STATIC( flag_id( "IS_UPS" ) ) ) ) {
                 qty = sum_no_wrap( qty, e->ammo_remaining() );
             }
         }
@@ -888,6 +892,12 @@ int read_only_visitable::charges_of( const itype_id &what, int limit,
                                      const std::function<bool( const item & )> &filter,
                                      const std::function<void( int )> &visitor, bool in_tools ) const
 {
+    if( what == itype_UPS ) {
+        int qty = 0;
+        qty = sum_no_wrap( qty, charges_of( itype_UPS_off ) );
+        return std::min( qty, limit );
+    }
+
     return charges_of_internal( *this, *this, what, limit, filter, visitor, in_tools );
 }
 
@@ -896,11 +906,14 @@ int inventory::charges_of( const itype_id &what, int limit,
                            const std::function<bool( const item & )> &filter,
                            const std::function<void( int )> &visitor, bool in_tools ) const
 {
+    if( what == itype_UPS ) {
+        int qty = 0;
+        qty = sum_no_wrap( qty, charges_of( itype_UPS_off ) );
+        return std::min( qty, limit );
+    }
+
     const itype_bin &binned = get_binned_items();
-    const auto iter = std::find_if( binned.begin(),
-    binned.end(), [&what]( itype_bin::value_type const & it ) {
-        return it.first == what || ( what == itype_UPS && it.first->has_flag( flag_IS_UPS ) );
-    } );
+    const auto iter = binned.find( what );
     if( iter == binned.end() ) {
         return 0;
     }

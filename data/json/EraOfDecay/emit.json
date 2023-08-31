@@ -1,9 +1,0 @@
-[
-  {
-    "id": "emit_small_toxic_stream",
-    "type": "emit",
-    "field": "fd_toxic_gas",
-    "intensity": 2,
-    "qty": 10
-  }
-]

@@ -19,13 +19,10 @@
 #include "bodypart.h"
 #include "butchery_requirements.h"
 #include "cata_assert.h"
-#include "cata_scope_helpers.h"
 #include "cata_utility.h"
 #include "character_modifier.h"
-#include "city.h"
 #include "clothing_mod.h"
 #include "clzones.h"
-#include "condition.h"
 #include "construction.h"
 #include "construction_category.h"
 #include "construction_group.h"
@@ -50,7 +47,6 @@
 #include "item_factory.h"
 #include "itype.h"
 #include "json.h"
-#include "json_loader.h"
 #include "loading_ui.h"
 #include "lru_cache.h"
 #include "magic.h"
@@ -62,7 +58,6 @@
 #include "martialarts.h"
 #include "material.h"
 #include "mission.h"
-#include "math_parser_jmath.h"
 #include "mod_tileset.h"
 #include "monfaction.h"
 #include "mongroup.h"
@@ -78,7 +73,6 @@
 #include "overmap.h"
 #include "overmap_connection.h"
 #include "overmap_location.h"
-#include "path_info.h"
 #include "profession.h"
 #include "proficiency.h"
 #include "recipe_dictionary.h"
@@ -97,7 +91,6 @@
 #include "speed_description.h"
 #include "start_location.h"
 #include "string_formatter.h"
-#include "test_data.h"
 #include "text_snippets.h"
 #include "translations.h"
 #include "trap.h"
@@ -124,8 +117,8 @@ DynamicDataLoader &DynamicDataLoader::get_instance()
 }
 
 void DynamicDataLoader::load_object( const JsonObject &jo, const std::string &src,
-                                     const cata_path &base_path,
-                                     const cata_path &full_path )
+                                     const std::string &base_path,
+                                     const std::string &full_path )
 {
     const std::string type = jo.get_string( "type" );
     const t_type_function_map::iterator it = type_function_map.find( type );
@@ -164,11 +157,17 @@ void DynamicDataLoader::load_deferred( deferred_json &data )
         const size_t n = data.size();
         auto it = data.begin();
         for( size_t idx = 0; idx != n; ++idx ) {
-            try {
-                const JsonObject &jo = it->first;
-                load_object( jo, it->second );
-            } catch( const JsonError &err ) {
-                debugmsg( "(json-error)\n%s", err.what() );
+            if( !it->first.path ) {
+                debugmsg( "JSON source location has null path, data may load incorrectly" );
+            } else {
+                try {
+                    shared_ptr_fast<std::istream> stream = get_cached_stream( *it->first.path );
+                    JsonIn jsin( *stream, it->first );
+                    JsonObject jo = jsin.get_object();
+                    load_object( jo, it->second );
+                } catch( const JsonError &err ) {
+                    debugmsg( "(json-error)\n%s", err.what() );
+                }
             }
             ++it;
             inp_mngr.pump_events();
@@ -176,10 +175,16 @@ void DynamicDataLoader::load_deferred( deferred_json &data )
         data.erase( data.begin(), it );
         if( data.size() == n ) {
             for( const auto &elem : data ) {
-                try {
-                    elem.first.throw_error( "JSON contains circular dependency, this object is discarded" );
-                } catch( const JsonError &err ) {
-                    debugmsg( "(json-error)\n%s", err.what() );
+                if( !elem.first.path ) {
+                    debugmsg( "JSON source location has null path when reporting circular dependency" );
+                } else {
+                    try {
+                        shared_ptr_fast<std::istream> stream = get_cached_stream( *it->first.path );
+                        JsonIn jsin( *stream, elem.first );
+                        jsin.error( "JSON contains circular dependency, this object is discarded" );
+                    } catch( const JsonError &err ) {
+                        debugmsg( "(json-error)\n%s", err.what() );
+                    }
                 }
                 inp_mngr.pump_events();
             }
@@ -198,7 +203,7 @@ static void load_ignored_type( const JsonObject &jo )
 }
 
 void DynamicDataLoader::add( const std::string &type,
-                             const std::function<void( const JsonObject &, const std::string &, const cata_path &, const cata_path & )>
+                             const std::function<void( const JsonObject &, const std::string &, const std::string &, const std::string & )>
                              &f )
 {
     const auto pair = type_function_map.emplace( type, f );
@@ -208,31 +213,28 @@ void DynamicDataLoader::add( const std::string &type,
 }
 
 void DynamicDataLoader::add( const std::string &type,
-                             const std::function<void( const JsonObject &, const std::string &, const std::string &, const std::string & )>
-                             &f )
-{
-    add( type, [f]( const JsonObject & obj, const std::string & src, const cata_path & base_path,
-    const cata_path & full_path ) {
-        f( obj, src, base_path.generic_u8string(), full_path.generic_u8string() );
-    } );
-}
-
-void DynamicDataLoader::add( const std::string &type,
                              const std::function<void( const JsonObject &, const std::string & )> &f )
 {
-    add( type, [f]( const JsonObject & obj, const std::string & src, const cata_path &,
-    const cata_path & ) {
+    const auto pair = type_function_map.emplace( type, [f]( const JsonObject & obj,
+                      const std::string & src,
+    const std::string &, const std::string & ) {
         f( obj, src );
     } );
+    if( !pair.second ) {
+        debugmsg( "tried to insert a second handler for type %s into the DynamicDataLoader", type.c_str() );
+    }
 }
 
 void DynamicDataLoader::add( const std::string &type,
                              const std::function<void( const JsonObject & )> &f )
 {
-    add( type, [f]( const JsonObject & obj, const std::string_view,  const cata_path &,
-    const cata_path & ) {
+    const auto pair = type_function_map.emplace( type, [f]( const JsonObject & obj, const std::string &,
+    const std::string &, const std::string & ) {
         f( obj );
     } );
+    if( !pair.second ) {
+        debugmsg( "tried to insert a second handler for type %s into the DynamicDataLoader", type.c_str() );
+    }
 }
 
 void DynamicDataLoader::initialize()
@@ -247,11 +249,7 @@ void DynamicDataLoader::initialize()
     add( "EXTERNAL_OPTION", &load_external_option );
     add( "option_slider", &option_slider::load_option_sliders );
     add( "json_flag", &json_flag::load_all );
-    add( "jmath_function", &jmath_func::load_func );
-    add( "var_migration", &global_variables::load_migrations );
-    add( "connect_group", &connect_group::load );
-    add( "fault", &fault::load );
-    add( "fault_fix", &fault_fix::load );
+    add( "fault", &fault::load_fault );
     add( "relic_procgen_data", &relic_procgen_data::load_relic_procgen_data );
     add( "effect_on_condition", &effect_on_conditions::load );
     add( "field_type", &field_types::load );
@@ -264,7 +262,6 @@ void DynamicDataLoader::initialize()
     add( "vitamin", &vitamin::load_vitamin );
     add( "material", &materials::load );
     add( "bionic", &bionic_data::load_bionic );
-    add( "bionic_migration", &bionic_data::load_bionic_migration );
     add( "profession", &profession::load_profession );
     add( "profession_item_substitutions", &profession::load_item_substitutions );
     add( "proficiency", &proficiency::load_proficiencies );
@@ -311,10 +308,10 @@ void DynamicDataLoader::initialize()
         item_action_generator::generator().load_item_action( jo );
     } );
 
-    add( "vehicle_part",  &vehicles::parts::load );
+    add( "vehicle_part",  &vpart_info::load );
     add( "vehicle_part_category",  &vpart_category::load );
     add( "vehicle_part_migration", &vpart_migration::load );
-    add( "vehicle", &vehicles::load_prototype );
+    add( "vehicle",  &vehicle_prototype::load );
     add( "vehicle_group",  &VehicleGroup::load );
     add( "vehicle_placement",  &VehiclePlacement::load );
     add( "vehicle_spawn",  &VehicleSpawn::load );
@@ -381,8 +378,7 @@ void DynamicDataLoader::initialize()
 
     add( "charge_removal_blacklist", load_charge_removal_blacklist );
     add( "charge_migration_blacklist", load_charge_migration_blacklist );
-    add( "temperature_removal_blacklist", load_temperature_removal_blacklist );
-    add( "test_data", &test_data::load );
+    add( "known_bad_density_list", &known_bad_density::load );
 
     add( "MONSTER", []( const JsonObject & jo, const std::string & src ) {
         MonsterGenerator::generator().load_monster( jo, src );
@@ -405,7 +401,7 @@ void DynamicDataLoader::initialize()
     add( "weapon_category", &weapon_category::load_weapon_categories );
     add( "martial_art", &load_martial_art );
     add( "effect_type", &load_effect_type );
-    add( "oter_id_migration", &overmap::load_oter_id_migration );
+    add( "obsolete_terrain", &overmap::load_obsolete_terrains );
     add( "overmap_terrain", &overmap_terrains::load );
     add( "construction_category", &construction_categories::load );
     add( "construction_group", &construction_groups::load );
@@ -480,8 +476,6 @@ void DynamicDataLoader::initialize()
     add( "conduct", &achievement::load_achievement );
     add( "widget", &widget::load_widget );
     add( "weakpoint_set", &weakpoints::load_weakpoint_sets );
-    add( "damage_type", &damage_type::load_damage_types );
-    add( "damage_info_order", &damage_info_order::load_damage_info_orders );
 #if defined(TILES)
     add( "mod_tileset", &load_mod_tileset );
 #else
@@ -490,7 +484,7 @@ void DynamicDataLoader::initialize()
 #endif
 }
 
-void DynamicDataLoader::load_data_from_path( const cata_path &path, const std::string &src,
+void DynamicDataLoader::load_data_from_path( const std::string &path, const std::string &src,
         loading_ui &ui )
 {
     cata_assert( !finalized &&
@@ -501,19 +495,23 @@ void DynamicDataLoader::load_data_from_path( const cata_path &path, const std::s
     // the first loaded mode might provide a vehicle that uses that frame
     // But not the other way round.
 
-    std::vector<cata_path> files;
-    if( dir_exist( path.get_unrelative_path() ) ) {
-        const std::vector<cata_path> dir_files = get_files_from_path( ".json", path, true, true );
-        files.insert( files.end(), dir_files.begin(), dir_files.end() );
-    } else if( file_exist( path.get_unrelative_path() ) ) {
-        files.emplace_back( path );
+    // get a list of all files in the directory
+    str_vec files = get_files_from_path( ".json", path, true, true );
+    if( files.empty() ) {
+        cata::ifstream tmp( fs::u8path( path ), std::ios::in );
+        if( tmp ) {
+            // path is actually a file, don't checking the extension,
+            // assume we want to load this file anyway
+            files.push_back( path );
+        }
     }
-
     // iterate over each file
-    for( const cata_path &file : files ) {
+    for( const std::string &file : files ) {
+        // and stuff it into ram
+        std::istringstream iss( read_entire_file( file ) );
         try {
             // parse it
-            JsonValue jsin = json_loader::from_path( file );
+            JsonIn jsin( iss, file );
             load_all_from_json( jsin, src, ui, path, file );
         } catch( const JsonError &err ) {
             throw std::runtime_error( err.what() );
@@ -521,23 +519,30 @@ void DynamicDataLoader::load_data_from_path( const cata_path &path, const std::s
     }
 }
 
-void DynamicDataLoader::load_all_from_json( const JsonValue &jsin, const std::string &src,
-        loading_ui &,
-        const cata_path &base_path, const cata_path &full_path )
+void DynamicDataLoader::load_all_from_json( JsonIn &jsin, const std::string &src, loading_ui &,
+        const std::string &base_path, const std::string &full_path )
 {
     if( jsin.test_object() ) {
         // find type and dispatch single object
         JsonObject jo = jsin.get_object();
         load_object( jo, src, base_path, full_path );
+        jo.finish();
+        // if there's anything else in the file, it's an error.
+        jsin.eat_whitespace();
+        if( jsin.good() ) {
+            jsin.error( string_format( "expected single-object file but found '%c'", jsin.peek() ) );
+        }
     } else if( jsin.test_array() ) {
-        JsonArray ja = jsin.get_array();
+        jsin.start_array();
         // find type and dispatch each object until array close
-        for( JsonObject jo : ja ) {
+        while( !jsin.end_array() ) {
+            JsonObject jo = jsin.get_object();
             load_object( jo, src, base_path, full_path );
+            jo.finish();
         }
     } else {
         // not an object or an array?
-        jsin.throw_error( "expected object or array" );
+        jsin.error( "expected object or array" );
     }
     inp_mngr.pump_events();
 }
@@ -564,8 +569,6 @@ void DynamicDataLoader::unload_data()
     clothing_mods::reset();
     construction_categories::reset();
     construction_groups::reset();
-    damage_type::reset();
-    damage_info_order::reset();
     disease_type::reset();
     dreams.clear();
     emit::reset();
@@ -574,7 +577,6 @@ void DynamicDataLoader::unload_data()
     effect_on_conditions::reset();
     event_transformation::reset();
     faction_template::reset();
-    fault_fix::reset();
     fault::reset();
     field_types::reset();
     gates::reset();
@@ -582,9 +584,7 @@ void DynamicDataLoader::unload_data()
     harvest_list::reset();
     item_category::reset();
     item_controller->reset();
-    jmath_func::reset();
     json_flag::reset();
-    connect_group::reset();
     limb_score::reset();
     mapgen_palette::reset();
     materials::reset();
@@ -607,7 +607,6 @@ void DynamicDataLoader::unload_data()
     overmap_specials::reset();
     overmap_special_migration::reset();
     overmap_terrains::reset();
-    overmap::reset_oter_id_migrations();
     profession::reset();
     proficiency::reset();
     proficiency_category::reset();
@@ -648,9 +647,9 @@ void DynamicDataLoader::unload_data()
     VehicleGroup::reset();
     VehiclePlacement::reset();
     VehicleSpawn::reset();
-    vehicles::reset_prototypes();
+    vehicle_prototype::reset();
     vitamin::reset();
-    vehicles::parts::reset();
+    vpart_info::reset();
     vpart_category::reset();
     vpart_migration::reset();
     weakpoints::reset();
@@ -686,13 +685,11 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
             { _( "Body parts" ), &body_part_type::finalize_all },
             { _( "Sub body parts" ), &sub_body_part_type::finalize_all },
             { _( "Body graphs" ), &bodygraph::finalize_all },
-            { _( "Bionics" ), &bionic_data::finalize_bionic },
             { _( "Weather types" ), &weather_types::finalize_all },
             { _( "Effect on conditions" ), &effect_on_conditions::finalize_all },
             { _( "Field types" ), &field_types::finalize_all },
             { _( "Ammo effects" ), &ammo_effects::finalize_all },
             { _( "Emissions" ), &emit::finalize },
-            { _( "Materials" ), &material_type::finalize_all },
             {
                 _( "Items" ), []()
                 {
@@ -706,7 +703,7 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
                 }
             },
             { _( "Vehicle part categories" ), &vpart_category::finalize },
-            { _( "Vehicle parts" ), &vehicles::parts::finalize },
+            { _( "Vehicle parts" ), &vpart_info::finalize },
             { _( "Traps" ), &trap::finalize },
             { _( "Terrain" ), &set_ter_ids },
             { _( "Furniture" ), &set_furn_ids },
@@ -716,11 +713,8 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
             { _( "Overmap specials" ), &overmap_specials::finalize },
             { _( "Overmap locations" ), &overmap_locations::finalize },
             { _( "Cities" ), &city::finalize },
-            { _( "Math functions" ), &jmath_func::finalize },
-            { _( "Math expressions" ), &finalize_conditions },
             { _( "Start locations" ), &start_locations::finalize_all },
-            { _( "Vehicle part migrations" ), &vpart_migration::finalize },
-            { _( "Vehicle prototypes" ), &vehicles::finalize_prototypes },
+            { _( "Vehicle prototypes" ), &vehicle_prototype::finalize },
             { _( "Mapgen weights" ), &calculate_mapgen_weights },
             { _( "Mapgen parameters" ), &overmap_specials::finalize_mapgen_parameters },
             { _( "Behaviors" ), &behavior::finalize },
@@ -742,11 +736,9 @@ void DynamicDataLoader::finalize_loaded_data( loading_ui &ui )
             { _( "Missions" ), &mission_type::finalize },
             { _( "Harvest lists" ), &harvest_list::finalize_all },
             { _( "Anatomies" ), &anatomy::finalize_all },
-            { _( "Mutations" ), &mutation_branch::finalize_all },
+            { _( "Mutations" ), &mutation_branch::finalize },
             { _( "Achievements" ), &achievement::finalize },
-            { _( "Damage info orders" ), &damage_info_order::finalize_all },
             { _( "Widgets" ), &widget::finalize },
-            { _( "Fault fixes" ), &fault_fix::finalize },
 #if defined(TILES)
             { _( "Tileset" ), &load_tileset },
 #endif
@@ -797,10 +789,8 @@ void DynamicDataLoader::check_consistency( loading_ui &ui )
                 }
             },
             { _( "Materials" ), &materials::check },
-            { _( "Faults" ), &fault::check_consistency },
-            { _( "Fault fixes" ), &fault_fix::check_consistency },
-            { _( "Vehicle parts" ), &vehicles::parts::check },
-            { _( "Vehicle part migrations" ), &vpart_migration::check },
+            { _( "Engine faults" ), &fault::check_consistency },
+            { _( "Vehicle parts" ), &vpart_info::check },
             { _( "Mapgen definitions" ), &check_mapgen_definitions },
             { _( "Mapgen palettes" ), &mapgen_palette::check_definitions },
             {
@@ -854,7 +844,6 @@ void DynamicDataLoader::check_consistency( loading_ui &ui )
             { _( "Achievements" ), &achievement::check_consistency },
             { _( "Disease types" ), &disease_type::check_disease_consistency },
             { _( "Factions" ), &faction_template::check_consistency },
-            { _( "Damage types" ), &damage_type::check }
         }
     };
 

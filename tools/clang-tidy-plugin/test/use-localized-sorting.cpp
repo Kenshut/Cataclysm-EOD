@@ -1,9 +1,47 @@
-// RUN: %check_clang_tidy -allow-stdinc %s cata-use-localized-sorting %t -- --load=%cata_plugin -- -isystem %cata_include
+// RUN: %check_clang_tidy %s cata-use-localized-sorting %t -- -plugins=%cata_plugin -- -isystem %cata_include
 
-#include <algorithm>
-#include <string>
-#include <tuple>
-#include <vector>
+namespace std
+{
+
+template<class T>
+struct allocator;
+
+template<class CharT>
+class char_traits;
+
+template <
+    class CharT,
+    class Traits = std::char_traits<CharT>,
+    class Allocator = std::allocator<CharT>
+    > class basic_string;
+
+typedef basic_string<char> string;
+
+template<class CharT, class Traits, class Alloc>
+bool operator<( const std::basic_string<CharT, Traits, Alloc> &lhs,
+                const std::basic_string<CharT, Traits, Alloc> &rhs ) noexcept;
+
+template<class RandomIt>
+void sort( RandomIt first, RandomIt last );
+
+template<class T1, class T2>
+struct pair;
+
+template< class T1, class T2 >
+bool operator<( const std::pair<T1, T2> &lhs, const std::pair<T1, T2> &rhs );
+
+template< class... Types >
+class tuple;
+
+template<class... TTypes, class... UTypes>
+bool operator<( const tuple<TTypes...> &lhs,
+                const tuple<UTypes...> &rhs );
+}
+
+template<class T>
+struct iterator {
+    using value_type = T;
+};
 
 class NonString
 {
@@ -51,24 +89,24 @@ bool f4( const std::tuple<std::tuple<std::string>> &l,
     // CHECK-MESSAGES: warning: Raw comparison of 'const std::tuple<std::tuple<std::string>>' (aka 'const tuple<tuple<basic_string<char>>>'). For UI purposes please use localized_compare from translations.h. [cata-use-localized-sorting]
 }
 
-void sort0( std::string *start, std::string *end )
+bool sort0( const std::string *start, const std::string *end )
 {
     std::sort( start, end );
-    // CHECK-MESSAGES: warning: Raw sort of 'std::string' (aka 'basic_string<char>').  For UI purposes please use localized_compare from translations.h. [cata-use-localized-sorting]
+    // CHECK-MESSAGES: warning: Raw sort of 'const std::string' (aka 'const basic_string<char>').  For UI purposes please use localized_compare from translations.h. [cata-use-localized-sorting]
 }
 
-void sort1( NonString *start, NonString *end )
+bool sort1( const NonString *start, const NonString *end )
 {
     std::sort( start, end );
 }
 
-void sortit0( std::vector<std::string>::iterator start, std::vector<std::string>::iterator end )
+bool sortit0( iterator<std::string> start, iterator<std::string> end )
 {
     std::sort( start, end );
-    // CHECK-MESSAGES: warning: Raw sort of 'typename __traits_type::value_type' (aka 'std::basic_string<char>').  For UI purposes please use localized_compare from translations.h. [cata-use-localized-sorting]
+    // CHECK-MESSAGES: warning: Raw sort of 'std::basic_string<char>'.  For UI purposes please use localized_compare from translations.h. [cata-use-localized-sorting]
 }
 
-void sortit1( std::vector<NonString>::iterator start, std::vector<NonString>::iterator end )
+bool sortit1( iterator<NonString> start, iterator<NonString> end )
 {
     std::sort( start, end );
 }

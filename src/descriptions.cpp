@@ -7,15 +7,12 @@
 #include <utility>
 
 #include "avatar.h"
-#include "cached_options.h"
 #include "calendar.h"
 #include "character.h"
 #include "color.h"
 #include "creature_tracker.h"
 #include "harvest.h"
 #include "input.h"
-#include "item_group.h"
-#include "itype.h"
 #include "map.h"
 #include "mapdata.h"
 #include "mod_manager.h"
@@ -23,7 +20,6 @@
 #include "string_formatter.h"
 #include "translations.h"
 #include "ui_manager.h"
-#include "vehicle.h"
 #include "viewer.h"
 
 static const skill_id skill_survival( "survival" );
@@ -33,8 +29,7 @@ static const trait_id trait_ILLITERATE( "ILLITERATE" );
 enum class description_target : int {
     creature,
     furniture,
-    terrain,
-    vehicle
+    terrain
 };
 
 static const Creature *seen_critter( const tripoint &p )
@@ -79,7 +74,6 @@ void game::extended_description( const tripoint &p )
     ctxt.register_action( "CREATURE" );
     ctxt.register_action( "FURNITURE" );
     ctxt.register_action( "TERRAIN" );
-    ctxt.register_action( "VEHICLE" );
     ctxt.register_action( "CONFIRM" );
     ctxt.register_action( "QUIT" );
     ctxt.register_action( "HELP_KEYBINDINGS" );
@@ -88,9 +82,9 @@ void game::extended_description( const tripoint &p )
         werase( w_head );
         mvwprintz( w_head, point_zero, c_white,
                    _( "[%s] describe creatures, [%s] describe furniture, "
-                      "[%s] describe terrain, [%s] describe vehicle/appliance, [%s] close." ),
+                      "[%s] describe terrain, [%s] close." ),
                    ctxt.get_desc( "CREATURE" ), ctxt.get_desc( "FURNITURE" ),
-                   ctxt.get_desc( "TERRAIN" ), ctxt.get_desc( "VEHICLE" ), ctxt.get_desc( "QUIT" ) );
+                   ctxt.get_desc( "TERRAIN" ), ctxt.get_desc( "QUIT" ) );
 
         // Set up line drawings
         for( int i = 0; i < TERMX; i++ ) {
@@ -116,15 +110,11 @@ void game::extended_description( const tripoint &p )
                     desc = _( "You do not see any furniture here." );
                 } else {
                     const furn_id fid = m.furn( p );
-                    if( display_mod_source ) {
-                        const std::string mod_src = enumerate_as_string( fid->src.begin(),
-                        fid->src.end(), []( const std::pair<furn_str_id, mod_id> &source ) {
-                            return string_format( "'%s'", source.second->name() );
-                        }, enumeration_conjunction::arrow );
-                        desc = string_format( _( "Origin: %s\n%s" ), mod_src, fid->extended_description() );
-                    } else {
-                        desc = fid.obj().extended_description();
-                    }
+                    const std::string mod_src = enumerate_as_string( fid->src.begin(),
+                    fid->src.end(), []( const std::pair<furn_str_id, mod_id> &source ) {
+                        return string_format( "'%s'", source.second->name() );
+                    }, enumeration_conjunction::arrow );
+                    desc = string_format( _( "Origin: %s\n%s" ), mod_src, fid->extended_description() );
                 }
                 break;
             case description_target::terrain:
@@ -132,23 +122,11 @@ void game::extended_description( const tripoint &p )
                     desc = _( "You can't see the terrain here." );
                 } else {
                     const ter_id tid = m.ter( p );
-                    if( display_mod_source ) {
-                        const std::string mod_src = enumerate_as_string( tid->src.begin(),
-                        tid->src.end(), []( const std::pair<ter_str_id, mod_id> &source ) {
-                            return string_format( "'%s'", source.second->name() );
-                        }, enumeration_conjunction::arrow );
-                        desc = string_format( _( "Origin: %s\n%s" ), mod_src, tid->extended_description() );
-                    } else {
-                        desc = tid.obj().extended_description();
-                    }
-                }
-                break;
-            case description_target::vehicle:
-                const optional_vpart_position vp = m.veh_at( p );
-                if( !u.sees( p ) || !vp ) {
-                    desc = _( "You can't see vehicles or appliances here." );
-                } else {
-                    desc = vp.extended_description();
+                    const std::string mod_src = enumerate_as_string( tid->src.begin(),
+                    tid->src.end(), []( const std::pair<ter_str_id, mod_id> &source ) {
+                        return string_format( "'%s'", source.second->name() );
+                    }, enumeration_conjunction::arrow );
+                    desc = string_format( _( "Origin: %s\n%s" ), mod_src, tid->extended_description() );
                 }
                 break;
         }
@@ -174,8 +152,6 @@ void game::extended_description( const tripoint &p )
             cur_target = description_target::furniture;
         } else if( action == "TERRAIN" ) {
             cur_target = description_target::terrain;
-        } else if( action == "VEHICLE" ) {
-            cur_target = description_target::vehicle;
         }
     } while( action != "CONFIRM" && action != "QUIT" );
 }
@@ -232,18 +208,6 @@ std::string map_data_common_t::extended_description() const
         }
 
         ss << std::endl;
-    }
-
-    if( deconstruct.can_do ) {
-        const auto items = item_group::every_possible_item_from( deconstruct.drop_group );
-        if( items.size() > 0 ) {
-            ss << std::endl << _( "Deconstruction may yield the following items:" ) << std::endl;
-            for( const itype *it : items ) {
-                ss << "<good>" << item::nname( it->get_id() ) << "</good>" << std::endl;
-            }
-        } else {
-            ss << _( "Deconstruction wouldn't yield anything useful." ) << std::endl;
-        }
     }
 
     return replace_colors( ss.str() );

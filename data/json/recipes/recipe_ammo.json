@@ -3,8 +3,8 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "pebble",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "time": "1 m",
     "autolearn": true,
@@ -16,8 +16,8 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "pebble_clay",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "difficulty": 1,
     "time": "45 m",
@@ -29,8 +29,8 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "marble",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "difficulty": 6,
     "time": "60 m",
@@ -45,8 +45,8 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "bearing",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "skills_required": [ "gun", 4 ],
     "difficulty": 2,
@@ -464,76 +464,79 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "arrow_exploding",
-    "charges": 10,
     "category": "CC_AMMO",
     "subcategory": "CSC_AMMO_ARROWS",
     "skill_used": "fabrication",
-    "difficulty": 5,
-    "time": "40 m",
+    "skills_required": [ [ "archery", 4 ] ],
+    "difficulty": 4,
+    "time": "2 m",
+    "reversible": true,
+    "decomp_learn": 6,
+    "//": "you just take the warhead off or put it on, rather than making the warhead",
     "book_learn": [ [ "recipe_arrows", 6 ], [ "textbook_anarch", 4 ], [ "recipe_bullets", 7 ] ],
-    "proficiencies": [ { "proficiency": "prof_handloading" } ],
-    "qualities": [
-      { "id": "SAW_M", "level": 1 },
-      { "id": "SCREW", "level": 1 },
-      { "id": "HAMMER", "level": 1 },
-      { "id": "DRILL", "level": 1 },
-      { "id": "CUT", "level": 2 }
-    ],
+    "qualities": [ { "id": "SAW_M", "level": 1 }, { "id": "SCREW", "level": 1 } ],
     "components": [
-      [ [ "pipe", 1 ] ],
-      [ [ "nail", 10 ], [ "combatnail", 10 ] ],
-      [ [ "adhesive", 1, "LIST" ], [ "filament", 10, "LIST" ] ],
+      [ [ "exploding_arrow_warhead", 1 ] ],
       [
-        [ "smpistol_primer", 10 ],
-        [ "lgpistol_primer", 10 ],
-        [ "smrifle_primer", 10 ],
-        [ "lgrifle_primer", 10 ],
-        [ "shotgun_primer", 10 ],
-        [ "chem_hmtd", 10 ],
-        [ "chem_apex", 10 ],
-        [ "chem_mercury_fulminate", 10 ],
-        [ "chem_lead_azide", 10 ]
-      ],
-      [ [ "stable_explosive", 20, "LIST" ] ],
-      [ [ "fletching", 1, "LIST" ] ]
+        [ "arrow_field_point_fletched", 1 ],
+        [ "arrow_fire_hardened_fletched", 1 ],
+        [ "arrow_wood", 1 ],
+        [ "arrow_heavy_fire_hardened_fletched", 1 ],
+        [ "arrow_heavy_field_point_fletched", 1 ],
+        [ "arrow_wood_heavy", 1 ],
+        [ "arrow_metal", 1 ]
+      ]
     ]
   },
   {
     "type": "recipe",
-    "activity_level": "MODERATE_EXERCISE",
+    "activity_level": "LIGHT_EXERCISE",
+    "result": "exploding_arrow_warhead",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_COMPONENTS",
+    "skill_used": "fabrication",
+    "skills_required": [ [ "archery", 5 ], [ "mechanics", 3 ] ],
+    "difficulty": 6,
+    "time": "5 m",
+    "book_learn": [ [ "textbook_anarch", 4 ], [ "recipe_bullets", 7 ] ],
+    "using": [ [ "soldering_standard", 10 ] ],
+    "qualities": [ { "id": "SAW_M", "level": 1 } ],
+    "components": [
+      [ [ "can_food", 1 ], [ "can_drink", 1 ], [ "canister_empty", 1 ] ],
+      [ [ "superglue", 1 ], [ "cordage", 1, "LIST" ] ],
+      [
+        [ "smpistol_primer", 1 ],
+        [ "lgpistol_primer", 1 ],
+        [ "smrifle_primer", 1 ],
+        [ "lgrifle_primer", 1 ],
+        [ "shotgun_primer", 1 ]
+      ],
+      [ [ "gunpowder", 200 ], [ "chem_black_powder", 200 ] ]
+    ]
+  },
+  {
+    "type": "recipe",
+    "activity_level": "LIGHT_EXERCISE",
     "result": "bolt_explosive",
-    "charges": 10,
     "category": "CC_AMMO",
     "subcategory": "CSC_AMMO_ARROWS",
     "skill_used": "fabrication",
+    "skills_required": [ [ "mechanics", 3 ] ],
     "difficulty": 5,
-    "time": "40 m",
-    "book_learn": [ [ "recipe_arrows", 6 ], [ "textbook_anarch", 4 ], [ "recipe_bullets", 7 ] ],
-    "proficiencies": [ { "proficiency": "prof_handloading" } ],
-    "qualities": [
-      { "id": "SAW_M", "level": 1 },
-      { "id": "SCREW", "level": 1 },
-      { "id": "HAMMER", "level": 1 },
-      { "id": "DRILL", "level": 1 },
-      { "id": "CUT", "level": 2 }
-    ],
+    "time": "2 m",
+    "book_learn": [ [ "recipe_arrows", 7 ], [ "textbook_anarch", 4 ], [ "recipe_bullets", 7 ] ],
+    "qualities": [ { "id": "SAW_M", "level": 1 }, { "id": "SCREW", "level": 1 } ],
     "components": [
-      [ [ "pipe", 1 ] ],
-      [ [ "nail", 10 ], [ "combatnail", 10 ] ],
-      [ [ "adhesive", 1, "LIST" ], [ "filament", 10, "LIST" ] ],
+      [ [ "exploding_arrow_warhead", 1 ] ],
       [
-        [ "smpistol_primer", 10 ],
-        [ "lgpistol_primer", 10 ],
-        [ "smrifle_primer", 10 ],
-        [ "lgrifle_primer", 10 ],
-        [ "shotgun_primer", 10 ],
-        [ "chem_hmtd", 10 ],
-        [ "chem_apex", 10 ],
-        [ "chem_mercury_fulminate", 10 ],
-        [ "chem_lead_azide", 10 ]
-      ],
-      [ [ "stable_explosive", 20, "LIST" ] ],
-      [ [ "fletching", 1, "LIST" ] ]
+        [ "bolt_crude", 1 ],
+        [ "bolt_wood", 1 ],
+        [ "bolt_wood_bodkin", 1 ],
+        [ "bolt_steel", 1 ],
+        [ "bolt_makeshift", 1 ],
+        [ "bolt_wood_small_game", 1 ],
+        [ "bolt_metal", 1 ]
+      ]
     ]
   },
   {
@@ -683,6 +686,31 @@
   {
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
+    "result": "rebar_rail",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
+    "skill_used": "fabrication",
+    "difficulty": 1,
+    "time": "120 m",
+    "autolearn": true,
+    "qualities": [ { "id": "HAMMER", "level": 1 }, { "id": "SAW_M", "level": 1 } ],
+    "components": [ [ [ "rebar", 2 ] ] ]
+  },
+  {
+    "type": "recipe",
+    "activity_level": "BRISK_EXERCISE",
+    "result": "steel_rail",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
+    "skill_used": "fabrication",
+    "difficulty": 2,
+    "time": "100 m",
+    "autolearn": true,
+    "using": [ [ "blacksmithing_standard", 16 ], [ "steel_standard", 4 ] ]
+  },
+  {
+    "type": "recipe",
+    "activity_level": "MODERATE_EXERCISE",
     "result": "combatnail",
     "category": "CC_AMMO",
     "subcategory": "CSC_AMMO_OTHER",
@@ -698,8 +726,8 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "napalm",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
     "difficulty": 6,
     "time": "60 m",
@@ -709,7 +737,6 @@
       "textbook_anarch": { "skill_level": 7, "recipe_name": "Stuff THE MAN doesn't want you to know" },
       "recipe_labchem": { "skill_level": 6 }
     },
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" }, { "proficiency": "prof_inorganic_chemistry" } ],
     "tools": [ [ [ "surface_heat", 25, "LIST" ] ] ],
     "components": [
       [ [ "gasoline", 125 ], [ "diesel", 125 ], [ "biodiesel", 125 ] ],
@@ -723,8 +750,8 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "gelled_gasoline",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
     "difficulty": 2,
     "time": "20 m",
@@ -734,48 +761,45 @@
       "textbook_gaswarfare": { "skill_level": 2 },
       "textbook_anarch": { "skill_level": 2, "recipe_name": "Stuff THE MAN doesn't want you to know" }
     },
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" }, { "proficiency": "prof_organic_chemistry" } ],
     "components": [ [ [ "gasoline", 100 ] ], [ [ "plastic_chunk", 1 ] ] ]
   },
   {
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "flamethrower_fuel",
-    "charges": 3,
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
-    "time": "30 s",
-    "batch_time_factors": [ 99, 1 ],
-    "book_learn": [ [ "textbook_gaswarfare", 0 ], [ "textbook_anarch", 0 ], [ "manual_launcher", 0 ] ],
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
-    "components": [ [ [ "gasoline", 2 ], [ "avgas", 2 ] ], [ [ "diesel", 1 ], [ "biodiesel", 1 ], [ "jp8", 1 ] ] ],
-    "flags": [ "BLIND_HARD", "NEVER_FAIL" ]
+    "difficulty": 2,
+    "time": "3 m",
+    "batch_time_factors": [ 80, 5 ],
+    "qualities": [ { "id": "CONTAIN", "level": 1 } ],
+    "book_learn": {
+      "textbook_gaswarfare": { "skill_level": 2 },
+      "textbook_anarch": { "skill_level": 2, "recipe_name": "Stuff THE MAN doesn't want you to know" },
+      "manual_launcher": { "skill_level": 2 }
+    },
+    "components": [ [ [ "gasoline", 125 ] ], [ [ "diesel", 125 ], [ "biodiesel", 125 ] ] ]
   },
   {
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "spiked_rocket",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "difficulty": 3,
-    "time": "30 m",
+    "time": "8 m",
     "book_learn": [ [ "manual_launcher", 4 ] ],
-    "//": "At least basic knowledge on chemical handling safety is required.",
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
-    "qualities": [
-      { "id": "HAMMER", "level": 2 },
-      { "id": "SAW_M", "level": 1 },
-      { "id": "DRILL", "level": 1 },
-      { "id": "BOIL", "level": 1 }
+    "qualities": [ { "id": "HAMMER", "level": 3 }, { "id": "SAW_M", "level": 1 } ],
+    "tools": [
+      [ [ "oxy_torch", 6 ], [ "welder", 30 ], [ "welder_crude", 45 ], [ "toolset", 45 ] ],
+      [ [ "hotplate", 50 ], [ "toolset", 50 ] ]
     ],
-    "using": [ [ "welding_standard", 3 ] ],
-    "tools": [ [ [ "surface_heat", 50, "LIST" ] ] ],
     "components": [
-      [ [ "pipe", 1 ] ],
+      [ [ "pipe", 2 ] ],
       [ [ "spike", 1 ] ],
-      [ [ "tool_rocket_candy", 2 ], [ "chem_rocket_fuel", 10 ] ],
+      [ [ "tool_rocket_candy", 3 ], [ "chem_rocket_fuel", 15 ] ],
       [ [ "scrap", 3 ] ]
     ]
   },
@@ -783,69 +807,50 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "explosive_hm_rocket",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "difficulty": 4,
     "time": "30 m",
     "book_learn": [ [ "manual_launcher", 5 ] ],
-    "//": "At least basic knowledge on chemical handling safety is required.",
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" }, { "proficiency": "prof_handloading" } ],
-    "qualities": [
-      { "id": "HAMMER", "level": 2 },
-      { "id": "SAW_M", "level": 1 },
-      { "id": "DRILL", "level": 1 },
-      { "id": "BOIL", "level": 1 }
-    ],
-    "using": [ [ "welding_standard", 3 ] ],
-    "tools": [ [ [ "surface_heat", 50, "LIST" ] ] ],
+    "qualities": [ { "id": "HAMMER", "level": 3 }, { "id": "SAW_M", "level": 1 } ],
+    "tools": [ [ [ "hotplate", 50 ], [ "toolset", 50 ] ] ],
     "components": [
-      [ [ "pipe", 1 ] ],
+      [ [ "pipe", 2 ] ],
       [ [ "gunpowder", 300 ], [ "chem_black_powder", 300 ] ],
-      [ [ "tool_rocket_candy", 2 ], [ "chem_rocket_fuel", 10 ] ],
-      [ [ "scrap", 3 ] ]
+      [ [ "tool_rocket_candy", 2 ], [ "chem_rocket_fuel", 10 ] ]
     ]
   },
   {
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "incendiary_hm_rocket",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "fabrication",
     "difficulty": 5,
-    "time": "30 m",
+    "time": "20 m",
     "book_learn": [ [ "manual_launcher", 6 ] ],
-    "//": "At least basic knowledge on chemical handling safety is required.",
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
-    "qualities": [
-      { "id": "HAMMER", "level": 2 },
-      { "id": "SAW_M", "level": 1 },
-      { "id": "DRILL", "level": 1 },
-      { "id": "BOIL", "level": 1 }
-    ],
-    "using": [ [ "welding_standard", 3 ] ],
-    "tools": [ [ [ "surface_heat", 50, "LIST" ] ] ],
+    "qualities": [ { "id": "HAMMER", "level": 3 }, { "id": "SAW_M", "level": 1 } ],
+    "tools": [ [ [ "hotplate", 50 ], [ "toolset", 50 ] ] ],
     "components": [
-      [ [ "pipe", 1 ] ],
+      [ [ "pipe", 2 ] ],
       [ [ "chem_thermite", 50 ] ],
       [ [ "plastic_chunk", 5 ] ],
-      [ [ "tool_rocket_candy", 2 ], [ "chem_rocket_fuel", 10 ] ],
-      [ [ "scrap", 3 ] ]
+      [ [ "tool_rocket_candy", 2 ], [ "chem_rocket_fuel", 10 ] ]
     ]
   },
   {
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "gas_fungicidal",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
     "skills_required": [ "survival", 2 ],
     "difficulty": 4,
     "time": "8 m",
     "book_learn": [ [ "textbook_gaswarfare", 4 ], [ "textbook_chemistry", 4 ], [ "adv_chemistry", 4 ], [ "recipe_labchem", 4 ] ],
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" }, { "proficiency": "prof_inorganic_chemistry" } ],
     "qualities": [ { "id": "CHEM", "level": 1 } ],
     "tools": [ [ [ "surface_heat", 5, "LIST" ] ] ],
     "components": [ [ [ "fungicide", 50 ], [ "triffid_fungicide", 1 ] ], [ [ "chem_sulphur", 150 ] ] ]
@@ -854,14 +859,13 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "gas_insecticidal",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
     "skills_required": [ "survival", 2 ],
     "difficulty": 4,
     "time": "8 m",
     "book_learn": [ [ "textbook_gaswarfare", 4 ], [ "textbook_chemistry", 4 ], [ "adv_chemistry", 4 ], [ "recipe_labchem", 4 ] ],
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "qualities": [ { "id": "CHEM", "level": 1 } ],
     "tools": [ [ [ "surface_heat", 5, "LIST" ] ] ],
     "components": [ [ [ "insecticide", 50 ] ], [ [ "water", 2 ], [ "water_clean", 2 ] ] ]
@@ -870,8 +874,8 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "gas_chloramine",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
+    "category": "CC_AMMO",
+    "subcategory": "CSC_AMMO_OTHER",
     "skill_used": "chemistry",
     "skills_required": [ "survival", 2 ],
     "difficulty": 3,
@@ -883,9 +887,9 @@
       [ "recipe_labchem", 3 ],
       [ "textbook_anarch", 3 ]
     ],
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "qualities": [ { "id": "CHEM", "level": 1 } ],
-    "components": [ [ [ "bleach", 1 ] ], [ [ "ammonia_hydroxide", 1 ] ] ]
+    "tools": [ [ [ "surface_heat", 5, "LIST" ] ] ],
+    "components": [ [ [ "oxy_powder", 100 ] ], [ [ "lye_powder", 100 ] ] ]
   },
   {
     "type": "recipe",
@@ -915,46 +919,19 @@
         [ "willowbark", 1 ],
         [ "straw_pile", 1 ]
       ]
-    ],
-    "flags": [ "BLIND_HARD", "NEVER_FAIL" ]
+    ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "tinder",
-    "id_suffix": "softer",
+    "activity_level": "MODERATE_EXERCISE",
+    "result": "cac2powder",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_MATERIALS",
-    "skill_used": "survival",
-    "difficulty": 1,
-    "time": "1 m",
+    "skill_used": "fabrication",
+    "difficulty": 2,
+    "time": "60 m",
     "autolearn": true,
-    "qualities": [ { "id": "CUT", "level": 1 } ],
-    "components": [ [ [ "splinter", 2 ], [ "withered", 2 ], [ "cattail_stalk", 1 ] ] ],
-    "flags": [ "BLIND_HARD", "NEVER_FAIL" ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "tinder",
-    "id_suffix": "softest",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_MATERIALS",
-    "skill_used": "survival",
-    "difficulty": 1,
-    "time": "1 m",
-    "autolearn": true,
-    "components": [
-      [
-        [ "pine_bough", 1 ],
-        [ "cotton_patchwork", 1 ],
-        [ "paper", 5 ],
-        [ "cardboard", 1 ],
-        [ "rolling_paper", 30 ],
-        [ "wrapper", 5 ],
-        [ "straw_pile", 1 ]
-      ]
-    ],
-    "flags": [ "BLIND_HARD", "NEVER_FAIL" ]
+    "qualities": [ { "id": "HAMMER", "level": 1 } ],
+    "components": [ [ [ "coal_lump", 30 ] ], [ [ "material_quicklime", 44 ] ] ]
   }
 ]

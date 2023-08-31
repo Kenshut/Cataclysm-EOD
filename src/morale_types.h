@@ -28,7 +28,7 @@ class morale_type_data
             return permanent;
         }
 
-        void load( const JsonObject &jo, std::string_view src );
+        void load( const JsonObject &jo, const std::string &src );
         void check() const;
 
         static void load_type( const JsonObject &jo, const std::string &src );
@@ -90,24 +90,19 @@ extern const morale_type MORALE_MOODSWING;
 extern const morale_type MORALE_BOOK;
 extern const morale_type MORALE_COMFY;
 extern const morale_type MORALE_SCREAM;
-extern const morale_type MORALE_PERM_DARKNESS;
 extern const morale_type MORALE_PERM_MASOCHIST;
-extern const morale_type MORALE_PERM_NAKED;
 extern const morale_type MORALE_PERM_NOFACE;
 extern const morale_type MORALE_PERM_FPMODE_ON;
 extern const morale_type MORALE_PERM_HOARDER;
 extern const morale_type MORALE_PERM_FANCY;
 extern const morale_type MORALE_PERM_OPTIMIST;
 extern const morale_type MORALE_PERM_BADTEMPER;
-extern const morale_type MORALE_PERM_BAREFOOT;
 extern const morale_type MORALE_PERM_NUMB;
 extern const morale_type MORALE_PERM_CONSTRAINED;
 extern const morale_type MORALE_PERM_NOMAD;
-extern const morale_type MORALE_PERM_RADIOPHILE;
 extern const morale_type MORALE_GAME_FOUND_KITTEN;
 extern const morale_type MORALE_HAIRCUT;
 extern const morale_type MORALE_SHAVE;
-extern const morale_type MORALE_SPIRITUAL;
 extern const morale_type MORALE_CHAT;
 extern const morale_type MORALE_VOMITED;
 extern const morale_type MORALE_PLAY_WITH_PET;

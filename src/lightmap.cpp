@@ -7,7 +7,6 @@
 #include <cstring>
 #include <map>
 #include <memory>
-#include <optional>
 #include <tuple>
 #include <utility>
 #include <vector>
@@ -34,6 +33,7 @@
 #include "monster.h"
 #include "mtype.h"
 #include "npc.h"
+#include "optional.h"
 #include "point.h"
 #include "string_formatter.h"
 #include "submap.h"
@@ -155,7 +155,7 @@ bool map::build_transparency_cache( const int zlev )
                 return std::make_pair( value, value_wo_fields );
             };
 
-            if( cur_submap->is_uniform() ) {
+            if( cur_submap->is_uniform ) {
                 float value;
                 float dummy;
                 std::tie( value, dummy ) = calc_transp( sm_offset );
@@ -510,7 +510,7 @@ void map::generate_lightmap( const int zlev )
     for( wrapped_vehicle &vv : vehs ) {
         vehicle *v = vv.v;
 
-        auto lights = v->lights();
+        auto lights = v->lights( true );
 
         float veh_luminance = 0.0f;
         float iteration = 1.0f;
@@ -547,18 +547,8 @@ void map::generate_lightmap( const int zlev )
                 }
 
             } else if( vp.has_flag( VPFLAG_HALF_CIRCLE_LIGHT ) ) {
-                if( vp.has_flag( VPFLAG_WALL_MOUNTED ) ) {
-                    tileray tdir( v->face.dir() + pt->direction );
-                    tdir.advance();
-                    tripoint offset = src;
-                    offset.x = src.x + tdir.dx();
-                    offset.y = src.y + tdir.dy();
-                    add_light_source( offset, M_SQRT2 ); // Add a little surrounding light
-                    apply_light_arc( offset, v->face.dir() + pt->direction, vp.bonus, 180_degrees );
-                } else {
-                    add_light_source( src, M_SQRT2 ); // Add a little surrounding light
-                    apply_light_arc( src, v->face.dir() + pt->direction, vp.bonus, 180_degrees );
-                }
+                add_light_source( src, M_SQRT2 ); // Add a little surrounding light
+                apply_light_arc( src, v->face.dir() + pt->direction, vp.bonus, 180_degrees );
 
             } else if( vp.has_flag( VPFLAG_CIRCLE_LIGHT ) ) {
                 const bool odd_turn = calendar::once_every( 2_turns );
@@ -714,10 +704,8 @@ map::apparent_light_info map::apparent_light_helper( const level_cache &map_cach
             if( is_opaque( neighbour ) ) {
                 continue;
             }
-            if( ( rl_dist( u.pos().xy(), neighbour ) > u.unimpaired_range() &&
-                  map_cache.camera_cache[neighbour.x][neighbour.y] == 0 ) ||
-                ( map_cache.seen_cache[neighbour.x][neighbour.y] == 0 &&
-                  map_cache.camera_cache[neighbour.x][neighbour.y] == 0 ) ) {
+            if( map_cache.seen_cache[neighbour.x][neighbour.y] == 0 &&
+                map_cache.camera_cache[neighbour.x][neighbour.y] == 0 ) {
                 continue;
             }
             // This is a non-opaque visible neighbour, so count visibility from the relevant
@@ -764,9 +752,13 @@ lit_level map::apparent_light_at( const tripoint &p, const visibility_variables 
                 // This represents too hazy to see detail,
                 // but enough light getting through to illuminate.
                 return lit_level::BRIGHT_ONLY;
+            } else {
+                // If it's not brighter than the surroundings, it just ends up shadowy.
+                return lit_level::LOW;
             }
+        } else {
+            return lit_level::BLANK;
         }
-        return lit_level::BLANK;
     }
     // Then we just search for the light level in descending order.
     if( a.apparent_light > LIGHT_SOURCE_BRIGHT || map_cache.sm[p.x][p.y] > 0.0 ) {
@@ -780,11 +772,6 @@ lit_level map::apparent_light_at( const tripoint &p, const visibility_variables 
     } else {
         return lit_level::BLANK;
     }
-}
-
-bool tinymap::pl_sees( const tripoint &, int ) const
-{
-    return false;
 }
 
 bool map::pl_sees( const tripoint &t, const int max_range ) const
@@ -995,8 +982,8 @@ castLightAll<fragment_cloud, fragment_cloud, shrapnel_calc, shrapnel_check,
  * @param origin the starting location
  * @param target_z Z-level to draw light map on
  */
-void map::build_seen_cache( const tripoint &origin, const int target_z, int extension_range,
-                            bool cumulative, bool camera, int penalty )
+void map::build_seen_cache( const tripoint &origin, const int target_z, bool cumulative,
+                            bool camera, int penalty )
 {
     level_cache &map_cache = get_cache( target_z );
     using mdarray = cata::mdarray<float, point_bub_ms>;
@@ -1072,13 +1059,10 @@ void map::build_seen_cache( const tripoint &origin, const int target_z, int exte
     // Cameras are also handled here, so that we only need to get through all vehicle parts once
     int cam_control = -1;
     for( const vpart_reference &vp : veh->get_all_parts_with_fakes() ) {
-        if( vp.part().removed || vp.part().is_broken() || !vp.info().has_flag( VPFLAG_EXTENDS_VISION ) ) {
+        if( vp.part().is_broken() || !vp.info().has_flag( VPFLAG_EXTENDS_VISION ) ) {
             continue;
         }
         const tripoint mirror_pos = vp.pos();
-        if( rl_dist( origin, vp.pos() ) > extension_range ) {
-            continue;
-        }
         // We can utilize the current state of the seen cache to determine
         // if the player can see the mirror from their position.
         if( !vp.info().has_flag( "CAMERA" ) &&
@@ -1104,14 +1088,12 @@ void map::build_seen_cache( const tripoint &origin, const int target_z, int exte
         // Determine how far the light has already traveled so mirrors
         // don't cheat the light distance falloff.
         int offsetDistance;
-        mdarray *mocache = &out_cache;
         if( !is_camera ) {
             offsetDistance = penalty + rl_dist( origin, mirror_pos );
         } else {
             offsetDistance = 60 - veh->part_info( mirror ).bonus *
                              veh->part( mirror ).hp() / veh->part_info( mirror ).durability;
-            mocache = &camera_cache;
-            ( *mocache )[mirror_pos.x][mirror_pos.y] = LIGHT_TRANSPARENCY_OPEN_AIR;
+            camera_cache[mirror_pos.x][mirror_pos.y] = LIGHT_TRANSPARENCY_OPEN_AIR;
         }
 
         // TODO: Factor in the mirror facing and only cast in the
@@ -1120,7 +1102,7 @@ void map::build_seen_cache( const tripoint &origin, const int target_z, int exte
         // The naive solution of making the mirrors act like a second player
         // at an offset appears to give reasonable results though.
         castLightAll<float, float, sight_calc, sight_check, update_light, accumulate_transparency>(
-            *mocache, transparency_cache, mirror_pos.xy(), offsetDistance );
+            camera_cache, transparency_cache, mirror_pos.xy(), offsetDistance );
     }
 }
 
@@ -1442,9 +1424,8 @@ void map::apply_light_arc( const tripoint &p, const units::angle &angle, float l
     }
 }
 
-void map::apply_light_ray(
-    cata::mdarray<bool, point_bub_ms, LIGHTMAP_CACHE_X, LIGHTMAP_CACHE_Y> &lit,
-    const tripoint &s, const tripoint &e, float luminance )
+void map::apply_light_ray( bool lit[LIGHTMAP_CACHE_X][LIGHTMAP_CACHE_Y],
+                           const tripoint &s, const tripoint &e, float luminance )
 {
     point a( std::abs( e.x - s.x ) * 2, std::abs( e.y - s.y ) * 2 );
     point d( ( s.x < e.x ) ? 1 : -1, ( s.y < e.y ) ? 1 : -1 );

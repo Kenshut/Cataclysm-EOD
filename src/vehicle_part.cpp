@@ -12,13 +12,11 @@
 #include "color.h"
 #include "debug.h"
 #include "enums.h"
-#include "fault.h"
 #include "flag.h"
 #include "game.h"
 #include "item.h"
 #include "item_pocket.h"
 #include "itype.h"
-#include "iuse_actor.h"
 #include "map.h"
 #include "messages.h"
 #include "npc.h"
@@ -37,18 +35,30 @@ static const itype_id fuel_type_battery( "battery" );
 static const itype_id fuel_type_none( "null" );
 
 static const itype_id itype_battery( "battery" );
+static const itype_id itype_muscle( "muscle" );
 
 /*-----------------------------------------------------------------------------
  *                              VEHICLE_PART
  *-----------------------------------------------------------------------------*/
 vehicle_part::vehicle_part()
-    : vehicle_part( vpart_id::NULL_ID(), item( vpart_id::NULL_ID()->base_item ) ) { }
+    : id( vpart_id::NULL_ID() ) {}
 
-vehicle_part::vehicle_part( const vpart_id &type, item &&base )
-    : info_( &type.obj() )
+vehicle_part::vehicle_part( const vpart_id &vp, const std::string &variant_id, const point &dp,
+                            item &&obj )
+    : mount( dp ), id( vp ), variant( variant_id ), base( std::move( obj ) )
 {
-    set_base( std::move( base ) );
-    variant = info_->variant_default;
+    // Mark base item as being installed as a vehicle part
+    base.set_flag( flag_VEHICLE );
+
+    if( base.typeId() != vp->base_item ) {
+        debugmsg( "incorrect vehicle part item, expected: %s, received: %s",
+                  vp->base_item.c_str(), base.typeId().c_str() );
+    }
+}
+
+vehicle_part::operator bool() const
+{
+    return id != vpart_id::NULL_ID();
 }
 
 const item &vehicle_part::get_base() const
@@ -56,15 +66,9 @@ const item &vehicle_part::get_base() const
     return base;
 }
 
-void vehicle_part::set_base( item &&new_base )
+void vehicle_part::set_base( const item &new_base )
 {
-    if( new_base.typeId() != info().base_item ) {
-        debugmsg( "new base '%s' doesn't match part type '%s', this is a bug",
-                  new_base.typeId().str(), info().id.str() );
-        return;
-    }
-    base = std::move( new_base );
-    base.set_flag( flag_VEHICLE );
+    base = new_base;
 }
 
 item vehicle_part::properties_to_item() const
@@ -74,86 +78,53 @@ item vehicle_part::properties_to_item() const
 
     // Cables get special handling: their target coordinates need to remain
     // stored, and if a cable actually drops, it should be half-connected.
-    if( tmp.has_flag( flag_CABLE_SPOOL ) ) {
+    if( tmp.has_flag( flag_CABLE_SPOOL ) && !tmp.has_flag( flag_TOW_CABLE ) ) {
         map &here = get_map();
-        tmp.link = cata::make_value<item::link_data>();
-
-        // Tow cables have these variables assigned in invalidate_towing, which calls properties_to_item.
-        if( !tmp.has_flag( flag_TOW_CABLE ) ) {
-            const tripoint local_pos = here.getlocal( target.first );
-            const optional_vpart_position target_vp = here.veh_at( local_pos );
-            if( !target_vp ) {
-                // That vehicle ain't there no more.
-                tmp.set_flag( flag_NO_DROP );
-            } else {
-                tmp.link->t_mount = target_vp->mount();
-            }
-            tmp.link->t_abs_pos = tripoint_abs_ms( target.second );
-            tmp.link->s_state = link_state::no_link;
-            tmp.link->t_state = link_state::vehicle_port;
+        const tripoint local_pos = here.getlocal( target.first );
+        if( !here.veh_at( local_pos ) ) {
+            // That vehicle ain't there no more.
+            tmp.set_flag( flag_NO_DROP );
         }
 
-        bool iuse_found = false;
-        const use_function *iuse = tmp.type->get_use( "link_up" );
-        if( iuse != nullptr ) {
-            const link_up_actor *actor_ptr =
-                static_cast<const link_up_actor *>( iuse->get_actor_ptr() );
-            if( actor_ptr != nullptr ) {
-                iuse_found = true;
-                tmp.link->max_length = actor_ptr->cable_length;
-                tmp.link->charge_efficiency = actor_ptr->charge_efficiency;
-                tmp.link->charge_rate = actor_ptr->charge_rate.value();
-                tmp.link->charge_interval = actor_ptr->charge_rate == 0_W ? -1 :
-                                            std::max( 1, static_cast<int>( std::floor( 1000000.0 / abs( actor_ptr->charge_rate.value() ) +
-                                                      0.5 ) ) );
-            }
-        }
-        if( !iuse_found ) {
-            debugmsg( "Could not find link_up iuse data for %s!  Using default values.", tmp.tname() );
-            tmp.link->max_length = tmp.type->maximum_charges();
-        }
-
-        tmp.link->last_processed = calendar::turn;
+        tmp.set_var( "source_x", target.first.x );
+        tmp.set_var( "source_y", target.first.y );
+        tmp.set_var( "source_z", target.first.z );
+        tmp.set_var( "state", "pay_out_cable" );
         tmp.active = true;
     }
 
-    // quantize damage and degradation to the middle of each damage_level so that items will stack nicely
-    tmp.set_damage( ( tmp.damage_level() - 0.5 ) * itype::damage_scale );
-    tmp.set_degradation( ( tmp.damage_level() - 0.5 ) * itype::damage_scale );
+    // force rationalization of damage values to the middle value of each damage level so
+    // that parts will stack nicely
+    tmp.set_damage( tmp.damage_level() * itype::damage_scale );
     return tmp;
 }
 
 std::string vehicle_part::name( bool with_prefix ) const
 {
-    std::string res;
-    if( with_prefix ) {
-        res += base.damage_indicator() + base.degradation_symbol() + " ";
-        if( !base.type->degrade_increments() ) {
-            res += " "; // aligns names when printing degrading and non-degrading parts with prefixes
-        }
+    auto res = info().name();
+
+    if( base.engine_displacement() > 0 ) {
+        res.insert( 0, string_format( _( "%2.1fL " ), base.engine_displacement() / 100.0 ) );
+
+    } else if( wheel_diameter() > 0 ) {
+        res.insert( 0, string_format( _( "%d\" " ), wheel_diameter() ) );
     }
-    if( base.engine_displacement() ) {
-        res += string_format( _( "%gL " ), base.engine_displacement() / 100.0 );
+
+    if( base.is_faulty() ) {
+        res += _( " (faulty)" );
     }
-    if( wheel_diameter() ) {
-        res += string_format( _( "%d\" " ), wheel_diameter() );
-    }
-    res += info().name();
+
     if( base.has_var( "contained_name" ) ) {
         res += string_format( _( " holding %s" ), base.get_var( "contained_name" ) );
     }
-    for( const fault_id &f : base.faults ) {
-        const std::string prefix = f->item_prefix();
-        if( !prefix.empty() ) {
-            res += " (" + prefix + ")";
-            break;
-        }
-    }
+
     if( is_leaking() ) {
         res += _( " (draining)" );
     }
-    if( debug_mode ) {
-        res += "{" + variant + "}";
+
+    if( with_prefix ) {
+        res.insert( 0, colorize( base.damage_symbol(),
+                                 base.damage_color() ) + base.degradation_symbol() + " " );
     }
     return res;
 }
@@ -183,9 +154,14 @@ int vehicle_part::max_damage() const
     return base.max_damage();
 }
 
-bool vehicle_part::is_repairable() const
+int vehicle_part::damage_floor( bool allow_negative ) const
 {
-    return !is_broken() && base.repairable_levels() > 0 && info().is_repairable();
+    return base.damage_floor( allow_negative );
+}
+
+int vehicle_part::damage_level( int dmg ) const
+{
+    return base.damage_level( dmg );
 }
 
 double vehicle_part::health_percent() const
@@ -214,7 +190,7 @@ bool vehicle_part::is_cleaner_on() const
 
 bool vehicle_part::is_unavailable( const bool carried ) const
 {
-    return is_broken() || ( has_flag( vp_flag::carried_flag ) && carried );
+    return is_broken() || ( has_flag( carried_flag ) && carried );
 }
 
 bool vehicle_part::is_available( const bool carried ) const
@@ -224,10 +200,15 @@ bool vehicle_part::is_available( const bool carried ) const
 
 itype_id vehicle_part::fuel_current() const
 {
-    if( !ammo_pref.is_null() ) {
-        return ammo_pref;
+    if( is_engine() ) {
+        if( ammo_pref.is_null() ) {
+            return info().fuel_type != itype_muscle ? info().fuel_type : itype_id::NULL_ID();
+        } else {
+            return ammo_pref;
+        }
     }
-    return info().fuel_type;
+
+    return itype_id::NULL_ID();
 }
 
 bool vehicle_part::fuel_set( const itype_id &fuel )
@@ -356,27 +337,33 @@ int vehicle_part::ammo_consume( int qty, const tripoint &pos )
     return base.ammo_consume( qty, pos, nullptr );
 }
 
-units::energy vehicle_part::consume_energy( const itype_id &ftype, units::energy wanted_energy )
+double vehicle_part::consume_energy( const itype_id &ftype, double energy_j )
 {
-    if( !is_fuel_store() ) {
-        return 0_J;
+    if( base.empty() || !is_fuel_store() ) {
+        return 0.0f;
     }
 
-    for( item *const fuel : base.all_items_top() ) {
-        if( fuel->typeId() != ftype || !fuel->is_fuel() ) {
-            continue;
-        }
-        const units::energy energy_per_charge = fuel->fuel_energy();
-        const int charges_wanted = static_cast<int>( wanted_energy / energy_per_charge );
-        const int charges_to_use = std::min( charges_wanted, fuel->charges );
-        fuel->charges -= charges_to_use;
-        if( fuel->charges == 0 ) {
-            base.remove_item( *fuel );
-        }
+    item &fuel = base.legacy_front();
+    if( fuel.typeId() == ftype ) {
+        cata_assert( fuel.is_fuel() );
+        // convert energy density in MJ/L to J/ml
+        const double energy_p_mL = fuel.fuel_energy() * 1000;
+        const int ml_to_use = static_cast<int>( std::floor( energy_j / energy_p_mL ) );
+        int charges_to_use = fuel.charges_per_volume( ml_to_use * 1_ml );
 
-        return charges_to_use * energy_per_charge;
+        if( !charges_to_use ) {
+            return 0.0;
+        }
+        if( charges_to_use >= fuel.charges ) {
+            charges_to_use = fuel.charges;
+            base.clear_items();
+        } else {
+            fuel.charges -= charges_to_use;
+        }
+        item fuel_consumed( ftype, calendar::turn, charges_to_use );
+        return energy_p_mL * units::to_milliliter<int>( fuel_consumed.volume( true ) );
     }
-    return 0_J;
+    return 0.0;
 }
 
 bool vehicle_part::can_reload( const item &obj ) const
@@ -442,24 +429,27 @@ void vehicle_part::process_contents( map &here, const tripoint &pos, const bool 
 {
     // for now we only care about processing food containers since things like
     // fuel don't care about temperature yet
-    temperature_flag flag = temperature_flag::NORMAL;
-    if( e_heater ) {
-        flag = temperature_flag::HEATER;
+    if( base.has_item_with( []( const item & it ) {
+    return it.needs_processing();
+    } ) ) {
+        temperature_flag flag = temperature_flag::NORMAL;
+        if( e_heater ) {
+            flag = temperature_flag::HEATER;
+        }
+        if( enabled && info().has_flag( VPFLAG_FRIDGE ) ) {
+            flag = temperature_flag::FRIDGE;
+        } else if( enabled && info().has_flag( VPFLAG_FREEZER ) ) {
+            flag = temperature_flag::FREEZER;
+        } else if( enabled && info().has_flag( VPFLAG_HEATED_TANK ) ) {
+            flag = temperature_flag::HEATER;
+        }
+        base.process( here, nullptr, pos, 1, flag );
     }
-    if( enabled && info().has_flag( VPFLAG_FRIDGE ) ) {
-        flag = temperature_flag::FRIDGE;
-    } else if( enabled && info().has_flag( VPFLAG_FREEZER ) ) {
-        flag = temperature_flag::FREEZER;
-    } else if( enabled && info().has_flag( VPFLAG_HEATED_TANK ) ) {
-        flag = temperature_flag::HEATER;
-    }
-    base.process( here, nullptr, pos, 1, flag );
 }
 
 bool vehicle_part::fill_with( item &liquid, int qty )
 {
-    if( ( is_tank() && !( liquid.made_of( phase_id::LIQUID ) || liquid.made_of( phase_id::GAS ) ) ) ||
-        !can_reload( liquid ) ) {
+    if( ( is_tank() && !liquid.made_of( phase_id::LIQUID ) ) || !can_reload( liquid ) ) {
         return false;
     }
 
@@ -621,21 +611,32 @@ bool vehicle_part::is_seat() const
 
 const vpart_info &vehicle_part::info() const
 {
-    return *info_;
+    static const vpart_info info_none = vpart_info();
+    if( !info_cache ) {
+        // segmentation fault occurs here during severe vehicle crash
+        // probably this part is removed/destroyed?
+        if( !id.is_null() && id.is_valid() ) {
+            info_cache = &id.obj();
+        } else {
+            info_cache = nullptr;
+            return info_none;
+        }
+    }
+    return *info_cache;
 }
 
 void vehicle::set_hp( vehicle_part &pt, int qty, bool keep_degradation, int new_degradation )
 {
     int dur = pt.info().durability;
     if( qty == dur || dur <= 0 ) {
-        pt.base.set_damage( keep_degradation ? pt.base.degradation() : 0 );
+        pt.base.set_damage( keep_degradation ? pt.base.damage_floor( false ) : 0 );
 
     } else if( qty == 0 ) {
         pt.base.set_damage( pt.base.max_damage() );
 
     } else {
         int amt = pt.base.max_damage() - pt.base.max_damage() * qty / dur;
-        amt = std::max( amt, pt.base.degradation() );
+        amt = std::max( amt, pt.base.damage_floor( false ) );
         pt.base.set_damage( amt );
     }
     if( !keep_degradation ) {
@@ -649,13 +650,14 @@ void vehicle::set_hp( vehicle_part &pt, int qty, bool keep_degradation, int new_
     }
 }
 
-bool vehicle::mod_hp( vehicle_part &pt, int qty )
+bool vehicle::mod_hp( vehicle_part &pt, int qty, damage_type dt )
 {
-    const int dur = pt.info().durability;
-    if( dur <= 0 ) {
+    int dur = pt.info().durability;
+    if( dur > 0 ) {
+        return pt.base.mod_damage( -( pt.base.max_damage() * qty / dur ), dt );
+    } else {
         return false;
     }
-    return pt.base.mod_damage( -qty * pt.base.max_damage() / dur );
 }
 
 bool vehicle::can_enable( const vehicle_part &pt, bool alert ) const
@@ -679,7 +681,7 @@ bool vehicle::can_enable( const vehicle_part &pt, bool alert ) const
 
     // TODO: check fuel for combustion engines
 
-    if( pt.info().epower < 0_W && fuel_left( fuel_type_battery ) <= 0 ) {
+    if( pt.info().epower < 0 && fuel_left( fuel_type_battery, true ) <= 0 ) {
         if( alert ) {
             add_msg( m_bad, _( "Insufficient power to enable %s" ), pt.name() );
         }
@@ -715,7 +717,8 @@ bool vehicle::assign_seat( vehicle_part &pt, const npc &who )
 
 std::string vehicle_part::carried_name() const
 {
-    return carried_stack.empty()
-           ? std::string()
-           : carried_stack.top().veh_name;
+    if( carry_names.empty() ) {
+        return std::string();
+    }
+    return carry_names.top().substr( name_offset );
 }

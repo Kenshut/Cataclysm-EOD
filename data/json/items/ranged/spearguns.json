@@ -13,14 +13,14 @@
     "volume": "250 ml",
     "weight": "18 g",
     "longest_side": "120 cm",
+    "bashing": 1,
     "ammo_type": "fishspear",
     "damage": { "damage_type": "stab", "amount": 12, "armor_penetration": 4 },
     "range": 6,
     "dispersion": 150,
     "loudness": 0,
     "count": 4,
-    "effects": [ "RECOVER_5" ],
-    "melee_damage": { "bash": 1 }
+    "effects": [ "RECOVER_5" ]
   },
   {
     "type": "AMMO",
@@ -36,14 +36,14 @@
     "volume": "250 ml",
     "weight": "12 g",
     "longest_side": "120 cm",
+    "bashing": 1,
     "ammo_type": "fishspear",
     "damage": { "damage_type": "stab", "amount": 14, "armor_penetration": 12 },
     "range": 10,
     "dispersion": 90,
     "loudness": 0,
     "count": 4,
-    "effects": [ "RECOVER_3" ],
-    "melee_damage": { "bash": 1 }
+    "effects": [ "RECOVER_3" ]
   },
   {
     "type": "AMMO",
@@ -59,14 +59,14 @@
     "volume": "250 ml",
     "weight": "28 g",
     "longest_side": "120 cm",
+    "bashing": 1,
     "ammo_type": "fishspear",
     "damage": { "damage_type": "stab", "amount": 14, "armor_penetration": 8 },
     "range": 6,
     "dispersion": 120,
     "loudness": 0,
     "count": 4,
-    "effects": [ "RECOVER_15" ],
-    "melee_damage": { "bash": 1 }
+    "effects": [ "RECOVER_15" ]
   },
   {
     "id": "airspeargun",
@@ -86,6 +86,7 @@
     "weight": "3460 g",
     "volume": "2 L",
     "longest_side": "90 cm",
+    "bashing": 8,
     "to_hit": -2,
     "ranged_damage": { "damage_type": "stab", "amount": 12 },
     "range": 2,
@@ -94,9 +95,16 @@
     "clip_size": 4,
     "reload": 6000,
     "loudness": 11,
-    "valid_mod_locations": [ [ "grip", 1 ], [ "sights", 1 ], [ "sling", 1 ], [ "stock", 1 ], [ "rail mount", 1 ], [ "underbarrel mount", 1 ] ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 4 } } ],
-    "melee_damage": { "bash": 8 }
+    "valid_mod_locations": [
+      [ "accessories", 4 ],
+      [ "grip", 1 ],
+      [ "sights", 1 ],
+      [ "sling", 1 ],
+      [ "stock", 1 ],
+      [ "rail mount", 1 ],
+      [ "underbarrel mount", 1 ]
+    ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 4 } } ]
   },
   {
     "id": "doublespeargun",
@@ -116,6 +124,7 @@
     "weight": "3060 g",
     "volume": "2 L",
     "longest_side": "90 cm",
+    "bashing": 8,
     "to_hit": -2,
     "ranged_damage": { "damage_type": "stab", "amount": 6 },
     "range": 4,
@@ -123,9 +132,16 @@
     "durability": 7,
     "clip_size": 2,
     "reload": 700,
-    "valid_mod_locations": [ [ "grip", 1 ], [ "sights", 1 ], [ "sling", 1 ], [ "stock", 1 ], [ "rail mount", 1 ], [ "underbarrel mount", 1 ] ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 2 } } ],
-    "melee_damage": { "bash": 8 }
+    "valid_mod_locations": [
+      [ "accessories", 4 ],
+      [ "grip", 1 ],
+      [ "sights", 1 ],
+      [ "sling", 1 ],
+      [ "stock", 1 ],
+      [ "rail mount", 1 ],
+      [ "underbarrel mount", 1 ]
+    ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 2 } } ]
   },
   {
     "id": "minispeargun",
@@ -145,14 +161,21 @@
     "weight": "840 g",
     "volume": "1 L",
     "longest_side": "35 cm",
+    "bashing": 7,
     "to_hit": -2,
     "dispersion": 120,
     "durability": 8,
     "clip_size": 1,
     "reload": 600,
-    "valid_mod_locations": [ [ "grip", 1 ], [ "sights", 1 ], [ "stock", 1 ], [ "rail mount", 1 ], [ "underbarrel mount", 1 ] ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 1 } } ],
-    "melee_damage": { "bash": 7 }
+    "valid_mod_locations": [
+      [ "accessories", 2 ],
+      [ "grip", 1 ],
+      [ "sights", 1 ],
+      [ "stock", 1 ],
+      [ "rail mount", 1 ],
+      [ "underbarrel mount", 1 ]
+    ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 1 } } ]
   },
   {
     "id": "speargun",
@@ -172,6 +195,7 @@
     "weight": "2100 g",
     "volume": "1750 ml",
     "longest_side": "90 cm",
+    "bashing": 7,
     "to_hit": -2,
     "ranged_damage": { "damage_type": "stab", "amount": 6 },
     "range": 4,
@@ -179,8 +203,15 @@
     "durability": 8,
     "clip_size": 1,
     "reload": 700,
-    "valid_mod_locations": [ [ "grip", 1 ], [ "sights", 1 ], [ "sling", 1 ], [ "stock", 1 ], [ "rail mount", 1 ], [ "underbarrel mount", 1 ] ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 1 } } ],
-    "melee_damage": { "bash": 7 }
+    "valid_mod_locations": [
+      [ "accessories", 4 ],
+      [ "grip", 1 ],
+      [ "sights", 1 ],
+      [ "sling", 1 ],
+      [ "stock", 1 ],
+      [ "rail mount", 1 ],
+      [ "underbarrel mount", 1 ]
+    ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "ammo_restriction": { "fishspear": 1 } } ]
   }
 ]

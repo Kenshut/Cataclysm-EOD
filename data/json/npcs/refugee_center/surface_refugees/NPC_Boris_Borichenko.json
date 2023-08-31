@@ -30,9 +30,7 @@
       { "trait": "OUTDOORSMAN" },
       { "trait": "PAINRESIST" },
       { "group": "trait_group_STRONGBACK" },
-      { "group": "Appearance_Caucasian" },
-      { "trait": "NO_BASH" },
-      { "trait": "RETURN_TO_START_POS" }
+      { "group": "Appearance_Caucasian" }
     ],
     "proficiencies": [ "prof_carpentry_basic", "prof_carving", "prof_plumbing" ],
     "skills": [

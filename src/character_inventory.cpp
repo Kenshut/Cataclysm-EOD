@@ -89,7 +89,7 @@ void Character::handle_contents_changed( const std::vector<item_location> &conta
         if( loc.has_parent() ) {
             item_location parent_loc = loc.parent_item();
             item_loc_with_depth parent( parent_loc );
-            item_pocket *const pocket = loc.parent_pocket();
+            item_pocket *const pocket = parent_loc->contained_where( *loc );
             pocket->unseal();
             bool exists = false;
             auto it = sorted_containers.lower_bound( parent );
@@ -161,7 +161,6 @@ item_location Character::try_add( item it, const item *avoid, const item *origin
                                   const bool allow_wield, bool ignore_pkt_settings )
 {
     invalidate_inventory_validity_cache();
-    invalidate_leak_level_cache();
     itype_id item_type_id = it.typeId();
     last_item = item_type_id;
 
@@ -208,7 +207,6 @@ item_location Character::i_add( item it, bool /* should_stack */, const item *av
                                 const bool allow_wield, bool ignore_pkt_settings )
 {
     invalidate_inventory_validity_cache();
-    invalidate_leak_level_cache();
     item_location added = try_add( it, avoid, original_inventory_item, allow_wield,
                                    ignore_pkt_settings );
     if( added == item_location::nowhere ) {
@@ -223,44 +221,6 @@ item_location Character::i_add( item it, bool /* should_stack */, const item *av
         }
     } else {
         return added;
-    }
-}
-
-ret_val<item_location> Character::i_add_or_fill( item &it, bool should_stack, const item *avoid,
-        const item *original_inventory_item, const bool allow_drop,
-        const bool allow_wield, bool ignore_pkt_settings )
-{
-    item_location loc = item_location::nowhere;
-    bool success = false;
-    if( it.count_by_charges() && it.charges >= 2 && !ignore_pkt_settings ) {
-        const int last_charges = it.charges;
-        int new_charge = last_charges;
-        this->worn.add_stash( *this, it, new_charge, false );
-
-        if( new_charge < last_charges ) {
-            it.charges = new_charge;
-            success = true;
-        } else {
-            success = false;
-        }
-        if( new_charge >= 1 ) {
-            if( !allow_wield || !wield( it ) ) {
-                if( allow_drop ) {
-                    loc = item_location( map_cursor( pos() ), &get_map().add_item_or_charges( pos(), it ) );
-                }
-            } else {
-                loc = item_location( *this, &weapon );
-            }
-        }
-        if( success ) {
-            return ret_val<item_location>::make_success( loc );
-        } else {
-            return ret_val<item_location>::make_failure( loc );
-        }
-    } else {
-        loc = i_add( it, should_stack, avoid, original_inventory_item, allow_drop, allow_wield,
-                     ignore_pkt_settings );
-        return ret_val<item_location>::make_success( loc );
     }
 }
 
@@ -291,7 +251,6 @@ item Character::i_rem( const item *it )
         debugmsg( "did not found item %s to remove it!", it->tname() );
         return item();
     }
-    invalidate_leak_level_cache();
     return tmp.front();
 }
 
@@ -304,7 +263,7 @@ bool Character::i_add_or_drop( item &it, int qty, const item *avoid,
                                const item *original_inventory_item )
 {
     bool retval = true;
-    bool drop = it.made_of( phase_id::LIQUID ) || it.made_of( phase_id::GAS );
+    bool drop = it.made_of( phase_id::LIQUID );
     bool add = it.is_gun() || !it.is_irremovable();
     inv->assign_empty_invlet( it, *this );
     map &here = get_map();
@@ -411,7 +370,7 @@ int Character::get_item_position( const item *it ) const
         return -1;
     }
 
-    std::optional<int> pos = worn.get_item_position( *it );
+    cata::optional<int> pos = worn.get_item_position( *it );
     if( pos ) {
         return worn_position_to_index( *pos );
     }
@@ -431,8 +390,8 @@ void Character::drop( const drop_locations &what, const tripoint &target,
     if( what.empty() ) {
         return;
     }
-    invalidate_leak_level_cache();
-    const std::optional<vpart_reference> vp = get_map().veh_at(
+
+    const cata::optional<vpart_reference> vp = get_map().veh_at(
                 target ).part_with_feature( "CARGO", false );
     if( rl_dist( pos(), target ) > 1 || !( stash || get_map().can_put_items( target ) )
         || ( vp.has_value() && vp->part().is_cleaner_on() ) ) {
@@ -449,9 +408,13 @@ void Character::drop( const drop_locations &what, const tripoint &target,
         }
     }
     if( stash ) {
-        assign_activity( stash_activity_actor( items, placement ) );
+        assign_activity( player_activity( stash_activity_actor(
+                                              items, placement
+                                          ) ) );
     } else {
-        assign_activity( drop_activity_actor( items, placement, /* force_ground = */ false ) );
+        assign_activity( player_activity( drop_activity_actor(
+                                              items, placement, /*force_ground=*/false
+                                          ) ) );
     }
 }
 
@@ -460,7 +423,7 @@ void Character::pick_up( const drop_locations &what )
     if( what.empty() ) {
         return;
     }
-    invalidate_leak_level_cache();
+
     //todo: refactor pickup_activity_actor to just use drop_locations, also rename drop_locations
     std::vector<item_location> items;
     std::vector<int> quantities;
@@ -469,7 +432,7 @@ void Character::pick_up( const drop_locations &what )
         quantities.emplace_back( dl.second );
     }
 
-    assign_activity( pickup_activity_actor( items, quantities, pos(), false ) );
+    assign_activity( player_activity( pickup_activity_actor( items, quantities, pos(), false ) ) );
 }
 
 invlets_bitset Character::allocated_invlets() const
@@ -495,7 +458,7 @@ bool Character::has_active_item( const itype_id &id ) const
 
 ret_val<void> Character::can_drop( const item &it ) const
 {
-    if( it.has_flag( flag_NO_UNWIELD ) || it.has_flag( flag_INTEGRATED ) ) {
+    if( it.has_flag( flag_NO_UNWIELD ) ) {
         return ret_val<void>::make_failure( _( "You cannot drop your %s." ), it.tname() );
     }
     return ret_val<void>::make_success();
@@ -509,7 +472,7 @@ void Character::drop_invalid_inventory()
     bool dropped_liquid = false;
     for( const std::list<item> *stack : inv->const_slice() ) {
         const item &it = stack->front();
-        if( it.made_of( phase_id::LIQUID ) || it.made_of( phase_id::GAS ) ) {
+        if( it.made_of( phase_id::LIQUID ) ) {
             dropped_liquid = true;
             get_map().add_item_or_charges( pos(), it );
             // must be last
@@ -520,11 +483,9 @@ void Character::drop_invalid_inventory()
         add_msg_if_player( m_bad, _( "Liquid from your inventory has leaked onto the ground." ) );
     }
 
-    item_location weap = get_wielded_item();
-    if( weap ) {
-        weap.overflow();
-    }
-    worn.overflow( *this );
+    weapon.overflow( pos() );
+    worn.overflow( pos() );
+
     cache_inventory_is_valid = true;
 }
 

@@ -6,11 +6,7 @@
 #include <memory>
 #include <type_traits>
 
-#include "condition.h"
 #include "clone_ptr.h"
-#include "creature.h"
-#include "dialogue.h"
-#include "type_id.h"
 
 class JsonObject;
 class monster;
@@ -29,12 +25,6 @@ class mattack_actor
         bool was_loaded = false;
 
         int cooldown = 0;
-        // Percent chance for the attack to happen if the mob tries it
-        int attack_chance = 100;
-
-        // Dialogue conditions of the attack
-        std::function<bool( dialogue & )> condition;
-        bool has_condition = false;
 
         void load( const JsonObject &jo, const std::string &src );
 

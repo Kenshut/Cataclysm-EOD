@@ -29,7 +29,7 @@ void activity_tracker::try_reduce_weariness( int bmr, float fatigue_mod, float f
         }
     }
 
-    const float recovery_mult = 0.05f * get_option<float>( "WEARY_RECOVERY_MULT" );
+    const float recovery_mult = get_option<float>( "WEARY_RECOVERY_MULT" );
     const int bmr_cal = bmr * 1000;
 
     if( low_activity_ticks >= 1.0f ) {

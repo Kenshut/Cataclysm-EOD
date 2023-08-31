@@ -9,8 +9,6 @@
 #include "units.h"
 
 static const character_modifier_id
-character_modifier_move_mode_move_cost_mod( "move_mode_move_cost_mod" );
-static const character_modifier_id
 character_modifier_stamina_move_cost_mod( "stamina_move_cost_mod" );
 static const character_modifier_id
 character_modifier_stamina_recovery_breathing_mod( "stamina_recovery_breathing_mod" );
@@ -71,8 +69,7 @@ static float move_cost_mod( Character &dummy, const move_mode_id &move_mode,
     REQUIRE( dummy.get_stamina() == new_stamina );
 
     // The point of it all: move cost modifier
-    return dummy.get_modifier( character_modifier_stamina_move_cost_mod ) * dummy.get_modifier(
-               character_modifier_move_mode_move_cost_mod );
+    return dummy.get_modifier( character_modifier_stamina_move_cost_mod );
 }
 
 // Return amount of stamina burned per turn by `burn_move_stamina` in the given movement mode.
@@ -143,7 +140,7 @@ static float actual_regen_rate( Character &dummy, int turns )
 // Test cases
 // ----------
 
-TEST_CASE( "stamina_movement_cost_modifier", "[stamina][cost]" )
+TEST_CASE( "stamina movement cost modifier", "[stamina][cost]" )
 {
     Character &dummy = get_player_character();
 
@@ -190,7 +187,7 @@ TEST_CASE( "stamina_movement_cost_modifier", "[stamina][cost]" )
     }
 }
 
-TEST_CASE( "modify_character_stamina", "[stamina][modify]" )
+TEST_CASE( "modify character stamina", "[stamina][modify]" )
 {
     Character &dummy = get_player_character();
     clear_avatar();
@@ -265,12 +262,12 @@ TEST_CASE( "modify_character_stamina", "[stamina][modify]" )
     }
 }
 
-TEST_CASE( "stamina_burn_for_movement", "[stamina][burn][move]" )
+TEST_CASE( "stamina burn for movement", "[stamina][burn][move]" )
 {
     Character &dummy = get_player_character();
 
-    // Defined in world options
-    const int normal_burn_rate = 15 * get_option<float>( "PLAYER_BASE_STAMINA_BURN_RATE" );
+    // Defined in game_balance.json
+    const int normal_burn_rate = get_option<int>( "PLAYER_BASE_STAMINA_BURN_RATE" );
     REQUIRE( normal_burn_rate > 0 );
 
     GIVEN( "player is naked and unburdened" ) {
@@ -328,7 +325,7 @@ TEST_CASE( "stamina_burn_for_movement", "[stamina][burn][move]" )
     }
 }
 
-TEST_CASE( "burning_stamina_when_overburdened_may_cause_pain", "[stamina][burn][pain]" )
+TEST_CASE( "burning stamina when overburdened may cause pain", "[stamina][burn][pain]" )
 {
     Character &dummy = get_player_character();
     int pain_before;
@@ -371,13 +368,13 @@ TEST_CASE( "burning_stamina_when_overburdened_may_cause_pain", "[stamina][burn][
     }
 }
 
-TEST_CASE( "stamina_regeneration_rate", "[stamina][update][regen]" )
+TEST_CASE( "stamina regeneration rate", "[stamina][update][regen]" )
 {
     Character &dummy = get_player_character();
     clear_avatar();
     int turn_moves = to_moves<int>( 1_turns );
 
-    const float normal_regen_rate = 20 * get_option<float>( "PLAYER_BASE_STAMINA_REGEN_RATE" );
+    const float normal_regen_rate = get_option<float>( "PLAYER_BASE_STAMINA_REGEN_RATE" );
     REQUIRE( normal_regen_rate > 0 );
 
     GIVEN( "character is not winded" ) {
@@ -400,7 +397,7 @@ TEST_CASE( "stamina_regeneration_rate", "[stamina][update][regen]" )
     }
 }
 
-TEST_CASE( "stamina_regen_in_different_movement_modes", "[stamina][update][regen][mode]" )
+TEST_CASE( "stamina regen in different movement modes", "[stamina][update][regen][mode]" )
 {
     Character &dummy = get_player_character();
     clear_avatar();
@@ -436,7 +433,7 @@ TEST_CASE( "stamina_regen_in_different_movement_modes", "[stamina][update][regen
     }
 }
 
-TEST_CASE( "stamina_regen_with_mouth_encumbrance", "[stamina][update][regen][encumbrance]" )
+TEST_CASE( "stamina regen with mouth encumbrance", "[stamina][update][regen][encumbrance]" )
 {
     Character &dummy = get_player_character();
     clear_avatar();
@@ -446,7 +443,7 @@ TEST_CASE( "stamina_regen_with_mouth_encumbrance", "[stamina][update][regen][enc
     int turn_moves = to_moves<int>( 1_turns );
 
     // Ensure normal baseline regen rate and breathing modifier
-    const float normal_regen_rate = 20 * get_option<float>( "PLAYER_BASE_STAMINA_REGEN_RATE" );
+    const float normal_regen_rate = get_option<float>( "PLAYER_BASE_STAMINA_REGEN_RATE" );
     REQUIRE( normal_regen_rate == Approx( 20.0 ) );
     // Regen is reduced in proportion to stamina_recovery_breathing_modifier
     const float normal_breathing_mod = dummy.get_modifier(

@@ -1,6 +1,5 @@
 #include "cached_options.h"
 #include "character.h"
-#include "options.h"
 #include "proficiency.h"
 
 bool Character::has_proficiency( const proficiency_id &prof ) const
@@ -11,20 +10,6 @@ bool Character::has_proficiency( const proficiency_id &prof ) const
 float Character::get_proficiency_practice( const proficiency_id &prof ) const
 {
     return _proficiencies->pct_practiced( prof );
-}
-
-time_duration Character::get_proficiency_practiced_time( const proficiency_id &prof ) const
-{
-    return _proficiencies->pct_practiced_time( prof );
-}
-
-void Character::set_proficiency_practiced_time( const proficiency_id &prof, int turns )
-{
-    if( turns < 0 ) {
-        _proficiencies->remove( prof );
-        return;
-    }
-    _proficiencies->set_time_practiced( prof, time_duration::from_turns( turns ) );
 }
 
 bool Character::has_prof_prereqs( const proficiency_id &prof ) const
@@ -56,13 +41,12 @@ std::vector<display_proficiency> Character::display_proficiencies() const
 }
 
 bool Character::practice_proficiency( const proficiency_id &prof, const time_duration &amount,
-                                      const std::optional<time_duration> &max )
+                                      const cata::optional<time_duration> &max )
 {
     // Proficiencies can ignore focus using the `ignore_focus` JSON property
     const bool ignore_focus = prof->ignore_focus();
-    const time_duration mod_amount = amount * get_option<float>( "PROF_LEARN_MOD" );
-    const time_duration &focused_amount = ignore_focus ? mod_amount : time_duration::from_seconds(
-            adjust_for_focus( to_seconds<float>( mod_amount ) ) );
+    const time_duration &focused_amount = ignore_focus ? amount : time_duration::from_seconds(
+            adjust_for_focus( to_seconds<int>( amount ) ) / 100 );
 
     const float pct_before = _proficiencies->pct_practiced( prof );
     const bool learned = _proficiencies->practice( prof, focused_amount, max );
@@ -106,5 +90,5 @@ void Character::set_proficiency_practice( const proficiency_id &id, const time_d
         return;
     }
 
-    _proficiencies->practice( id, amount, std::nullopt );
+    _proficiencies->practice( id, amount, cata::nullopt );
 }

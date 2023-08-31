@@ -31,10 +31,6 @@ struct furn_t;
 struct itype;
 struct tripoint;
 
-// size of connect groups bitset; increase if needed
-const int NUM_TERCONN = 32;
-connect_group get_connect_group( const std::string &name );
-
 template <typename E> struct enum_traits;
 
 struct map_bash_info {
@@ -66,7 +62,7 @@ struct map_bash_info {
         terrain,
         field
     };
-    bool load( const JsonObject &jsobj, std::string_view member, map_object_type obj_type,
+    bool load( const JsonObject &jsobj, const std::string &member, map_object_type obj_type,
                const std::string &context );
 };
 struct map_deconstruct_info {
@@ -79,7 +75,7 @@ struct map_deconstruct_info {
     ter_str_id ter_set;    // terrain to set (REQUIRED for terrain))
     furn_str_id furn_set;    // furniture to set (only used by furniture, not terrain)
     map_deconstruct_info();
-    bool load( const JsonObject &jsobj, std::string_view member, bool is_furniture,
+    bool load( const JsonObject &jsobj, const std::string &member, bool is_furniture,
                const std::string &context );
 };
 struct map_shoot_info {
@@ -99,7 +95,7 @@ struct map_shoot_info {
     int destroy_dmg_max = 0;
     // Are lasers incapable of destroying the object (defaults to false)
     bool no_laser_destroy = false;
-    bool load( const JsonObject &jsobj, std::string_view member, bool was_loaded );
+    bool load( const JsonObject &jsobj, const std::string &member, bool was_loaded );
 };
 struct furn_workbench_info {
     // Base multiplier applied for crafting here
@@ -108,7 +104,7 @@ struct furn_workbench_info {
     units::mass allowed_mass;
     units::volume allowed_volume;
     furn_workbench_info();
-    bool load( const JsonObject &jsobj, std::string_view member );
+    bool load( const JsonObject &jsobj, const std::string &member );
 };
 struct plant_data {
     // What the furniture turns into when it grows or you plant seeds in it
@@ -120,7 +116,7 @@ struct plant_data {
     // What percent of the normal harvest this crop gives
     float harvest_multiplier;
     plant_data();
-    bool load( const JsonObject &jsobj, std::string_view member );
+    bool load( const JsonObject &jsobj, const std::string &member );
 };
 
 /*
@@ -192,7 +188,6 @@ struct plant_data {
  * Order does not matter.
  */
 enum class ter_furn_flag : int {
-    TFLAG_BAREFOOT_BAD,
     TFLAG_TRANSPARENT,
     TFLAG_FLAMMABLE,
     TFLAG_REDUCE_SCENT,
@@ -220,12 +215,11 @@ enum class ter_furn_flag : int {
     TFLAG_WALL,
     TFLAG_DEEP_WATER,
     TFLAG_SHALLOW_WATER,
-    TFLAG_WATER_CUBE,
     TFLAG_CURRENT,
     TFLAG_HARVESTED,
     TFLAG_PERMEABLE,
     TFLAG_AUTO_WALL_SYMBOL,
-    TFLAG_CONNECT_WITH_WALL,
+    TFLAG_CONNECT_TO_WALL,
     TFLAG_CLIMBABLE,
     TFLAG_GOES_DOWN,
     TFLAG_GOES_UP,
@@ -307,7 +301,6 @@ enum class ter_furn_flag : int {
     TFLAG_TRANSPARENT_FLOOR,
     TFLAG_TOILET_WATER,
     TFLAG_ELEVATOR,
-    TFLAG_ACTIVE_GENERATOR,
 
     NUM_TFLAG_FLAGS
 };
@@ -317,17 +310,33 @@ struct enum_traits<ter_furn_flag> {
     static constexpr ter_furn_flag last = ter_furn_flag::NUM_TFLAG_FLAGS;
 };
 
-struct connect_group {
-    public:
-        connect_group_id id;
-        int index;
-        std::set<ter_furn_flag> group_flags;
-        std::set<ter_furn_flag> connects_to_flags;
-        std::set<ter_furn_flag> rotates_to_flags;
-
-        bool was_loaded;
-        static void load( const JsonObject &jo );
-        static void reset();
+/*
+ * Terrain groups which affect whether the terrain connects visually.
+ * Groups are also defined in ter_connects_map() in mapdata.cpp which matches group to JSON string.
+ */
+enum ter_connects : int {
+    TERCONN_NONE,
+    TERCONN_WALL,
+    TERCONN_CHAINFENCE,
+    TERCONN_WOODFENCE,
+    TERCONN_RAILING,
+    TERCONN_POOLWATER,
+    TERCONN_WATER,
+    TERCONN_PAVEMENT,
+    TERCONN_RAIL,
+    TERCONN_COUNTER,
+    TERCONN_CANVAS_WALL,
+    TERCONN_SAND,
+    TERCONN_PIT_DEEP,
+    TERCONN_LINOLEUM,
+    TERCONN_CARPET,
+    TERCONN_CONCRETE,
+    TERCONN_CLAY,
+    TERCONN_DIRT,
+    TERCONN_ROCKFLOOR,
+    TERCONN_MULCHFLOOR,
+    TERCONN_METALFLOOR,
+    TERCONN_WOODFLOOR,
 };
 
 struct activity_byproduct {
@@ -529,26 +538,14 @@ struct map_data_common_t {
 
         void set_flag( ter_furn_flag flag );
 
-        // Terrain groups of this type, for others to connect or rotate to; not symmetric, passive part
-        std::bitset<NUM_TERCONN> connect_groups;
-        // Terrain groups to connect to; not symmetric, target of active part
-        std::bitset<NUM_TERCONN> connect_to_groups;
-        // Terrain groups rotate towards; not symmetric, target of active part
-        std::bitset<NUM_TERCONN> rotate_to_groups;
+        int connect_group = 0;
 
-        // Set to be member of a connection target group
-        void set_connect_groups( const std::vector<std::string> &connect_groups_vec );
-        // Set target connection group
-        void set_connects_to( const std::vector<std::string> &connect_groups_vec );
-        // Set target group to rotate towards
-        void set_rotates_to( const std::vector<std::string> &connect_groups_vec );
+        void set_connects( const std::string &connect_group_string );
 
-        // Set groups helper function
-        void set_groups( std::bitset<NUM_TERCONN> &bits,
-                         const std::vector<std::string> &connect_groups_vec );
+        bool connects( int &ret ) const;
 
-        bool in_connect_groups( const std::bitset<NUM_TERCONN> &test_connect_group ) const {
-            return ( connect_groups & test_connect_group ).any();
+        bool connects_to( int test_connect_group ) const {
+            return connect_group != TERCONN_NONE && connect_group == test_connect_group;
         }
 
         int symbol() const;
@@ -765,18 +762,20 @@ extern ter_id t_null,
        t_gas_pump, t_gas_pump_smashed,
        t_diesel_pump, t_diesel_pump_smashed,
        t_atm,
+       t_generator_broken,
        t_missile, t_missile_exploded,
        t_radio_tower, t_radio_controls,
-       t_gates_mech_control, t_gates_control_concrete, t_gates_control_brick,
+       t_console_broken, t_console, t_gates_mech_control, t_gates_control_concrete, t_gates_control_brick,
        t_barndoor, t_palisade_pulley,
        t_gates_control_metal,
        t_sewage_pipe, t_sewage_pump,
+       t_centrifuge,
        t_column,
        t_vat,
        t_rootcellar,
        t_cvdbody, t_cvdmachine,
        t_water_pump,
-       t_conveyor,
+       t_conveyor, t_machinery_light, t_machinery_heavy, t_machinery_old, t_machinery_electronic,
        t_improvised_shelter,
        // Staircases etc.
        t_stairs_down, t_stairs_up, t_manhole, t_ladder_up, t_ladder_down, t_slope_down,
@@ -790,7 +789,7 @@ extern ter_id t_null,
        t_rock_red, t_rock_green, t_rock_blue, t_floor_red, t_floor_green, t_floor_blue,
        t_switch_rg, t_switch_gb, t_switch_rb, t_switch_even,
        t_rdoor_c, t_rdoor_b, t_rdoor_o, t_mdoor_frame, t_window_reinforced, t_window_reinforced_noglass,
-       t_window_enhanced, t_window_enhanced_noglass, t_open_air,
+       t_window_enhanced, t_window_enhanced_noglass, t_open_air, t_plut_generator,
        t_pavement_bg_dp, t_pavement_y_bg_dp, t_sidewalk_bg_dp, t_guardrail_bg_dp,
        t_linoleum_white, t_linoleum_gray, t_rad_platform,
        // Railroad and subway
@@ -849,7 +848,7 @@ extern furn_id f_null, f_clear,
        f_camp_chair,
        f_sign,
        f_gunsafe_ml, f_gunsafe_mj, f_gun_safe_el,
-       f_street_light, f_traffic_light, f_flagpole, f_wooden_flagpole,
+       f_street_light, f_traffic_light,
        f_console, f_console_broken;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

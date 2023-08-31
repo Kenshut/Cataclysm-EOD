@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <limits>
 
-#include "coordinates.h"
 #include "enums.h"
 #include "game_constants.h"
 #include "mdarray.h"
@@ -53,7 +52,7 @@ class reachability_cache_layer
     public:
         using Q = reachability_cache_quadrant;
         using ElType = uint8_t;
-        using QLayers = std::array<reachability_cache_layer, enum_traits<Q>::size>;
+        using QLayers = reachability_cache_layer[enum_traits<Q>::size];
         // max distance the cache supports
         // all checks for distance that exceeds MAX_D will return "false"
         static constexpr int MAX_D = std::numeric_limits<ElType>::max() - 3;

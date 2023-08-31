@@ -4,27 +4,20 @@
     "id": "cable_xlr",
     "name": { "str": "XLR cable" },
     "description": "A balanced cable used for sending audio signal.  The connectors have three prongs.",
-    "material": [ { "type": "copper", "portion": 85 }, { "type": "plastic", "portion": 15 } ],
-    "symbol": ",",
+    "symbol": "o",
     "color": "dark_gray",
     "volume": "325 ml",
-    "weight": "45 g",
-    "to_hit": { "grip": "none", "length": "hand", "surface": "any", "balance": "uneven" },
-    "flags": [ "SOFT" ]
+    "weight": "45 g"
   },
   {
     "type": "GENERIC",
     "id": "cable_speaker",
     "name": { "str": "speaker cable" },
     "description": "This audio cable connects one speaker to a powered head, or one speaker to another.",
-    "material": [ { "type": "copper", "portion": 85 }, { "type": "plastic", "portion": 15 } ],
-    "symbol": ",",
+    "symbol": "o",
     "color": "dark_gray",
     "volume": "400 ml",
-    "weight": "90 g",
-    "to_hit": { "grip": "none", "length": "hand", "surface": "any", "balance": "uneven" },
-    "melee_damage": { "bash": 1 },
-    "flags": [ "SOFT" ]
+    "weight": "90 g"
   },
   {
     "type": "GENERIC",
@@ -34,104 +27,65 @@
     "copy-from": "cable_xlr"
   },
   {
-    "type": "ARMOR",
+    "type": "GENERIC",
     "id": "headphones_circumaural",
-    "name": { "str": "pair of headphones", "str_pl": "pairs of headphones" },
-    "description": "A pair of headphones that covers your ears for improved sound quality and private listening.  You could wear them on your head even if you don't plan to listen to music, but it'd have little to no effect.",
-    "symbol": "[",
-    "color": "dark_gray",
+    "name": { "str_sp": "headphones" },
+    "description": "Typical headphones that cover your ears.  A well-known brand that is very high quality, with a detachable 1/8\" cable.  Comes with a 1/8\" to 1/4\" adaptor.",
+    "symbol": "Ω",
     "volume": "400 ml",
-    "weight": "100 g",
-    "longest_side": "18 cm",
-    "to_hit": { "grip": "none", "length": "hand", "surface": "any", "balance": "uneven" },
-    "price": "20 USD",
-    "price_postapoc": "1 USD",
-    "material": [ "plastic" ],
-    "armor": [
-      {
-        "material": [ { "type": "plastic", "covered_by_mat": 100, "thickness": 2 } ],
-        "covers": [ "head" ],
-        "coverage": 40,
-        "specifically_covers": [ "head_ear_l", "head_ear_r", "head_crown" ],
-        "layers": [ "OUTER" ]
-      }
-    ],
-    "melee_damage": { "bash": 1 },
-    "flags": [ "PADDED", "WATER_FRIENDLY", "FRAGILE", "FRAGILE_MELEE" ]
+    "weight": "100 g"
   },
   {
     "type": "GENERIC",
     "id": "microphone_xlr_generic",
     "name": { "str": "XLR microphone" },
-    "description": "A microphone used to record or amplify sound.  Comes with a clip.  Has a 3-pin XLR connector on the bottom in order to connect to an amp.",
-    "symbol": ",",
+    "description": "A typical microphone used to record or amplify voice.  Comes with a clip.  Has a 3-pin XLR connector on the bottom in order to connect to an amp.",
+    "symbol": "i",
     "color": "dark_gray",
     "volume": "550 ml",
-    "weight": "265 g",
-    "price": "20 USD",
-    "price_postapoc": "1 USD",
-    "material": [ "aluminum" ],
-    "longest_side": "15 cm",
-    "to_hit": { "grip": "solid", "length": "hand", "surface": "any", "balance": "neutral" },
-    "melee_damage": { "bash": 4 },
-    "flags": [ "FRAGILE_MELEE" ]
+    "weight": "265 g"
   },
   {
     "type": "GENERIC",
     "id": "mic_stand_tall",
     "name": { "str": "microphone stand" },
-    "description": "A lightweight telescoping boom stand made of aluminum and painted black.  About 6' tall when full extended, or 3' when closed fully.  Has threads for a mic clip on one end.  Too flimsy to make a good melee weapon.",
-    "symbol": "/",
+    "description": "A lightweight telescoping boom stand made of aluminum and painted black.  About 6' tall when full extended, or 3' when closed fully.  Has threads for a mic clip on one end.",
+    "symbol": "Γ",
     "color": "dark_gray",
     "volume": "2200 ml",
     "material": [ "aluminum" ],
-    "weight": "1542 g",
-    "longest_side": "92 cm",
-    "to_hit": { "grip": "solid", "length": "long", "surface": "any", "balance": "neutral" },
-    "melee_damage": { "bash": 8 },
-    "flags": [ "FRAGILE_MELEE" ]
+    "weight": "1542 g"
   },
   {
     "type": "GENERIC",
     "id": "guitar_stand",
     "name": { "str": "guitar stand" },
-    "description": "A small, oddly-shaped piece of aluminum hardware with three legs.  When placed on the ground, this can support one guitar in an upright position.",
+    "description": "A small, oddly shaped piece of aluminum hardware with three legs.  When placed on the ground, this can support one guitar in an upright position.",
     "material": [ "aluminum" ],
-    "symbol": "/",
+    "symbol": "y",
     "color": "dark_gray",
     "volume": "800 ml",
-    "weight": "500 g",
-    "longest_side": "60 cm",
-    "to_hit": { "grip": "solid", "length": "short", "surface": "any", "balance": "uneven" },
-    "melee_damage": { "bash": 4 },
-    "flags": [ "FRAGILE_MELEE" ]
+    "weight": "500 g"
   },
   {
     "type": "GENERIC",
     "id": "plectrum",
     "name": { "str": "plectrum", "str_pl": "plectra" },
-    "description": "A flat piece of plastic with a pointed tip, designed for plucking the strings of an instrument.",
+    "description": "A flat piece of plastic with a pointed tip, designed for plucking the strings of a guitar or mandolin.",
     "material": [ "plastic" ],
     "symbol": ",",
-    "color": "light_gray",
+    "color": "red",
     "volume": "2 ml",
-    "weight": "1 g",
-    "longest_side": "2 cm"
+    "weight": "1 g"
   },
   {
     "type": "GENERIC",
     "id": "mixer_music",
-    "name": { "str": "music mixer" },
-    "description": "A device with faders, switches, and knobs that mixes input signal and sends it to two output XLR cables, a left one and a right one.",
-    "//": "Weight and dimensions based on TOA D-5.5E music mixer.",
-    "material": [ "aluminum", "steel" ],
-    "symbol": ",",
+    "name": { "str": "mixer" },
+    "description": "A device with faders, switches, and knobs that mixes input signal and sends it to two output XLR cables.  (left and right)",
+    "symbol": "□",
     "color": "light_gray",
-    "volume": "62710 ml",
-    "weight": "22 kg",
-    "longest_side": "634 mm",
-    "to_hit": { "grip": "bad", "length": "short", "surface": "any", "balance": "clumsy" },
-    "melee_damage": { "bash": 16 },
-    "flags": [ "FRAGILE_MELEE" ]
+    "volume": "8 L",
+    "weight": "40 kg"
   }
 ]

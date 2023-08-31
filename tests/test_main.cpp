@@ -26,7 +26,6 @@
 #include "avatar.h"
 #include "cached_options.h"
 #include "cata_assert.h"
-#include "cata_scope_helpers.h"
 #include "cata_utility.h"
 #include "color.h"
 #include "compatibility.h"
@@ -91,7 +90,7 @@ static void init_global_game_state( const std::vector<mod_id> &mods,
 {
     if( !assure_dir_exist( user_dir ) ) {
         // NOLINTNEXTLINE(misc-static-assert,cert-dcl03-c)
-        cata_fatal( "Unable to make user_dir directory '%s'.  Check permissions.", user_dir );
+        cata_fatal( "Unable to make user_dir directory.  Check permissions." );
     }
 
     PATH_INFO::init_base_path( "" );
@@ -135,11 +134,10 @@ static void init_global_game_state( const std::vector<mod_id> &mods,
 
     world_generator->set_active_world( nullptr );
     world_generator->init();
-    // Using unicode characters in the world name to test path encoding
 #ifndef _WIN32
-    const std::string test_world_name = "Test World 测试世界 " + std::to_string( getpid() );
+    const std::string test_world_name = "Test World " + std::to_string( getpid() );
 #else
-    const std::string test_world_name = "Test World 测试世界";
+    const std::string test_world_name = "Test World";
 #endif
     WORLD *test_world = world_generator->make_new_world( test_world_name, mods );
     cata_assert( test_world != nullptr );
@@ -292,10 +290,6 @@ CATCH_REGISTER_LISTENER( CataListener )
 int main( int argc, const char *argv[] )
 {
     reset_floating_point_mode();
-    on_out_of_scope json_member_reporting_guard{ [] {
-            // Disable reporting unvisited members if stack unwinding leaves main early.
-            Json::globally_report_unvisited_members( false );
-        } };
     Catch::Session session;
 
     std::vector<const char *> arg_vec( argv, argv + argc );
@@ -384,29 +378,29 @@ int main( int argc, const char *argv[] )
 
     bool error_during_initialization = debug_has_error_been_observed();
 
-    DebugLog( D_INFO, DC_ALL ) << "Game data loaded, running Catch2 session:" << std::endl;
-    const std::chrono::system_clock::time_point start = std::chrono::system_clock::now();
+    const auto start = std::chrono::system_clock::now();
+    std::time_t start_time = std::chrono::system_clock::to_time_t( start );
+    // Leading newline in case there were debug messages during
+    // initialization.
+    DebugLog( D_INFO, DC_ALL ) << "Starting the actual test at " << std::ctime( &start_time );
     result = session.run();
-    const std::chrono::system_clock::time_point end = std::chrono::system_clock::now();
+    const auto end = std::chrono::system_clock::now();
+    std::time_t end_time = std::chrono::system_clock::to_time_t( end );
 
-    std::string world_name = world_generator->active_world->world_name;
+    auto world_name = world_generator->active_world->world_name;
     if( result == 0 || dont_save ) {
         world_generator->delete_world( world_name, true );
     } else {
-        if( g->save() ) {
-            DebugLog( D_INFO, DC_ALL ) << "Test world " << world_name << " left for inspection.";
-        } else {
-            DebugLog( D_ERROR, DC_ALL ) << "Test world " << world_name << " failed to save.";
-            result = 1;
-        }
+        DebugLog( D_INFO, DC_ALL ) << "Test world " << world_name << " left for inspection.";
     }
 
     std::chrono::duration<double> elapsed_seconds = end - start;
-    DebugLog( D_INFO, DC_ALL ) << "Finished in " << elapsed_seconds.count() << " seconds";
+    DebugLog( D_INFO, DC_ALL ) << "Ended test at " << std::ctime( &end_time );
+    DebugLog( D_INFO, DC_ALL ) << "The test took " << elapsed_seconds.count() << " seconds";
 
     if( seed ) {
         // Also print the seed at the end so it can be easily found
-        DebugLog( D_INFO, DC_ALL ) << "Randomness seeded to: " << seed << std::endl;
+        DebugLog( D_INFO, DC_ALL ) << "Randomness seeded to: " << seed;
     }
 
     if( error_during_initialization ) {

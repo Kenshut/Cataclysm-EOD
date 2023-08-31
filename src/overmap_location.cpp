@@ -9,6 +9,7 @@
 #include "generic_factory.h"
 #include "json.h"
 #include "omdata.h"
+#include "overmap.h"
 #include "rng.h"
 
 namespace
@@ -40,7 +41,7 @@ oter_type_id overmap_location::get_random_terrain() const
     return random_entry( terrains );
 }
 
-void overmap_location::load( const JsonObject &jo, const std::string_view )
+void overmap_location::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "flags", flags );
     optional( jo, was_loaded, "terrains", terrains );

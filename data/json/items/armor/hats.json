@@ -1,6 +1,7 @@
 [
   {
     "id": "10gal_hat",
+    "repairs_like": "tricorne",
     "type": "ARMOR",
     "name": { "str": "ten-gallon hat" },
     "description": "These may not be the Great Plains, but you can still be the Boss with this high-crowned, wide-brimmed hat.",
@@ -16,14 +17,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "bandana_head",
@@ -48,17 +42,11 @@
     "warmth": 5,
     "material_thickness": 0.1,
     "environmental_protection": 1,
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 80, "covers": [ "head" ] } ]
   },
   {
     "id": "beret",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "beret" },
     "description": "A soft cotton hat.  Commonly worn by armed forces and existentialists.",
@@ -73,14 +61,7 @@
     "warmth": 3,
     "material_thickness": 0.3,
     "flags": [ "VARSIZE", "WATER_FRIENDLY" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 40, "covers": [ "head" ] } ]
   },
   {
     "id": "beret_wool",
@@ -98,17 +79,11 @@
     "warmth": 10,
     "material_thickness": 0.3,
     "flags": [ "VARSIZE", "WATERPROOF" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 40, "covers": [ "head" ] } ]
   },
   {
     "id": "bowhat",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "bowler hat" },
     "description": "The only hat for a made man.  Look like a real good fella while laughing in the face of your foes!",
@@ -124,14 +99,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "FANCY", "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "chaplet",
@@ -148,35 +116,13 @@
     "color": "dark_gray",
     "material_thickness": 0.1,
     "flags": [ "OVERSIZE", "WATER_FRIENDLY", "ALLOWS_NATURAL_ATTACKS", "SOFT" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 40, "covers": [ "head" ] } ]
   },
   {
     "id": "cowboy_hat",
     "type": "ARMOR",
     "name": { "str": "cowboy hat" },
     "description": "Whether yer hunting varmints, fixing up the ranch, or heading into the sunset, this is the hat for the job.",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "generic_cowboy_hat",
-        "name": { "str": "cowboy hat" },
-        "description": "Whether yer hunting varmints, fixing up the ranch, or heading into the sunset, this is the hat for the job.",
-        "weight": 30
-      },
-      {
-        "id": "flag_cowboy_hat",
-        "name": { "str_sp": "American cowboy hat" },
-        "description": "This hat has traded its original classic looks for a red, white, and blue pattern with a band of golden stars embossed about its lip; suitable headwear for only the most serious of patriots.",
-        "append": true
-      }
-    ],
     "weight": "390 g",
     "volume": "2 L",
     "price": 9500,
@@ -189,14 +135,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "drinking_hat",
@@ -214,12 +153,11 @@
     "material_thickness": 0.2,
     "pocket_data": [ { "max_contains_volume": "500 ml", "max_contains_weight": "1 kg", "watertight": true, "rigid": true } ],
     "flags": [ "OVERSIZE", "BELTED", "ALLOWS_NATURAL_ATTACKS", "WATER_FRIENDLY" ],
-    "armor": [
-      { "encumbrance_modifiers": [ "NONE" ], "coverage": 60, "covers": [ "head" ], "specifically_covers": [ "head_crown" ] }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 15, "covers": [ "head" ] } ]
   },
   {
     "id": "eboshi",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "eboshi" },
     "description": "A high, black cap with a very narrow top.  Traditionally worn by Shinto priests.",
@@ -234,14 +172,7 @@
     "warmth": 4,
     "material_thickness": 0.2,
     "environmental_protection": 1,
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 60, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_navy",
@@ -260,14 +191,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 65, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_boonie",
@@ -286,17 +210,11 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 65, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_ball",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "baseball cap" },
     "//": "Head encumbrance stops you from wearing additional headgear.  No helmet over a ballcap, sorry.  But brimmed gear gets the anti-glare flag!",
@@ -313,14 +231,7 @@
     "material_thickness": 0.1,
     "environmental_protection": 1,
     "flags": [ "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ],
     "variant_type": "generic",
     "variants": [
       {
@@ -345,6 +256,7 @@
   },
   {
     "id": "hat_chef",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "toque" },
     "description": "A traditional chef's hat, standing tall and proud against the vulgarities of the world.",
@@ -359,14 +271,7 @@
     "warmth": 5,
     "material_thickness": 0.1,
     "environmental_protection": 1,
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 75, "covers": [ "head" ] } ],
     "variant_type": "generic",
     "variants": [
       {
@@ -443,14 +348,7 @@
     "material_thickness": 0.1,
     "environmental_protection": 1,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 65, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_fur",
@@ -468,14 +366,7 @@
     "warmth": 60,
     "material_thickness": 0.3,
     "environmental_protection": 2,
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 95, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_faux_fur",
@@ -496,6 +387,7 @@
     "volume": "2500 ml",
     "price": 1200,
     "price_postapoc": 250,
+    "bashing": 6,
     "material": [ "plastic" ],
     "symbol": "[",
     "looks_like": "hat_ball",
@@ -505,15 +397,7 @@
     "environmental_protection": 1,
     "techniques": [ "WBLOCK_1" ],
     "flags": [ "WATERPROOF", "PADDED" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "cover_vitals": 90,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 80, "cover_vitals": 90, "covers": [ "head" ] } ],
     "pocket_data": [
       {
         "pocket_type": "CONTAINER",
@@ -564,16 +448,6 @@
         "moves": 250,
         "description": "Pocket for a counterweight pouch.",
         "flag_restriction": [ "HELMET_BACK_POUCH" ]
-      },
-      {
-        "pocket_type": "CONTAINER",
-        "volume_encumber_modifier": 0,
-        "max_contains_volume": "300 ml",
-        "max_contains_weight": "400 g",
-        "max_item_length": "14 cm",
-        "moves": 100,
-        "description": "Pocket for a flashlight attachment.",
-        "flag_restriction": [ "HELMET_HEAD_ATTACHMENT" ]
       }
     ],
     "variant_type": "generic",
@@ -683,7 +557,7 @@
       {
         "id": "flag_hat_hard",
         "name": { "str": "flag hard hat" },
-        "description": "It's decorated with an American flag pattern.",
+        "description": "It's decorated with an American flag pattern.  Protects your head with the power of freedom.",
         "color": "light_red",
         "weight": 2,
         "append": true
@@ -696,8 +570,7 @@
         "weight": 1,
         "append": true
       }
-    ],
-    "melee_damage": { "bash": 6 }
+    ]
   },
   {
     "id": "hat_hard_hooded",
@@ -709,6 +582,7 @@
     "volume": "2750 ml",
     "price": 1200,
     "price_postapoc": 300,
+    "bashing": 6,
     "material": [ "plastic" ],
     "symbol": "[",
     "looks_like": "hat_hard",
@@ -748,16 +622,6 @@
         "moves": 250,
         "description": "Pocket for a counterweight pouch.",
         "flag_restriction": [ "HELMET_BACK_POUCH" ]
-      },
-      {
-        "pocket_type": "CONTAINER",
-        "volume_encumber_modifier": 0,
-        "max_contains_volume": "300 ml",
-        "max_contains_weight": "400 g",
-        "max_item_length": "14 cm",
-        "moves": 100,
-        "description": "Pocket for a flashlight attachment.",
-        "flag_restriction": [ "HELMET_HEAD_ATTACHMENT" ]
       }
     ],
     "variant_type": "generic",
@@ -867,7 +731,7 @@
       {
         "id": "flag_hat_hard",
         "name": { "str": "flag summer hard hat" },
-        "description": "It's decorated with an American flag pattern.",
+        "description": "It's decorated with an American flag pattern.  Protects your head with the power of freedom.",
         "color": "light_red",
         "weight": 2,
         "append": true
@@ -880,8 +744,7 @@
         "weight": 1,
         "append": true
       }
-    ],
-    "melee_damage": { "bash": 6 }
+    ]
   },
   {
     "id": "hat_hunting",
@@ -900,14 +763,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 2,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 85, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_knit",
@@ -926,17 +782,11 @@
     "material_thickness": 0.5,
     "environmental_protection": 2,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 95, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_newsboy",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "newsboy cap" },
     "description": "A slouching wool cap with a short front brim, traditionally associated with newspaper delivery boys.  Quite warm.",
@@ -952,14 +802,7 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 70, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_noise_cancelling",
@@ -977,17 +820,11 @@
     "warmth": 5,
     "material_thickness": 0.1,
     "flags": [ "DEAF" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "IMBALANCED" ],
-        "coverage": 25,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "IMBALANCED" ], "coverage": 5, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_sombrero",
+    "repairs_like": "tricorne",
     "type": "ARMOR",
     "name": { "str": "sombrero" },
     "//": "Head encumbrance stops you from wearing additional headgear.  No helmet over a sombrero, sorry.  But brimmed gear gets the anti-glare flag!",
@@ -1005,17 +842,11 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "OUTER", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 65, "covers": [ "head" ] } ]
   },
   {
     "id": "kippah",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "kippah" },
     "description": "A thin, rounded skullcap.  A traditional headdress in Judaism.",
@@ -1029,12 +860,11 @@
     "color": "blue",
     "warmth": 2,
     "material_thickness": 0.1,
-    "armor": [
-      { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ], "specifically_covers": [ "head_crown" ] }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 30, "covers": [ "head" ] } ]
   },
   {
     "id": "kufi",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "kufi cap" },
     "description": "A brimless, short and rounded cap.",
@@ -1049,17 +879,11 @@
     "warmth": 6,
     "material_thickness": 0.1,
     "environmental_protection": 1,
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 60, "covers": [ "head" ] } ]
   },
   {
     "id": "maid_hat",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "French maid hat" },
     "description": "A frilly white headpiece.",
@@ -1074,17 +898,11 @@
     "warmth": 2,
     "material_thickness": 0.05,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 55,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 25, "covers": [ "head" ] } ]
   },
   {
     "id": "porkpie",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "porkpie hat" },
     "description": "A flat-topped hat with circular indent and a narrow brim.  Most popular in the 40s and 50s, still common among those in the mod scene, hipsters, and people named Heisenberg.",
@@ -1100,17 +918,11 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "FANCY", "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "postman_hat",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "mail carrier hat" },
     "description": "A traditional mail carrier's cap, with the US postal service logo embroidered on the front above the plastic brim.  A symbol of a bygone world.",
@@ -1126,14 +938,7 @@
     "material_thickness": 0.1,
     "environmental_protection": 1,
     "flags": [ "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 60, "covers": [ "head" ] } ]
   },
   {
     "id": "santa_hat",
@@ -1152,14 +957,7 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "OVERSIZE", "ALLOWS_NATURAL_ATTACKS" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 80, "covers": [ "head" ] } ]
   },
   {
     "id": "straw_hat",
@@ -1178,14 +976,7 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 40, "covers": [ "head" ] } ]
   },
   {
     "id": "tinfoil_hat",
@@ -1202,18 +993,12 @@
     "looks_like": "hat_cotton",
     "warmth": 5,
     "color": "yellow",
-    "flags": [ "PSYSHIELD_PARTIAL", "SKINTIGHT", "TRADER_AVOID", "NO_REPAIR", "SOFT" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "flags": [ "PSYSHIELD_PARTIAL", "SKINTIGHT", "TRADER_AVOID", "SOFT" ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 90, "covers": [ "head" ] } ]
   },
   {
     "id": "tophat",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "top hat" },
     "//": "No, you're not wearing anything over your top hat.",
@@ -1230,14 +1015,7 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "SUPER_FANCY" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "tricorne",
@@ -1256,17 +1034,11 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE", "WATERPROOF", "WATER_FRIENDLY", "FANCY" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "turban",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "turban" },
     "description": "Cloth wound around the head, worn by people of many cultures worldwide.  Some historical examples could be huge and ostentatious, but this one is a very simple design.",
@@ -1283,17 +1055,11 @@
     "material_thickness": 0.3,
     "environmental_protection": 1,
     "flags": [ "OVERSIZE", "ALLOWS_NATURAL_ATTACKS" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 60, "covers": [ "head" ] } ]
   },
   {
     "id": "hat_golf",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "golf cap" },
     "//": "Head encumbrance stops you from wearing additional headgear.  No helmet over a ballcap, sorry.  But brimmed gear gets the anti-glare flag!",
@@ -1310,14 +1076,7 @@
     "material_thickness": 0.1,
     "environmental_protection": 1,
     "flags": [ "SUN_GLASSES" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 100,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 40, "covers": [ "head" ] } ]
   },
   {
     "id": "wizard_hat_costume",
@@ -1335,14 +1094,7 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 80,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   },
   {
     "id": "pointed_hat",
@@ -1360,13 +1112,6 @@
     "material_thickness": 0.2,
     "environmental_protection": 1,
     "flags": [ "VARSIZE" ],
-    "armor": [
-      {
-        "encumbrance_modifiers": [ "NONE" ],
-        "coverage": 80,
-        "covers": [ "head" ],
-        "specifically_covers": [ "head_crown", "head_forehead", "head_ear_r", "head_ear_l" ]
-      }
-    ]
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 50, "covers": [ "head" ] } ]
   }
 ]

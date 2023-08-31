@@ -177,8 +177,7 @@
       [ "bio_scent_mask", 10 ],
       [ "bio_jointservo", 10 ],
       [ "bio_taste_blocker", 10 ],
-      [ "bio_trickle", 10 ],
-      [ "bio_ar", 10 ]
+      [ "bio_trickle", 10 ]
     ]
   },
   {
@@ -229,15 +228,7 @@
   {
     "type": "item_group",
     "id": "EXODII_CBM_tier1_utility",
-    "items": [
-      [ "bio_watch", 10 ],
-      [ "bio_alarm", 10 ],
-      [ "bio_sunglasses", 10 ],
-      [ "bio_meteorologist", 10 ],
-      [ "bio_pitch_perfect", 10 ],
-      [ "bio_fitnessband", 10 ],
-      [ "bio_radio", 10 ]
-    ]
+    "items": [ [ "bio_watch", 10 ], [ "bio_alarm", 10 ], [ "bio_sunglasses", 10 ], [ "bio_meteorologist", 10 ] ]
   },
   {
     "type": "item_group",
@@ -265,14 +256,7 @@
     "type": "item_group",
     "id": "EXODII_CBM_unlocks_weapons_light",
     "//": "To get items from this group in the Exodii CBM store requires finishing missions for their faction and earning their trust",
-    "items": [
-      [ "bio_blade", 10 ],
-      [ "bio_claws", 10 ],
-      [ "bio_cqb", 10 ],
-      [ "bio_flashbang", 10 ],
-      [ "bio_razors", 10 ],
-      [ "bio_heli", 10 ]
-    ]
+    "items": [ [ "bio_blade", 10 ], [ "bio_claws", 10 ], [ "bio_cqb", 10 ], [ "bio_flashbang", 10 ], [ "bio_razors", 10 ] ]
   },
   {
     "type": "item_group",
@@ -291,16 +275,12 @@
     "type": "item_group",
     "id": "EXODII_CBM_unlocks_weapons_heavy",
     "//": "To get items from this group in the Exodii CBM store requires finishing missions for their faction and earning their trust",
-    "items": [ [ "bio_chain_lightning", 15 ], [ "bio_emp", 1 ], [ "bio_emp_armgun", 1 ], [ "bio_shockwave", 10 ] ]
-  },
-  {
-    "type": "item_group",
-    "id": "EXODII_Store_Salvage_Tech",
-    "//": "At this point the Exodii trust you enough to sell you the materials to bootstrap some of their salvaged tech onto your own tech.",
-    "subtype": "collection",
     "items": [
-      { "item": "exodii_wiring_kit_reference", "prob": 100 },
-      { "item": "exodii_wire_kit", "prob": 100, "count": [ 1, 4 ] }
+      [ "bio_chain_lightning", 15 ],
+      [ "bio_emp", 1 ],
+      [ "bio_emp_armgun", 1 ],
+      [ "bio_railgun", 15 ],
+      [ "bio_shockwave", 10 ]
     ]
   }
 ]

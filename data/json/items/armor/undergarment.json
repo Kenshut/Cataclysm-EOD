@@ -45,6 +45,24 @@
     "extend": { "flags": [ "UNDERSIZE" ] }
   },
   {
+    "id": "army_top",
+    "repairs_like": "tank_top",
+    "type": "ARMOR",
+    "name": { "str": "camo tank top" },
+    "description": "A sleeveless cotton shirt with a camouflage pattern.  Very easy to move in.",
+    "weight": "78 g",
+    "volume": "250 ml",
+    "price": 1500,
+    "price_postapoc": 50,
+    "material": [ "cotton" ],
+    "symbol": "[",
+    "looks_like": "tank_top",
+    "color": "green",
+    "material_thickness": 0.1,
+    "flags": [ "VARSIZE", "WATER_FRIENDLY", "SKINTIGHT" ],
+    "armor": [ { "coverage": 60, "covers": [ "torso" ] } ]
+  },
+  {
     "id": "bellyband",
     "type": "ARMOR",
     "name": { "str": "belly band" },
@@ -202,21 +220,6 @@
     "type": "ARMOR",
     "name": { "str_sp": "boxer shorts" },
     "description": "Men's boxer shorts.  More fashionable than briefs and just as comfortable.",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "generic_boxer_shorts",
-        "name": { "str_sp": "boxer shorts" },
-        "description": "Men's boxer shorts.  More fashionable than briefs and just as comfortable.",
-        "weight": 30
-      },
-      {
-        "id": "flag_boxer_shorts",
-        "name": { "str_sp": "star-spangled boxer shorts" },
-        "description": "This pair has been printed with the pattern of an American flag, with stars and miniature eagles embroidered at strategic positions.",
-        "append": true
-      }
-    ],
     "weight": "42 g",
     "volume": "250 ml",
     "price": 1000,
@@ -258,21 +261,6 @@
     "type": "ARMOR",
     "name": { "str_sp": "boy shorts" },
     "description": "Female underwear similar to men's boxer shorts, but much more close-fitting.",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "generic_boy_shorts",
-        "name": { "str_sp": "boy shorts" },
-        "description": "Female underwear similar to men's boxer shorts, but much more close-fitting.",
-        "weight": 30
-      },
-      {
-        "id": "flag_boy_shorts",
-        "name": { "str_sp": "star-spangled boy shorts" },
-        "description": "This pair has been printed with the pattern of an American flag, with stars and miniature eagles embroidered at strategic positions.",
-        "append": true
-      }
-    ],
     "weight": "42 g",
     "volume": "250 ml",
     "price": 1000,
@@ -347,6 +335,7 @@
   },
   {
     "id": "camisole",
+    "repairs_like": "tank_top",
     "type": "ARMOR",
     "name": { "str": "camisole" },
     "description": "A small camisole made from silk.  Typically used as an undergarment, it is light and easy to wear.",
@@ -361,10 +350,7 @@
     "color": "light_blue",
     "material_thickness": 0.1,
     "flags": [ "VARSIZE", "SKINTIGHT" ],
-    "armor": [
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 70 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 }
-    ]
+    "armor": [ { "coverage": 65, "covers": [ "torso" ] } ]
   },
   {
     "id": "chestwrap",
@@ -440,6 +426,7 @@
   },
   {
     "id": "corset",
+    "repairs_like": "vest_leather",
     "type": "ARMOR",
     "name": { "str": "leather corset" },
     "description": "A snug, black leather corset.  Has no pockets, but its thick material provides good protection from harm.  Use it to loosen it if you want to wear it over normal clothing.",
@@ -457,10 +444,7 @@
     "environmental_protection": 1,
     "use_action": { "type": "transform", "msg": "You loosen your %s.", "target": "corset_loose", "menu_text": "Loosen" },
     "flags": [ "VARSIZE", "FANCY", "SKINTIGHT" ],
-    "armor": [
-      { "encumbrance": 15, "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 70 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 }
-    ]
+    "armor": [ { "encumbrance": 15, "coverage": 75, "covers": [ "torso" ] } ]
   },
   {
     "id": "corset_loose",
@@ -472,13 +456,11 @@
     "environmental_protection": 1,
     "use_action": { "type": "transform", "msg": "You wrap your corset tighter.", "target": "corset", "menu_text": "Wrap tighter" },
     "delete": { "flags": [ "SKINTIGHT" ] },
-    "armor": [
-      { "encumbrance": 12, "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 70 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 }
-    ]
+    "armor": [ { "encumbrance": 12, "coverage": 75, "covers": [ "torso" ] } ]
   },
   {
     "id": "corset_waist",
+    "repairs_like": "vest_leather",
     "type": "ARMOR",
     "name": { "str": "waist corset" },
     "description": "A snug, black leather waist corset.  Works as a stylish solution for back pain.  Use it to loosen it if you want to wear it over normal clothing.",
@@ -543,11 +525,10 @@
     "armor": [
       {
         "encumbrance": 1,
-        "coverage": 100,
+        "coverage": 75,
         "covers": [ "leg_l", "leg_r" ],
-        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r" ]
-      },
-      { "coverage": 90, "covers": [ "leg_l", "leg_r" ], "specifically_covers": [ "leg_upper_l", "leg_upper_r" ] }
+        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r", "leg_upper_l", "leg_upper_r" ]
+      }
     ]
   },
   {
@@ -569,11 +550,10 @@
     "armor": [
       {
         "encumbrance": 3,
-        "coverage": 100,
+        "coverage": 75,
         "covers": [ "leg_l", "leg_r" ],
-        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r" ]
-      },
-      { "coverage": 90, "covers": [ "leg_l", "leg_r" ], "specifically_covers": [ "leg_upper_l", "leg_upper_r" ] }
+        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r", "leg_upper_l", "leg_upper_r" ]
+      }
     ]
   },
   {
@@ -623,11 +603,10 @@
     "armor": [
       {
         "encumbrance": 7,
-        "coverage": 100,
+        "coverage": 75,
         "covers": [ "leg_l", "leg_r" ],
-        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r" ]
-      },
-      { "coverage": 90, "covers": [ "leg_l", "leg_r" ], "specifically_covers": [ "leg_upper_l", "leg_upper_r" ] }
+        "specifically_covers": [ "leg_lower_l", "leg_lower_r", "leg_knee_l", "leg_knee_r", "leg_upper_l", "leg_upper_r" ]
+      }
     ]
   },
   {
@@ -656,7 +635,7 @@
     "warmth": 30,
     "material_thickness": 0.2,
     "flags": [ "VARSIZE", "SKINTIGHT" ],
-    "armor": [ { "encumbrance": 3, "coverage": 100, "covers": [ "leg_l", "leg_r" ] } ]
+    "armor": [ { "encumbrance": 3, "coverage": 95, "covers": [ "leg_l", "leg_r" ] } ]
   },
   {
     "id": "long_undertop",
@@ -674,15 +653,7 @@
     "warmth": 30,
     "material_thickness": 0.2,
     "flags": [ "VARSIZE", "SKINTIGHT" ],
-    "armor": [
-      { "encumbrance": 3, "coverage": 100, "covers": [ "arm_l", "arm_r" ] },
-      {
-        "covers": [ "torso" ],
-        "specifically_covers": [ "torso_upper", "torso_lower" ],
-        "coverage": 100,
-        "encumbrance": 3
-      }
-    ]
+    "armor": [ { "encumbrance": 3, "coverage": 95, "covers": [ "torso", "arm_l", "arm_r" ] } ]
   },
   {
     "id": "long_undertop_sleeveless",
@@ -700,9 +671,7 @@
     "warmth": 30,
     "material_thickness": 0.2,
     "flags": [ "VARSIZE", "SKINTIGHT" ],
-    "armor": [
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper", "torso_lower" ], "coverage": 100, "encumbrance": 3 }
-    ]
+    "armor": [ { "encumbrance": 3, "coverage": 95, "covers": [ "torso" ] } ]
   },
   {
     "id": "panties",
@@ -737,10 +706,7 @@
     "warmth": 20,
     "material_thickness": 0.1,
     "flags": [ "VARSIZE", "SKINTIGHT", "WATER_FRIENDLY" ],
-    "armor": [
-      { "coverage": 100, "covers": [ "arm_l", "arm_r" ] },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper", "torso_lower" ], "coverage": 100 }
-    ]
+    "armor": [ { "coverage": 95, "covers": [ "torso", "arm_l", "arm_r" ] } ]
   },
   {
     "id": "sports_bra",
@@ -785,9 +751,9 @@
     "type": "ARMOR",
     "name": { "str": "tank top" },
     "description": "A sleeveless cotton shirt.  Very easy to move in.",
-    "weight": "130 g",
-    "volume": "115 ml",
-    "price": "9 USD",
+    "weight": "78 g",
+    "volume": "250 ml",
+    "price": 500,
     "price_postapoc": 50,
     "material": [ "cotton" ],
     "symbol": "[",
@@ -795,35 +761,11 @@
     "color": "light_gray",
     "material_thickness": 0.1,
     "flags": [ "VARSIZE", "WATER_FRIENDLY", "SKINTIGHT" ],
-    "armor": [
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 90 }
-    ],
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "tank_top_generic",
-        "name": { "str": "tank top" },
-        "description": "A sleeveless cotton shirt.  Very easy to move in.",
-        "weight": 45
-      },
-      {
-        "id": "tank_top_camo",
-        "name": { "str": "camo tank top" },
-        "description": "A sleeveless cotton shirt with a camouflage pattern.  Very easy to move in.",
-        "weight": 3
-      },
-      {
-        "id": "tank_top_cheerleader",
-        "name": { "str": "cheerleader tank top" },
-        "description": "A red cheerleader tank top.  It has the word \"Cheers\" printed at the top.",
-        "weight": 2
-      }
-    ],
-    "//": "Based on https://www.amazon.com/dp/B07SDD5CZH/ref=twister_B07SB568SW?th=1"
+    "armor": [ { "coverage": 60, "covers": [ "torso" ] } ]
   },
   {
     "id": "tights",
+    "repairs_like": "jeans",
     "type": "ARMOR",
     "name": { "str_sp": "tights" },
     "description": "A snug cloth garment which clings tightly to the legs and feet to protect them from the cold.",
@@ -856,7 +798,7 @@
     "warmth": 20,
     "material_thickness": 0.05,
     "flags": [ "VARSIZE", "SKINTIGHT", "WATER_FRIENDLY" ],
-    "armor": [ { "coverage": 100, "covers": [ "torso" ] } ]
+    "armor": [ { "coverage": 95, "covers": [ "torso" ] } ]
   },
   {
     "id": "under_armor_shorts",
@@ -895,10 +837,7 @@
     "warmth": 10,
     "material_thickness": 0.1,
     "flags": [ "VARSIZE", "SKINTIGHT" ],
-    "armor": [
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 90 }
-    ]
+    "armor": [ { "coverage": 80, "covers": [ "torso" ] } ]
   },
   {
     "id": "unitard",
@@ -915,10 +854,6 @@
     "warmth": 20,
     "material_thickness": 0.02,
     "flags": [ "VARSIZE", "SKINTIGHT", "WATER_FRIENDLY" ],
-    "armor": [
-      { "coverage": 100, "covers": [ "leg_l", "leg_r" ] },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_lower" ], "coverage": 100 },
-      { "covers": [ "torso" ], "specifically_covers": [ "torso_upper" ], "coverage": 90 }
-    ]
+    "armor": [ { "coverage": 90, "covers": [ "torso", "leg_l", "leg_r" ] } ]
   }
 ]

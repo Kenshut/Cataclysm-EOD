@@ -18,10 +18,14 @@
 
 using namespace clang::ast_matchers;
 
-namespace clang::tidy::cata
+namespace clang
+{
+namespace tidy
+{
+namespace cata
 {
 
-static auto isMemberExpr( const std::string_view/*type*/, const std::string &member_,
+static auto isMemberExpr( const std::string &/*type*/, const std::string &member_,
                           const std::string &objBind )
 {
     return ignoringParenCasts(
@@ -166,4 +170,6 @@ void SimplifyPointConstructorsCheck::check( const MatchFinder::MatchResult &Resu
     CheckConstructor( *this, Result );
 }
 
-} // namespace clang::tidy::cata
+} // namespace cata
+} // namespace tidy
+} // namespace clang

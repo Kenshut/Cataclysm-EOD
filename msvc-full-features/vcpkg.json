@@ -9,13 +9,8 @@
         },
         {
           "name": "sdl2-mixer",
-          "features": [ "libflac", "mpg123", "libmodplug" ]
+          "features": [ "libflac", "mpg123", "libmodplug", "libvorbis" ]
         },
         "sdl2-ttf"
-    ],
-    "vcpkg-configuration": {
-        "overlay-ports": [
-            "../.github/vcpkg_ports"
-        ]
-    }
+    ]
 }

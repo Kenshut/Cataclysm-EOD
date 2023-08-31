@@ -66,9 +66,7 @@ const morale_type MORALE_MUTAGEN_MUTATION( "morale_mutagen_mutation" );
 const morale_type MORALE_MUTILATE_CORPSE( "morale_mutilate_corpse" );
 const morale_type MORALE_NO_DIGEST( "morale_no_digest" );
 const morale_type MORALE_NULL( "morale_null" );
-const morale_type MORALE_PERM_DARKNESS( "morale_perm_darkness" );
 const morale_type MORALE_PERM_BADTEMPER( "morale_perm_badtemper" );
-const morale_type MORALE_PERM_BAREFOOT( "morale_perm_barefoot" );
 const morale_type MORALE_PERM_CONSTRAINED( "morale_perm_constrained" );
 const morale_type MORALE_PERM_DEBUG( "morale_perm_debug" );
 const morale_type MORALE_PERM_FANCY( "morale_perm_fancy" );
@@ -76,12 +74,10 @@ const morale_type MORALE_PERM_FILTHY( "morale_perm_filthy" );
 const morale_type MORALE_PERM_FPMODE_ON( "morale_perm_fpmode_on" );
 const morale_type MORALE_PERM_HOARDER( "morale_perm_hoarder" );
 const morale_type MORALE_PERM_MASOCHIST( "morale_perm_masochist" );
-const morale_type MORALE_PERM_NAKED( "morale_perm_naked" );
 const morale_type MORALE_PERM_NOFACE( "morale_perm_noface" );
 const morale_type MORALE_PERM_NOMAD( "morale_perm_nomad" );
 const morale_type MORALE_PERM_NUMB( "morale_perm_numb" );
 const morale_type MORALE_PERM_OPTIMIST( "morale_perm_optimist" );
-const morale_type MORALE_PERM_RADIOPHILE( "morale_perm_radiophile" );
 const morale_type MORALE_PHOTOS( "morale_photos" );
 const morale_type MORALE_PLAY_WITH_PET( "morale_play_with_pet" );
 const morale_type MORALE_PYROMANIA_NEARFIRE( "morale_pyromania_nearfire" );
@@ -89,7 +85,6 @@ const morale_type MORALE_PYROMANIA_NOFIRE( "morale_pyromania_nofire" );
 const morale_type MORALE_PYROMANIA_STARTFIRE( "morale_pyromania_startfire" );
 const morale_type MORALE_SCREAM( "morale_scream" );
 const morale_type MORALE_SHAVE( "morale_shave" );
-const morale_type MORALE_SPIRITUAL( "morale_spiritual" );
 const morale_type MORALE_SUPPORT( "morale_support" );
 const morale_type MORALE_SWEETTOOTH( "morale_sweettooth" );
 const morale_type MORALE_TREE_COMMUNION( "morale_tree_communion" );
@@ -151,7 +146,6 @@ static const morale_type morale_no_digest( "morale_no_digest" );
 static const morale_type morale_null( "morale_null" );
 static const morale_type morale_perm_badtemper( "morale_perm_badtemper" );
 static const morale_type morale_perm_constrained( "morale_perm_constrained" );
-static const morale_type morale_perm_darkness( "morale_perm_darkness" );
 static const morale_type morale_perm_fancy( "morale_perm_fancy" );
 static const morale_type morale_perm_filthy( "morale_perm_filthy" );
 static const morale_type morale_perm_hoarder( "morale_perm_hoarder" );
@@ -166,7 +160,6 @@ static const morale_type morale_pyromania_nofire( "morale_pyromania_nofire" );
 static const morale_type morale_pyromania_startfire( "morale_pyromania_startfire" );
 static const morale_type morale_scream( "morale_scream" );
 static const morale_type morale_shave( "morale_shave" );
-static const morale_type morale_spiritual( "morale_spiritual" );
 static const morale_type morale_support( "morale_support" );
 static const morale_type morale_sweettooth( "morale_sweettooth" );
 static const morale_type morale_vegetarian( "morale_vegetarian" );
@@ -310,7 +303,7 @@ void morale_type_data::reset()
     morale_data.reset();
 }
 
-void morale_type_data::load( const JsonObject &jo, const std::string_view )
+void morale_type_data::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "id", id );
     mandatory( jo, was_loaded, "text", text );

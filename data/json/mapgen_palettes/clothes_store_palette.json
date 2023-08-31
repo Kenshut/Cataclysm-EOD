@@ -59,12 +59,7 @@
   {
     "type": "palette",
     "id": "tailor_palette",
-    "terrain": {
-      ";": [ "t_door_locked", "t_door_elocked_alarm" ],
-      "0": "t_window_alarm",
-      "z": "t_region_shrub_decorative",
-      "p": "t_region_groundcover_urban"
-    },
+    "terrain": { ";": "t_door_locked", "0": "t_window_alarm", "z": "t_region_shrub_decorative", "p": "t_region_groundcover_urban" },
     "furniture": {
       "%": "f_console_broken",
       "c": "f_counter",
@@ -100,7 +95,7 @@
     "type": "palette",
     "id": "furs_palette",
     "terrain": {
-      ";": [ "t_door_locked", "t_door_elocked_alarm" ],
+      ";": "t_door_locked",
       "i": "t_door_locked_interior",
       "0": "t_window_alarm",
       "z": "t_region_shrub_decorative",

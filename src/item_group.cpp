@@ -107,7 +107,7 @@ static item_pocket::pocket_type guess_pocket_for( const item &container, const i
 
 static void put_into_container(
     Item_spawn_data::ItemList &items, std::size_t num_items,
-    const std::optional<itype_id> &container_type,
+    const cata::optional<itype_id> &container_type,
     time_point birthday, Item_spawn_data::overflow_behaviour on_overflow,
     const std::string &context )
 {
@@ -123,12 +123,9 @@ static void put_into_container(
     item ctr( *container_type, birthday );
     Item_spawn_data::ItemList excess;
     for( auto it = items.end() - num_items; it != items.end(); ++it ) {
-        if( ctr.can_contain_directly( *it ).success() ) {
+        if( ctr.can_contain( *it ).success() ) {
             const item_pocket::pocket_type pk_type = guess_pocket_for( ctr, *it );
             ctr.put_in( *it, pk_type );
-        } else if( ctr.is_corpse() ) {
-            const item_pocket::pocket_type pk_type = guess_pocket_for( ctr, *it );
-            ctr.force_insert_item( *it, pk_type );
         } else {
             switch( on_overflow ) {
                 case Item_spawn_data::overflow_behaviour::none:
@@ -149,9 +146,7 @@ static void put_into_container(
             }
         }
     }
-    ctr.add_automatic_whitelist();
-
-    excess.emplace_back( std::move( ctr ) );
+    excess.push_back( ctr );
     items.erase( items.end() - num_items, items.end() );
     items.insert( items.end(), excess.begin(), excess.end() );
 }
@@ -196,10 +191,10 @@ item Single_item_creator::create_single( const time_point &birthday, RecursionLi
     if( modifier ) {
         modifier->modify( tmp, "modifier for " + context() );
     } else {
-        int qty = tmp.count();
+        int qty = tmp.charges;
         if( modifier ) {
             qty = rng( modifier->charges.first, modifier->charges.second );
-        } else if( tmp.made_of_from_type( phase_id::LIQUID ) || tmp.made_of_from_type( phase_id::GAS ) ) {
+        } else if( tmp.made_of_from_type( phase_id::LIQUID ) ) {
             qty = item::INFINITE_CHARGES;
         }
         // TODO: change the spawn lists to contain proper references to containers
@@ -209,7 +204,7 @@ item Single_item_creator::create_single( const time_point &birthday, RecursionLi
         tmp.overwrite_relic( artifact->generate_relic( tmp.typeId() ) );
     }
     if( container_item ) {
-        tmp = tmp.in_container( *container_item, tmp.count(), sealed );
+        tmp = tmp.in_container( *container_item, tmp.charges, sealed );
     }
     return tmp;
 }
@@ -422,34 +417,24 @@ void Item_modifier::modify( item &new_item, const std::string &context ) const
     item cont;
     if( container != nullptr ) {
         cont = container->create_single( new_item.birthday() );
-    } else if( new_item.type->default_container.has_value() ) {
-        cont = item( *new_item.type->default_container, new_item.birthday() );
+    }
+    if( cont.is_null() && new_item.type->default_container.has_value() ) {
+        const itype_id &cont_value = new_item.type->default_container.value_or( "null" );
+        if( !cont_value.is_null() ) {
+            cont = item( cont_value, new_item.birthday() );
+        }
     }
 
     int max_capacity = -1;
-
-    if( charges.first != -1 && charges.second == -1 && ( new_item.is_magazine() ||
-            new_item.uses_magazine() ) ) {
-        int max_ammo = 0;
-
-        if( new_item.is_magazine() ) {
-            // Get the ammo capacity of the new item itself
-            max_ammo = new_item.ammo_capacity( item_controller->find_template(
-                                                   new_item.ammo_default() )->ammo->type );
-        } else if( !new_item.magazine_default().is_null() ) {
-            // Get the capacity of the item's default magazine
-            max_ammo = item_controller->find_template( new_item.magazine_default() )->magazine->capacity;
-        }
-        // Don't change the ammo capacity from 0 if the item isn't a magazine
-        // and doesn't have a default magazine with a capacity
-
+    if( charges.first != -1 && charges.second == -1 && new_item.is_magazine() ) {
+        const int max_ammo = new_item.ammo_capacity( item_controller->find_template(
+                                 new_item.ammo_default() )->ammo->type );
         if( max_ammo > 0 ) {
             max_capacity = max_ammo;
         }
     }
 
     if( max_capacity == -1 && !cont.is_null() && ( new_item.made_of( phase_id::LIQUID ) ||
-            new_item.made_of( phase_id::GAS ) ||
             ( !new_item.is_tool() && !new_item.is_gun() && !new_item.is_magazine() ) ) ) {
         if( new_item.type->weight == 0_gram ) {
             max_capacity = new_item.charges_per_volume( cont.get_total_capacity() );
@@ -480,14 +465,12 @@ void Item_modifier::modify( item &new_item, const std::string &context ) const
 
         ch = charges_min == charges_max ? charges_min : rng( charges_min,
                 charges_max );
-    } else if( !cont.is_null() && ( new_item.made_of( phase_id::LIQUID ) ||
-                                    new_item.made_of( phase_id::GAS ) ) ) {
+    } else if( !cont.is_null() && new_item.made_of( phase_id::LIQUID ) ) {
         new_item.charges = std::max( 1, max_capacity );
     }
 
     if( ch != -1 ) {
-        if( new_item.count_by_charges() || new_item.made_of( phase_id::LIQUID ) ||
-            new_item.made_of( phase_id::GAS ) ) {
+        if( new_item.count_by_charges() || new_item.made_of( phase_id::LIQUID ) ) {
             // food, ammo
             // count_by_charges requires that charges is at least 1. It makes no sense to
             // spawn a "water (0)" item.
@@ -560,7 +543,6 @@ void Item_modifier::modify( item &new_item, const std::string &context ) const
     if( !cont.is_null() ) {
         const item_pocket::pocket_type pk_type = guess_pocket_for( cont, new_item );
         cont.put_in( new_item, pk_type );
-        cont.add_automatic_whitelist();
         new_item = cont;
         if( sealed ) {
             new_item.seal();
@@ -736,7 +718,6 @@ std::size_t Item_group::create( Item_spawn_data::ItemList &list,
     }
     const std::size_t items_created = list.size() - prev_list_size;
     put_into_container( list, items_created, container_item, birthday, on_overflow, context() );
-
     return list.size() - prev_list_size;
 }
 

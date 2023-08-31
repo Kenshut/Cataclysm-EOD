@@ -7,7 +7,7 @@
 static void export_raw_noise( const std::string &filename, const om_noise::om_noise_layer &noise,
                               int width, int height )
 {
-    std::ofstream testfile;
+    cata::ofstream testfile;
     testfile.open( fs::u8path( filename ), std::ofstream::trunc );
     testfile << "P2" << std::endl;
     testfile << width << " " << height << std::endl;
@@ -27,7 +27,7 @@ static void export_interpreted_noise(
     const std::string &filename, const om_noise::om_noise_layer &noise, int width, int height,
     float threshold )
 {
-    std::ofstream testfile;
+    cata::ofstream testfile;
     testfile.open( fs::u8path( filename ), std::ofstream::trunc );
     testfile << "P2" << std::endl;
     testfile << width << " " << height << std::endl;

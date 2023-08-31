@@ -11,9 +11,9 @@
       { "item": "hammer_sledge" },
       { "item": "hatchet" },
       { "item": "knife_combat" },
-      { "item": "hc_rapier" },
+      { "item": "rapier" },
       { "item": "machete" },
-      { "item": "hc_katana" },
+      { "item": "katana" },
       { "item": "spear_knife" },
       { "item": "pike" },
       { "item": "chainsaw_off" }
@@ -35,7 +35,7 @@
       { "item": "remington_870" },
       { "item": "browning_blr" },
       { "item": "ak47" },
-      { "item": "modular_m4_carbine", "variant": "modular_m4a1" },
+      { "item": "m4_carbine", "variant": "m4a1" },
       { "item": "savage_111f" },
       { "item": "hk_g3" },
       { "item": "hk_g80" },
@@ -159,7 +159,7 @@
       { "item": "smokebomb" },
       { "item": "bot_manhack" },
       { "item": "bot_turret" },
-      { "item": "UPS_OFF" },
+      { "item": "UPS_off" },
       { "item": "mininuke" }
     ]
   }

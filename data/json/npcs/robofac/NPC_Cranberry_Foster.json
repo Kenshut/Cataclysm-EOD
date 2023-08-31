@@ -70,8 +70,7 @@
       { "item": "robofac_kevlar_vambraces" },
       { "item": "robofac_kevlar_greaves" },
       { "item": "knife_combat", "container-item": "bootsheath" },
-      { "group": "robofac_mantle_merc" },
-      { "group": "robofac_helmet_merc" }
+      { "group": "robofac_mantle_merc" }
     ]
   },
   {
@@ -278,8 +277,8 @@
             {
               "or": [
                 { "u_has_perception": 10 },
-                { "math": [ "u_skill('mechanics')", ">=", "4" ] },
-                { "math": [ "u_skill('gun')", ">=", "2" ] }
+                { "u_has_skill": { "skill": "mechanics", "level": 4 } },
+                { "u_has_skill": { "skill": "gun", "level": 2 } }
               ]
             },
             {
@@ -332,7 +331,7 @@
         "condition": {
           "and": [
             { "not": { "u_has_var": "asked_gender", "type": "dialogue", "context": "robofac_merc_1", "value": "yes" } },
-            { "compare_num": [ { "npc_val": "npc_trust" }, ">=", { "const": 3 } ] }
+            { "compare_int": [ { "npc_val": "npc_trust" }, ">=", { "const": 3 } ] }
           ]
         },
         "topic": "TALK_ROBOFAC_MERC_1_GENDER"

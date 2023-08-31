@@ -9,7 +9,8 @@
     "volume": "1500 ml",
     "price": 5950,
     "price_postapoc": 2250,
-    "material": [ "paper", "cardboard" ],
+    "bashing": 4,
+    "material": [ "paper" ],
     "symbol": "?",
     "color": "blue",
     "looks_like": "textbook_botany",
@@ -18,8 +19,7 @@
     "max_level": 8,
     "intelligence": 8,
     "time": "30 m",
-    "fun": -1,
-    "melee_damage": { "bash": 4 }
+    "fun": -1
   },
   {
     "id": "book_pneumatics",
@@ -131,7 +131,7 @@
     "volume": "750 ml",
     "price": 5500,
     "price_postapoc": 500,
-    "material": [ "paper", "cardboard" ],
+    "material": [ "paper" ],
     "symbol": "?",
     "looks_like": "textbook_botany",
     "color": "green",
@@ -160,6 +160,7 @@
     "volume": "500 ml",
     "price": 3100,
     "price_postapoc": 24000,
+    "bashing": 1,
     "material": [ "paper" ],
     "symbol": "?",
     "looks_like": "textbook_mechanics",
@@ -169,8 +170,7 @@
     "max_level": 8,
     "intelligence": 9,
     "time": "30 m",
-    "fun": -1,
-    "melee_damage": { "bash": 1 }
+    "fun": -1
   },
   {
     "id": "textbook_mechanics",
@@ -182,7 +182,8 @@
     "volume": "1500 ml",
     "price": 4950,
     "price_postapoc": 500,
-    "material": [ "paper", "cardboard" ],
+    "bashing": 4,
+    "material": [ "paper" ],
     "symbol": "?",
     "looks_like": "textbook_botany",
     "color": "blue",
@@ -191,7 +192,6 @@
     "max_level": 6,
     "intelligence": 6,
     "time": "30 m",
-    "fun": -1,
-    "melee_damage": { "bash": 4 }
+    "fun": -1
   }
 ]

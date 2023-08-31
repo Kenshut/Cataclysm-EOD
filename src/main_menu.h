@@ -2,6 +2,7 @@
 #ifndef CATA_SRC_MAIN_MENU_H
 #define CATA_SRC_MAIN_MENU_H
 
+#include <chrono>
 #include <cstddef>
 #include <iosfwd>
 #include <vector>
@@ -13,6 +14,23 @@
 #include "point.h"
 #include "worldfactory.h"
 
+struct ascii_anim {
+    // Modifier to the base animation speed
+    double speed_mod;
+    // Number of frames in the animation
+    size_t nb_frames;
+    // Coordinates of the upper left corner, used when combining
+    size_t x, y;
+    // Layer of the animation, used when combining
+    size_t layer;
+
+    size_t current_frame;
+    std::chrono::time_point<std::chrono::steady_clock> last_frame;
+
+    // Vector of frames, which are vectors of strings
+    std::vector<std::vector<std::string>> frames;
+};
+
 class main_menu
 {
     public:
@@ -20,10 +38,8 @@ class main_menu
         // Shows the main menu and returns whether a game was started or not
         bool opening_screen();
 
-        static std::string queued_world_to_load;
-        static std::string queued_save_id_to_load;
     private:
-        // ASCII art that says "Cataclysm Dark Days Ahead"
+        // ASCII art that says "Roadside Cataclysm"
         std::vector<std::string> mmenu_title;
         std::string mmenu_motd;
         std::string mmenu_credits;
@@ -45,9 +61,13 @@ class main_menu
          * the case where the player goes to the 'Settings' tab and changes the language.
         */
         void init_strings();
+        void load_animation();
         /** Helper function for @ref init_strings */
         std::vector<std::string> load_file( const std::string &path,
                                             const std::string &alt_text ) const;
+
+        // Creates the title buffer for this frame
+        void compose_title();
 
         // Play a sound whenever the user moves left or right in the main menu or its tabs
         void on_move() const;
@@ -57,7 +77,6 @@ class main_menu
 
         // Tab functions. They return whether a game was started or not. The ones that can never
         // start a game have a void return type.
-        bool load_game( std::string const &worldname, save_t const &savegame );
         bool new_character_tab();
         bool load_character_tab( const std::string &worldname );
         void world_tab( const std::string &worldname );
@@ -72,7 +91,6 @@ class main_menu
         input_context ctxt;
         int sel1 = 1;
         int sel2 = 1;
-        int sub_opt_off = 0;
         point LAST_TERM;
         catacurses::window w_open;
         point menu_offset;
@@ -81,6 +99,10 @@ class main_menu
         std::vector<save_t> savegames;
         std::vector<std::pair<inclusive_rectangle<point>, std::pair<int, int>>> main_menu_sub_button_map;
         std::vector<std::pair<inclusive_rectangle<point>, int>> main_menu_button_map;
+
+        std::vector<ascii_anim> title_anim;
+        bool animate_title;
+        int animation_delay;
 
         /**
          * Prints a horizontal list of options

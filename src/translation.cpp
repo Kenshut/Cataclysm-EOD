@@ -79,6 +79,7 @@ void translation::make_plural()
     cached_translation = nullptr;
 }
 
+
 // return { true, suggested plural } if no irregular form is detected,
 // { false, suggested plural } otherwise. do have false positive/negatives.
 static std::pair<bool, std::string> possible_plural_of( const std::string &raw )
@@ -119,12 +120,13 @@ static std::pair<bool, std::string> possible_plural_of( const std::string &raw )
 #endif
 }
 
-void translation::deserialize( const JsonValue &jsin )
+void translation::deserialize( JsonIn &jsin )
 {
     // reset the cache
     cached_language_version = INVALID_LANGUAGE_VERSION;
     cached_num = 0;
     cached_translation = nullptr;
+    int end_offset;
 
     if( jsin.test_string() ) {
         ctxt = nullptr;
@@ -137,10 +139,14 @@ void translation::deserialize( const JsonValue &jsin )
             // strings with plural forms are currently only simple names, and
             // need no text style check.
             raw = jsin.get_string();
+            end_offset = jsin.tell();
         } else {
             // We know it's a string, we need to save the offset after the string.
+            JsonValue jv = jsin.get_value();
+            jv.get_string();
+            end_offset = jsin.tell();
             raw = text_style_check_reader( text_style_check_reader::allow_object::no )
-                  .get_next( jsin );
+                  .get_next( jv );
         }
         // if plural form is enabled
         if( raw_pl ) {
@@ -149,10 +155,10 @@ void translation::deserialize( const JsonValue &jsin )
 #ifndef CATA_IN_TOOL
             if( !suggested_pl.first && check_style ) {
                 try {
-                    jsin.throw_error_after( "Cannot autogenerate plural form.  "
-                                            "Please specify the plural form explicitly using "
-                                            "'str' and 'str_pl', or 'str_sp' if the singular "
-                                            "and plural forms are the same." );
+                    jsin.error( "Cannot autogenerate plural form.  "
+                                "Please specify the plural form explicitly using "
+                                "'str' and 'str_pl', or 'str_sp' if the singular "
+                                "and plural forms are the same." );
                 } catch( const JsonError &e ) {
                     debugmsg( "(json-error)\n%s", e.what() );
                 }
@@ -162,6 +168,7 @@ void translation::deserialize( const JsonValue &jsin )
         needs_translation = true;
     } else {
         JsonObject jsobj = jsin.get_object();
+        end_offset = jsin.tell();
         if( jsobj.has_member( "ctxt" ) ) {
             ctxt = cata::make_value<std::string>( jsobj.get_string( "ctxt" ) );
         } else {
@@ -262,15 +269,7 @@ void translation::deserialize( const JsonValue &jsin )
         }
         needs_translation = true;
     }
-
-    // Reset the underlying jsonin stream because errors leave it in an undefined state.
-    // This will be removed once everything is migrated off JsonIn.
-    if( jsin.test_string() ) {
-        jsin.get_string();
-
-    } else if( jsin.test_object() ) {
-        jsin.get_object().allow_omitted_members();
-    }
+    jsin.seek( end_offset );
 }
 
 std::string translation::translated( const int num ) const
@@ -389,14 +388,14 @@ bool translation::operator!=( const translation &that ) const
     return !operator==( that );
 }
 
-std::optional<int> translation::legacy_hash() const
+cata::optional<int> translation::legacy_hash() const
 {
     if( needs_translation && !ctxt && !raw_pl ) {
         return djb2_hash( reinterpret_cast<const unsigned char *>( raw.c_str() ) );
     }
     // Otherwise the translation must have been added after snippets were changed
     // to use string ids only, so the translation doesn't have a legacy hash value.
-    return std::nullopt;
+    return cata::nullopt;
 }
 
 translation to_translation( const std::string &raw )

@@ -10,7 +10,7 @@
 
 #include "cuboid_rectangle.h"
 
-class JsonArray;
+class JsonIn;
 class translation;
 namespace catacurses
 {
@@ -24,7 +24,7 @@ class help
         void display_help() const;
 
     private:
-        void deserialize( const JsonArray &ja );
+        void deserialize( JsonIn &jsin );
         std::map<int, inclusive_rectangle<point>> draw_menu( const catacurses::window &win,
                                                int selected ) const;
         static std::string get_note_colors();

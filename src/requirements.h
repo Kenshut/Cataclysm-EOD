@@ -24,7 +24,6 @@ class JsonObject;
 class JsonOut;
 class JsonValue;
 class item;
-class item_components;
 class nc_color;
 class read_only_visitable;
 template <typename E> struct enum_traits;
@@ -49,7 +48,7 @@ struct quality {
 
     std::vector<std::pair<int, std::string>> usages;
 
-    void load( const JsonObject &jo, std::string_view src );
+    void load( const JsonObject &jo, const std::string &src );
 
     static void reset();
     static void load_static( const JsonObject &jo, const std::string &src );
@@ -349,7 +348,7 @@ struct requirement_data {
         /** @param filter see @ref can_make_with_inventory */
         std::vector<std::string> get_folded_components_list( int width, nc_color col,
                 const read_only_visitable &crafting_inv, const std::function<bool( const item & )> &filter,
-                int batch = 1, std::string_view hilite = {},
+                int batch = 1, const std::string &hilite = "",
                 requirement_display_flags = requirement_display_flags::none ) const;
 
         std::vector<std::string> get_folded_tools_list( int width, nc_color col,
@@ -366,7 +365,7 @@ struct requirement_data {
          * Returned requirement_data is for *all* batches at once.
          */
         static requirement_data continue_requirements( const std::vector<item_comp> &required_comps,
-                const item_components &remaining_comps );
+                const std::list<item> &remaining_comps );
 
         /**
          * Merge similar quality/tool/component lists.
@@ -416,7 +415,7 @@ struct requirement_data {
         std::vector<std::string> get_folded_list( int width, const read_only_visitable &crafting_inv,
                 const std::function<bool( const item & )> &filter,
                 const std::vector< std::vector<T> > &objs, int batch = 1,
-                std::string_view hilite = {},
+                const std::string &hilite = "",
                 requirement_display_flags = requirement_display_flags::none ) const;
 
         template<typename T>

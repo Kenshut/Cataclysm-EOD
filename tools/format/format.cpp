@@ -5,7 +5,7 @@
 #include <sstream>
 #include <string>
 
-static void write_array( TextJsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
+static void write_array( JsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
 {
     jsout.start_array( force_wrap );
     jsin.start_array();
@@ -15,7 +15,7 @@ static void write_array( TextJsonIn &jsin, JsonOut &jsout, int depth, bool force
     jsout.end_array();
 }
 
-static void write_object( TextJsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
+static void write_object( JsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
 {
     jsout.start_object( force_wrap );
     jsin.start_object();
@@ -28,7 +28,7 @@ static void write_object( TextJsonIn &jsin, JsonOut &jsout, int depth, bool forc
             int in_start_pos = jsin.tell();
             bool ate_separator = jsin.get_ate_separator();
             {
-                TextJsonArray arr = jsin.get_array();
+                JsonArray arr = jsin.get_array();
                 if( arr.size() > 1 ) {
                     override_wrap = true;
                 }
@@ -41,8 +41,8 @@ static void write_object( TextJsonIn &jsin, JsonOut &jsout, int depth, bool forc
     jsout.end_object();
 }
 
-static void format_collection( TextJsonIn &jsin, JsonOut &jsout, int depth,
-                               const std::function<void( TextJsonIn &, JsonOut &, int, bool )> &write_func,
+static void format_collection( JsonIn &jsin, JsonOut &jsout, int depth,
+                               const std::function<void( JsonIn &, JsonOut &, int, bool )> &write_func,
                                bool force_wrap )
 {
     if( depth > 1 && !force_wrap ) {
@@ -70,7 +70,7 @@ static void format_collection( TextJsonIn &jsin, JsonOut &jsout, int depth,
     write_func( jsin, jsout, depth, true );
 }
 
-void formatter::format( TextJsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
+void formatter::format( JsonIn &jsin, JsonOut &jsout, int depth, bool force_wrap )
 {
     depth++;
     if( jsin.test_array() ) {
@@ -126,7 +126,7 @@ void formatter::format( TextJsonIn &jsin, JsonOut &jsout, int depth, bool force_
         jsin.skip_null();
         jsout.write_null();
     } else {
-        std::cerr << "Encountered unrecognized TextJson element \"";
+        std::cerr << "Encountered unrecognized json element \"";
         const int start_pos = jsin.tell();
         jsin.skip_value();
         const int end_pos = jsin.tell();

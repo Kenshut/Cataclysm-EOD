@@ -75,10 +75,10 @@
         "                        ",
         "                        ",
         "                        ",
-        "         #...X          ",
-        "         v...&          ",
-        "         #...=          ",
-        "         #:..N          ",
+        "         #___X          ",
+        "         >___&          ",
+        "         #___=          ",
+        "         #:__N          ",
         "                        ",
         "                        ",
         "                        ",
@@ -89,8 +89,7 @@
         "                        ",
         "                        "
       ],
-      "palettes": [ "roof_palette" ],
-      "terrain": { ".": "t_metal_flat_roof" }
+      "palettes": [ "underwater_structure_roof" ]
     }
   },
   {

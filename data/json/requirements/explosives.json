@@ -55,7 +55,6 @@
         [ "gunpowder_artillery", 90 ],
         [ "gunpowder_rifle", 70 ],
         [ "chem_hmtd", 14 ],
-        [ "chem_silver_acetylide", 14 ],
         [ "chem_apex", 7 ],
         [ "chem_mercury_fulminate", 21 ],
         [ "chem_lead_azide", 21 ]
@@ -65,27 +64,8 @@
   {
     "id": "stable_explosive",
     "type": "requirement",
-    "//": "All solid explosive materials that can be set off by a blasting cap.  10g TNT equivalent.",
-    "components": [
-      [
-        [ "chem_anfo", 11 ],
-        [ "chem_tacn", 11 ],
-        [ "chem_rdx", 4 ],
-        [ "chem_compositionb", 8 ],
-        [ "chem_tnt", 6 ],
-        [ "chem_petn", 4 ],
-        [ "chem_urea_nitrate", 8 ],
-        [ "chem_amatol", 7 ],
-        [ "chem_ammonal", 7 ],
-        [ "gunpowder", 90 ],
-        [ "gunpowder_pistol", 90 ],
-        [ "gunpowder_shotgun", 90 ],
-        [ "gunpowder_magnum_pistol", 90 ],
-        [ "gunpowder_artillery", 90 ],
-        [ "gunpowder_rifle", 90 ],
-        [ "chem_nitrocellulose", 12 ]
-      ]
-    ]
+    "//": "This should contain all the explosives you need to set off with an explosive primer, but can be used without casting in a crucible. 10g tnt equivalent.",
+    "components": [ [ [ "chem_ammonium_nitrate", 24 ], [ "chem_ammonium_nitrate_pellets", 24 ], [ "chem_anfo", 14 ], [ "chem_rdx", 6 ] ] ]
   },
   {
     "id": "military_explosive",

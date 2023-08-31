@@ -2,10 +2,8 @@
   {
     "id": "any_strong_acid",
     "type": "requirement",
-    "//": "This should contain all strong acids, based on pKa value.  1 ml of acid.",
-    "components": [
-      [ [ "chem_sulphuric_acid", 1 ], [ "chem_muriatic_acid", 1 ], [ "chem_nitric_acid", 1 ], [ "chem_hydrobromic_acid", 1 ] ]
-    ]
+    "//": "This should contain all strong acids, based on pKa value.",
+    "components": [ [ [ "chem_sulphuric_acid", 1 ], [ "chem_muriatic_acid", 1 ], [ "chem_nitric_acid", 1 ] ] ]
   },
   {
     "id": "any_weak_acid",

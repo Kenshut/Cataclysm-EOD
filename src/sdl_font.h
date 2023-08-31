@@ -17,6 +17,7 @@
 #include "color.h"
 #include "color_loader.h"
 #include "debug.h"
+#include "font_loader.h"
 #include "point.h"
 #include "hash_utils.h"
 #include "sdl_wrappers.h"

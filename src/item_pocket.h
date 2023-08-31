@@ -8,13 +8,13 @@
 #include <list>
 #include <map>
 #include <new>
-#include <optional>
 #include <set>
 #include <type_traits>
 #include <vector>
 
 #include "enums.h"
 #include "flat_set.h"
+#include "optional.h"
 #include "ret_val.h"
 #include "type_id.h"
 #include "units.h"
@@ -44,7 +44,6 @@ class item_pocket
             CORPSE, // the "corpse" pocket - bionics embedded in a corpse
             SOFTWARE, // software put into usb or some such
             EBOOK, // holds electronic books for a device or usb
-            CABLE, // pocket for storing power/data cables and handling their connections
             MIGRATION, // this allows items to load contents that are too big, in order to spill them later.
             LAST
         };
@@ -114,18 +113,11 @@ class item_pocket
                 bool is_unloadable() const;
                 void set_unloadable( bool );
 
-                const std::optional<std::string> &get_preset_name() const;
-                void set_preset_name( const std::string & );
-
-                void set_was_edited();
-                bool was_edited() const;
-
                 void info( std::vector<iteminfo> &info ) const;
 
                 void serialize( JsonOut &json ) const;
                 void deserialize( const JsonObject &data );
             private:
-                std::optional<std::string> preset_name;
                 int priority_rating = 0;
                 cata::flat_set<itype_id> item_whitelist;
                 cata::flat_set<itype_id> item_blacklist;
@@ -134,13 +126,12 @@ class item_pocket
                 bool collapsed = false;
                 bool disabled = false;
                 bool unload = true;
-                bool player_edited = false;
         };
 
         item_pocket() = default;
         explicit item_pocket( const pocket_data *data ) : data( data ) {}
 
-        bool stacks_with( const item_pocket &rhs, int depth = 0, int maxdepth = 2 ) const;
+        bool stacks_with( const item_pocket &rhs ) const;
         bool is_funnel_container( units::volume &bigger_than ) const;
         bool is_restricted() const;
         bool has_any_with( const std::function<bool( const item & )> &filter ) const;
@@ -168,7 +159,8 @@ class item_pocket
         // exceptions are MOD, CORPSE, SOFTWARE, MIGRATION, etc.
         bool is_standard_type() const;
 
-        bool is_forbidden() const;
+        bool is_allowed() const;
+        void set_usability( bool show );
 
         const translation &get_description() const;
         const translation &get_name() const;
@@ -187,6 +179,8 @@ class item_pocket
         size_t size() const;
         void pop_back();
 
+
+
         /**
          * Is the pocket compatible with the specified item?
          * Does not check if the item actually fits volume/weight wise
@@ -200,7 +194,6 @@ class item_pocket
          */
         ret_val<contain_code> can_contain( const item &it ) const;
         bool can_contain_liquid( bool held_or_ground ) const;
-        bool can_contain_gas( bool held_or_ground ) const;
         bool contains_phase( phase_id phase ) const;
 
         /**
@@ -294,12 +287,12 @@ class item_pocket
         void set_item_defaults();
 
         // removes and returns the item from the pocket.
-        std::optional<item> remove_item( const item &it );
-        std::optional<item> remove_item( const item_location &it );
+        cata::optional<item> remove_item( const item &it );
+        cata::optional<item> remove_item( const item_location &it );
         // spills any contents that can't fit into the pocket, largest items first
-        void overflow( const tripoint &pos, const item_location &loc );
+        void overflow( const tripoint &pos );
         bool spill_contents( const tripoint &pos );
-        void on_pickup( Character &guy, item *avoid = nullptr );
+        void on_pickup( Character &guy );
         void on_contents_changed();
         void handle_liquid_or_spill( Character &guy, const item *avoid = nullptr );
         void clear_items();
@@ -312,9 +305,6 @@ class item_pocket
          */
         void process( map &here, Character *carrier, const tripoint &pos, float insulation = 1,
                       temperature_flag flag = temperature_flag::NORMAL, float spoil_multiplier_parent = 1.0f );
-
-        void leak( map &here, Character *carrier, const tripoint &pos, item_pocket *pocke = nullptr );
-
         pocket_type saved_type() const {
             return _saved_type;
         }
@@ -324,17 +314,13 @@ class item_pocket
         }
 
         // tries to put an item in the pocket. returns false if failure
-        ret_val<contain_code> insert_item( const item &it, bool into_bottom = false,
-                                           bool restack_charges = true );
+        ret_val<contain_code> insert_item( const item &it );
         /**
           * adds an item to the pocket with no checks
           * may create a new pocket
           */
         void add( const item &it, item **ret = nullptr );
         bool can_unload_liquid() const;
-
-        int fill_with( const item &contained, Character &guy, int amount = 0,
-                       bool allow_unseal = false, bool ignore_settings = false );
 
         /**
         * @brief Check contents of pocket to see if it contains a valid item/pocket to store the given item.
@@ -392,20 +378,6 @@ class item_pocket
 
         favorite_settings settings;
 
-        // Pocket presets functions
-        static void serialize_presets( JsonOut &json );
-        static void deserialize_presets( const JsonArray &ja );
-        static void load_presets();
-        static void add_preset( const item_pocket::favorite_settings &preset );
-        static void save_presets();
-        static std::vector<item_pocket::favorite_settings>::iterator find_preset( const std::string &s );
-        static bool has_preset( const std::string &s );
-        static void delete_preset( std::vector<item_pocket::favorite_settings>::iterator iter );
-        static std::vector<item_pocket::favorite_settings> pocket_presets;
-
-        // Set wether rigid items are blocked in the pocket
-        void set_no_rigid( const std::set<sub_bodypart_id> &is_no_rigid );
-
         // should the name of this pocket be used as a description
         bool name_as_description = false; // NOLINT(cata-serialize)
     private:
@@ -416,8 +388,8 @@ class item_pocket
         // the items inside the pocket
         std::list<item> contents;
         bool _sealed = false;
-        // list of sub body parts that can't currently support rigid ablative armor
-        std::set<sub_bodypart_id> no_rigid;
+
+        bool allowed = true; // is it possible to put things in this pocket
 };
 
 /**
@@ -471,7 +443,7 @@ class pocket_data
         // max volume of stuff the pocket can hold
         units::volume volume_capacity = max_volume_for_container;
         // max volume of item that can be contained, otherwise it spills
-        std::optional<units::volume> max_item_volume = std::nullopt;
+        cata::optional<units::volume> max_item_volume = cata::nullopt;
         // min volume of item that can be contained, otherwise it spills
         units::volume min_item_volume = 0_ml;
         // min length of item that can be contained used for exterior pockets
@@ -540,15 +512,11 @@ class pocket_data
         // items stored are restricted to these item ids.
         // this takes precedence over the other two restrictions
         cata::flat_set<itype_id> item_id_restriction;
-        // Restricts items by their material.
-        cata::flat_set<material_id> material_restriction;
         cata::flat_set<itype_id> allowed_speedloaders;
         // the first in the json array for item_id_restriction when loaded
         itype_id default_magazine = itype_id::NULL_ID();
         // container's size and encumbrance does not change based on contents.
         bool rigid = false;
-        // if true, the pocket cannot be used by the player
-        bool forbidden = false;
 
         bool operator==( const pocket_data &rhs ) const;
 

@@ -10,7 +10,7 @@ static const string_id<scenario> scenario_test_random_day( "test_random_day" );
 static const string_id<scenario> scenario_test_random_hour( "test_random_hour" );
 static const string_id<scenario> scenario_test_random_year( "test_random_year" );
 
-TEST_CASE( "Test_start_dates" )
+TEST_CASE( "Test start dates" )
 {
     int default_initial_day = 60;
     int default_initial_time = 8;  // Note that the default for scenario time is same
@@ -47,11 +47,12 @@ TEST_CASE( "Test_start_dates" )
     }
 
     SECTION( "Scenario with start date" ) {
+        set_scenario( &scenario_ambushed.obj() );
+        // Ambushed scenario starts on winter day 1 (day 273 with default season length)
+
         // Initial time and spawn delay should not affect scenario dates
         override_option initial_time( "INITIAL_TIME", "13" );
         override_option spawn_delay( "SPAWN_DELAY", "10" );
-        set_scenario( &scenario_ambushed.obj() );
-        // Ambushed scenario starts on winter day 1 (day 273 with default season length)
 
         REQUIRE( get_option<int>( "INITIAL_DAY" ) == default_initial_day );
         REQUIRE( get_option<int>( "SEASON_LENGTH" ) == default_season_length );
@@ -64,9 +65,10 @@ TEST_CASE( "Test_start_dates" )
     }
 
     SECTION( "Scenario with start date tries to start before cataclysm" ) {
-        override_option initial_day( "INITIAL_DAY", "350" );
         set_scenario( &scenario_ambushed.obj() );
         // Ambushed scenario starts on winter day 1 (day 273 with default season length)
+
+        override_option initial_day( "INITIAL_DAY", "350" );
 
         REQUIRE( get_option<int>( "INITIAL_DAY" ) == 350 );
         REQUIRE( get_option<int>( "INITIAL_TIME" ) == default_initial_time );
@@ -88,7 +90,7 @@ TEST_CASE( "Test_start_dates" )
     calendar::turn = calendar::turn_zero;
 }
 
-TEST_CASE( "Random_dates" )
+TEST_CASE( "Random dates" )
 {
     int default_initial_time = 8;
 
@@ -113,7 +115,6 @@ TEST_CASE( "Random_dates" )
         // If even one of them is different everything is fine.
         bool all_same = true;
         for( int i = 0; i < 10; i++ ) {
-            set_scenario( scenario::generic() );
             g->start_calendar();
             all_same = start_of_cataclysm_1 == calendar::start_of_cataclysm;
             if( !all_same ) {
@@ -131,7 +132,7 @@ TEST_CASE( "Random_dates" )
     calendar::turn = calendar::turn_zero;
 }
 
-TEST_CASE( "Random_scenario_dates" )
+TEST_CASE( "Random scenario dates" )
 {
     // Days counted from start of year
     time_duration first_day_of_summer = calendar::season_length();
@@ -154,7 +155,6 @@ TEST_CASE( "Random_scenario_dates" )
         // If even one of them is different everything is fine.
         bool all_same = true;
         for( int i = 0; i < 10; i++ ) {
-            set_scenario( &scenario_test_random_hour.obj() );
             g->start_calendar();
             all_same = start_of_game_1 == calendar::start_of_game;
             if( !all_same ) {
@@ -183,7 +183,6 @@ TEST_CASE( "Random_scenario_dates" )
         // If even one of them is different everything is fine.
         bool all_same = true;
         for( int i = 0; i < 10; i++ ) {
-            set_scenario( &scenario_test_random_day.obj() );
             g->start_calendar();
             all_same = start_of_game_1 == calendar::start_of_game;
             if( !all_same ) {
@@ -213,7 +212,6 @@ TEST_CASE( "Random_scenario_dates" )
         // If even one of them is different everything is fine.
         bool all_same = true;
         for( int i = 0; i < 10; i++ ) {
-            set_scenario( &scenario_test_random_year.obj() );
             g->start_calendar();
             all_same = start_of_game_1 == calendar::start_of_game;
             if( !all_same ) {

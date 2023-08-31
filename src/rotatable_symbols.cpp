@@ -38,7 +38,7 @@ namespace rotatable_symbols
 void load( const JsonObject &jo, const std::string &src )
 {
     const std::string tuple_key = "tuple";
-    const bool strict = src == "dda";
+    const bool strict = src == "rc";
 
     std::vector<std::string> tuple_temp;
 

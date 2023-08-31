@@ -4,7 +4,6 @@
 #include <cmath>
 #include <cstdint>
 #include <cstdlib>
-#include <optional>
 #include <string>
 #include <type_traits>
 
@@ -21,12 +20,12 @@
 #include "item_pocket.h"
 #include "item_stack.h"
 #include "itype.h"
-#include "make_static.h"
 #include "map.h"
 #include "map_iterator.h"
 #include "mapdata.h"
 #include "messages.h" //for rust message
 #include "npc.h"
+#include "optional.h"
 #include "options.h"
 #include "point.h"
 #include "proficiency.h"
@@ -38,7 +37,7 @@
 #include "vpart_position.h"
 
 static const itype_id itype_aspirin( "aspirin" );
-static const itype_id itype_brick_oven_pseudo( "brick_oven_pseudo" );
+static const itype_id itype_battery( "battery" );
 static const itype_id itype_butchery_tree_pseudo( "butchery_tree_pseudo" );
 static const itype_id itype_codeine( "codeine" );
 static const itype_id itype_fire( "fire" );
@@ -182,16 +181,6 @@ inventory &inventory::operator+= ( const std::list<item> &rhs )
     return *this;
 }
 
-inventory &inventory::operator+= ( const item_components &rhs )
-{
-    for( const item_components::type_vector_pair &tvp : rhs ) {
-        for( const item &rh : tvp.second ) {
-            add_item( rh, false, false );
-        }
-    }
-    return *this;
-}
-
 inventory &inventory::operator+= ( const std::vector<item> &rhs )
 {
     for( const item &rh : rhs ) {
@@ -209,7 +198,7 @@ inventory &inventory::operator+= ( const item &rhs )
 inventory &inventory::operator+= ( const item_stack &rhs )
 {
     for( const item &p : rhs ) {
-        if( !p.made_of( phase_id::LIQUID ) && !p.made_of( phase_id::GAS ) ) {
+        if( !p.made_of( phase_id::LIQUID ) ) {
             add_item( p, true );
         }
     }
@@ -222,11 +211,6 @@ inventory inventory::operator+ ( const inventory &rhs )
 }
 
 inventory inventory::operator+ ( const std::list<item> &rhs )
-{
-    return inventory( *this ) += rhs;
-}
-
-inventory inventory::operator+ ( const item_components &rhs )
 {
     return inventory( *this ) += rhs;
 }
@@ -351,22 +335,29 @@ void inventory::push_back( const item &newit )
 extern void remove_stale_inventory_quick_shortcuts();
 #endif
 
-item *inventory::provide_pseudo_item( const item &tool )
+item *inventory::provide_pseudo_item( const itype_id &id, int battery )
 {
-    if( !provisioned_pseudo_tools.insert( tool.typeId() ).second ) {
-        return nullptr; // already provided tool -> bail out
+    if( id.is_empty() || !provisioned_pseudo_tools.insert( id ).second ) {
+        return nullptr; // empty itype_id or already provided tool -> bail out
     }
-    item *res = &add_item( tool );
-    res->set_flag( flag_PSEUDO );
-    return res;
-}
 
-item *inventory::provide_pseudo_item( const itype_id &tool_type )
-{
-    if( !tool_type.is_valid() ) {
-        return nullptr;
+    item &it = add_item( item( id, calendar::turn, 0 ) );
+    it.set_flag( flag_PSEUDO );
+
+    // if tool doesn't need battery bail out early
+    if( battery <= 0 || it.magazine_default().is_null() ) {
+        return &it;
     }
-    return provide_pseudo_item( item( tool_type, calendar::turn ) );
+    item it_batt( it.magazine_default() );
+    item it_ammo = item( it_batt.ammo_default(), calendar::turn_zero );
+    if( it_ammo.is_null() || it_ammo.typeId() != itype_battery ) {
+        return &it;
+    }
+
+    it_batt.ammo_set( it_batt.ammo_default(), battery );
+    it.put_in( it_batt, item_pocket::pocket_type::MAGAZINE_WELL );
+
+    return &it;
 }
 
 book_proficiency_bonuses inventory::get_book_proficiency_bonuses() const
@@ -518,15 +509,10 @@ void inventory::form_from_map( map &m, std::vector<tripoint> pts, const Characte
     for( const tripoint &p : pts ) {
         // a temporary hack while trees are terrain
         if( m.ter( p )->has_flag( ter_furn_flag::TFLAG_TREE ) ) {
-            provide_pseudo_item( itype_butchery_tree_pseudo );
-        }
-        // Another terrible hack, as terrain can't provide pseudo items, and construction can't do multi-step furniture
-        ter_id brick_oven( "t_brick_oven" );
-        if( m.ter( p ) == brick_oven ) {
-            provide_pseudo_item( itype_brick_oven_pseudo );
+            provide_pseudo_item( itype_butchery_tree_pseudo, 0 );
         }
         const furn_t &f = m.furn( p ).obj();
-        if( item *furn_item = provide_pseudo_item( f.crafting_pseudo_item ) ) {
+        if( item *furn_item = provide_pseudo_item( f.crafting_pseudo_item, 0 ) ) {
             const itype *ammo = f.crafting_ammo_item_type();
             if( furn_item->has_pocket_type( item_pocket::pocket_type::MAGAZINE ) ) {
                 // NOTE: This only works if the pseudo item has a MAGAZINE pocket, not a MAGAZINE_WELL!
@@ -556,17 +542,12 @@ void inventory::form_from_map( map &m, std::vector<tripoint> pts, const Characte
                         update_liq_container_count( i.typeId(), count );
                     }
                     add_item( i, false, assign_invlet );
-                } else if( !i.made_of( phase_id::GAS ) ) {
-                    if( i.empty_container() && i.is_airtight_container() ) {
-                        const int count = i.count_by_charges() ? i.charges : 1;
-                        update_liq_container_count( i.typeId(), count );
-                    }
                 }
             }
         }
         // Kludges for now!
         if( m.has_nearby_fire( p, 0 ) ) {
-            if( item *fire = provide_pseudo_item( itype_fire ) ) {
+            if( item *fire = provide_pseudo_item( itype_fire, 0 ) ) {
                 fire->charges = 1;
             }
         }
@@ -580,7 +561,7 @@ void inventory::form_from_map( map &m, std::vector<tripoint> pts, const Characte
         if( m.furn( p )->has_examine( iexamine::keg ) ) {
             map_stack liq_contained = m.i_at( p );
             for( item &i : liq_contained ) {
-                if( i.made_of( phase_id::LIQUID ) || i.made_of( phase_id::GAS ) ) {
+                if( i.made_of( phase_id::LIQUID ) ) {
                     add_item( i );
                 }
             }
@@ -859,8 +840,7 @@ void inventory::rust_iron_items()
                 //                       ^season length   ^14/5*0.75/pi (from volume of sphere)
                 //Freshwater without oxygen rusts slower than air
                 here.water_from( player_character.pos() ).typeId() == itype_salt_water ) {
-                // rusting never completely destroys an item, so no need to handle return value
-                elem_stack_iter.inc_damage();
+                elem_stack_iter.inc_damage( damage_type::ACID ); // rusting never completely destroys an item
                 add_msg( m_bad, _( "Your %s is damaged by rust." ), elem_stack_iter.tname() );
             }
         }
@@ -959,19 +939,27 @@ units::volume inventory::volume_without( const std::map<const item *, int> &with
     return ret;
 }
 
-enchant_cache inventory::get_active_enchantment_cache( const Character &owner ) const
+std::vector<item *> inventory::active_items()
 {
-    enchant_cache temp_cache;
+    std::vector<item *> ret;
+    for( std::list<item> &elem : items ) {
+        for( item &elem_stack_iter : elem ) {
+            if( elem_stack_iter.needs_processing() ) {
+                ret.push_back( &elem_stack_iter );
+            }
+        }
+    }
+    return ret;
+}
+
+enchantment inventory::get_active_enchantment_cache( const Character &owner ) const
+{
+    enchantment temp_cache;
     for( const std::list<item> &elem : items ) {
         for( const item &check_item : elem ) {
-            for( const enchant_cache &ench : check_item.get_proc_enchantments() ) {
+            for( const enchantment &ench : check_item.get_enchantments() ) {
                 if( ench.is_active( owner, check_item ) ) {
                     temp_cache.force_add( ench );
-                }
-            }
-            for( const enchantment &ench : check_item.get_defined_enchantments() ) {
-                if( ench.is_active( owner, check_item ) ) {
-                    temp_cache.force_add( ench, owner );
                 }
             }
         }

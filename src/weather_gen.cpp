@@ -90,10 +90,7 @@ static units::temperature weather_temperature_from_common_data( const weather_ge
     // -1 at coldest_hour, +1 twelve hours later
 
     // manually specified seasonal temp variation from region_settings.json
-    const std::array<int, 4> seasonal_temp_mod = {
-        wg.spring_temp_manual_mod, wg.summer_temp_manual_mod, wg.autumn_temp_manual_mod,
-        wg.winter_temp_manual_mod
-    };
+    const int seasonal_temp_mod[4] = { wg.spring_temp_manual_mod, wg.summer_temp_manual_mod, wg.autumn_temp_manual_mod, wg.winter_temp_manual_mod };
     const double baseline(
         wg.base_temperature +
         seasonal_temp_mod[season] +
@@ -102,7 +99,7 @@ static units::temperature weather_temperature_from_common_data( const weather_ge
 
     const double T = baseline + raw_noise_4d( x, y, z, modSEED ) * noise_magnitude_K;
 
-    return units::from_celsius( T );
+    return units::from_celcius( T );
 }
 
 units::temperature weather_generator::get_weather_temperature(
@@ -111,11 +108,11 @@ units::temperature weather_generator::get_weather_temperature(
     return weather_temperature_from_common_data( *this, get_common_data( location, real_t, seed ),
             season_effective_time( real_t ) );
 }
-w_point weather_generator::get_weather( const tripoint_abs_ms &location, const time_point &real_t,
+w_point weather_generator::get_weather( const tripoint &location, const time_point &real_t,
                                         unsigned seed ) const
 {
     season_effective_time t( real_t );
-    const weather_gen_common common = get_common_data( location.raw(), real_t, seed );
+    const weather_gen_common common = get_common_data( location, real_t, seed );
 
     const double x( common.x );
     const double y( common.y );
@@ -172,10 +169,10 @@ w_point weather_generator::get_weather( const tripoint_abs_ms &location, const t
         }
     }
     std::string wind_desc = get_wind_desc( W );
-    return w_point{ T, H, P, W, wind_desc, current_winddir, t, location };
+    return w_point{ T, H, P, W, wind_desc, current_winddir, t };
 }
 
-weather_type_id weather_generator::get_weather_conditions( const tripoint_abs_ms &location,
+weather_type_id weather_generator::get_weather_conditions( const tripoint &location,
         const time_point &t, unsigned seed ) const
 {
     w_point w( get_weather( location, t, seed ) );
@@ -192,11 +189,12 @@ weather_type_id weather_generator::get_weather_conditions( const w_point &w ) co
     const weather_manager &game_weather = get_weather_const();
     w_point original_weather_precise = *game_weather.weather_precise;
     *game_weather.weather_precise = w;
-    std::unordered_map<std::string, std::string> context;
-    context["npctalk_var_weather_location"] = w.location.to_string();
+
     weather_type_id current_conditions = WEATHER_CLEAR;
-    dialogue d( get_talker_for( get_avatar() ), nullptr, {}, context );
-    for( const weather_type_id &type : sorted_weather ) {
+    dialogue d( get_talker_for( get_avatar() ), nullptr );
+    for( const std::string &weather_type : weather_types ) {
+        weather_type_id type = weather_type_id( weather_type );
+
         bool required_weather = type->required_weathers.empty();
         if( !required_weather ) {
             for( const weather_type_id &weather : type->required_weathers ) {
@@ -290,7 +288,7 @@ void weather_generator::test_weather( unsigned seed ) const
         const time_point begin = calendar::turn;
         const time_point end = begin + 2 * calendar::year_length();
         for( time_point i = begin; i < end; i += 20_minutes ) {
-            w_point w = get_weather( tripoint_abs_ms( tripoint_zero ), i, seed );
+            w_point w = get_weather( tripoint_zero, i, seed );
             weather_type_id conditions = get_weather_conditions( w );
 
             int year = to_turns<int>( i - calendar::turn_zero ) / to_turns<int>
@@ -313,28 +311,6 @@ void weather_generator::test_weather( unsigned seed ) const
     }, "weather test file" );
 }
 
-
-void weather_generator::sort_weather()
-{
-    sorted_weather.clear();
-    for( const weather_type &wt : weather_types::get_all() ) {
-        // if we have a white list, only add those, if we have a black list, add all but those
-        if( weather_white_list.empty() ) {
-            if( std::find( weather_black_list.begin(), weather_black_list.end(),
-                           wt.id.c_str() ) == weather_black_list.end() ) {
-                sorted_weather.push_back( wt.id );
-            }
-        } else if( std::find( weather_white_list.begin(), weather_white_list.end(),
-                              wt.id.c_str() ) != weather_white_list.end() || wt.id == WEATHER_CLEAR ) {
-            sorted_weather.push_back( wt.id );
-        }
-    }
-    std::sort( sorted_weather.begin(), sorted_weather.end(), []( const weather_type_id & a,
-    const weather_type_id & b ) {
-        return a->priority < b->priority;
-    } );
-}
-
 weather_generator weather_generator::load( const JsonObject &jo )
 {
     weather_generator ret;
@@ -352,10 +328,9 @@ weather_generator weather_generator::load( const JsonObject &jo )
     ret.summer_humidity_manual_mod = jo.get_int( "summer_humidity_manual_mod", 0 );
     ret.autumn_humidity_manual_mod = jo.get_int( "autumn_humidity_manual_mod", 0 );
     ret.winter_humidity_manual_mod = jo.get_int( "winter_humidity_manual_mod", 0 );
-    ret.weather_black_list = jo.get_string_array( "weather_black_list" );
-    ret.weather_white_list = jo.get_string_array( "weather_white_list" );
-    if( !ret.weather_black_list.empty() && !ret.weather_white_list.empty() ) {
-        jo.throw_error( "weather_black_list and weather_white_list are mutually exclusive" );
+    ret.weather_types = jo.get_string_array( "weather_types" );
+    if( ret.weather_types.size() < 2 ) {
+        jo.throw_error( "Need at least 2 weather types per region for null and default." );
     }
     return ret;
 }

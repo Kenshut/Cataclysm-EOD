@@ -12,6 +12,7 @@
 #include "type_id.h"
 
 class Character;
+class JsonIn;
 class JsonOut;
 class JsonValue;
 class monster;
@@ -127,7 +128,7 @@ class activity_actor
 };
 
 void serialize( const cata::clone_ptr<activity_actor> &actor, JsonOut &jsout );
-void deserialize( cata::clone_ptr<activity_actor> &actor, const JsonValue &jsin );
+void deserialize( cata::clone_ptr<activity_actor> &actor, JsonIn &jsin );
 
 namespace activity_actors
 {

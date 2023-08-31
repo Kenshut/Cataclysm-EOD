@@ -93,8 +93,7 @@
       "terrain": {
         "|": [ [ "t_chainfence", 5 ], "t_chainfence_posts", [ "t_grass_dead", 4 ] ],
         "-": [ [ "t_chainfence", 5 ], "t_chainfence_posts", [ "t_grass_dead", 4 ] ]
-      },
-      "flags": [ "ERASE_ALL_BEFORE_PLACING_TERRAIN" ]
+      }
     }
   },
   {
@@ -191,6 +190,7 @@
           { "liquid": "ether", "amount": [ 1, 2 ], "chance": 120 },
           { "liquid": "chem_DMSO", "amount": [ 1, 4 ], "chance": 100 },
           { "liquid": "chem_chloroform", "amount": [ 1, 2 ], "chance": 130 },
+          { "liquid": "chem_phenol", "amount": [ 1, 4 ], "chance": 100 },
           { "liquid": "chem_benzene", "amount": [ 1, 4 ], "chance": 100 },
           { "liquid": "chem_toluene", "amount": [ 1, 4 ], "chance": 100 },
           { "liquid": "chem_glycerol", "amount": [ 1, 4 ], "chance": 100 },

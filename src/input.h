@@ -18,7 +18,6 @@
 #include "translations.h"
 
 enum action_id : int;
-class cata_path;
 class hotkey_queue;
 
 namespace cata
@@ -32,27 +31,27 @@ class window;
 } // namespace catacurses
 
 // Curses key constants
-constexpr int KEY_ESCAPE     = 27;
-constexpr int KEY_MIN        =
+static constexpr int KEY_ESCAPE     = 27;
+static constexpr int KEY_MIN        =
     0x101;    /* minimum extended key value */ //<---------not used
-constexpr int KEY_BREAK      =
+static constexpr int KEY_BREAK      =
     0x101;    /* break key */                  //<---------not used
-constexpr int KEY_DOWN       = 0x102;    /* down arrow */
-constexpr int KEY_UP         = 0x103;    /* up arrow */
-constexpr int KEY_LEFT       = 0x104;    /* left arrow */
-constexpr int KEY_RIGHT      = 0x105;    /* right arrow*/
-constexpr int KEY_HOME       =
+static constexpr int KEY_DOWN       = 0x102;    /* down arrow */
+static constexpr int KEY_UP         = 0x103;    /* up arrow */
+static constexpr int KEY_LEFT       = 0x104;    /* left arrow */
+static constexpr int KEY_RIGHT      = 0x105;    /* right arrow*/
+static constexpr int KEY_HOME       =
     0x106;    /* home key */
-constexpr int KEY_BACKSPACE  =
+static constexpr int KEY_BACKSPACE  =
     0x107;    /* Backspace */                  //<---------not used
-constexpr int KEY_DC         = 0x14A;    /* Delete Character */
-constexpr int KEY_F0         = 0x108;
+static constexpr int KEY_DC         = 0x14A;    /* Delete Character */
+static constexpr int KEY_F0         = 0x108;
 inline constexpr int KEY_F( const int n )
 {
     return KEY_F0 + n;    /* F1, F2, etc*/
 }
-constexpr int F_KEY_NUM_BEG  = 0;
-constexpr int F_KEY_NUM_END  = 63;
+static constexpr int F_KEY_NUM_BEG  = 0;
+static constexpr int F_KEY_NUM_END  = 63;
 inline constexpr int F_KEY_NUM( const int key )
 {
     return key - KEY_F0;
@@ -76,11 +75,11 @@ inline constexpr int KEY_NUM( const int n )
 {
     return 0x30 + n;     /* Numbers 0, 1, ..., 9 */
 }
-constexpr int KEY_NPAGE      = 0x152;    /* page down */
-constexpr int KEY_PPAGE      = 0x153;    /* page up */
-constexpr int KEY_ENTER      = 0x157;    /* enter */
-constexpr int KEY_BTAB       = 0x161;    /* back-tab = shift + tab */
-constexpr int KEY_END        = 0x168;    /* End */
+static constexpr int KEY_NPAGE      = 0x152;    /* page down */
+static constexpr int KEY_PPAGE      = 0x153;    /* page up */
+static constexpr int KEY_ENTER      = 0x157;    /* enter */
+static constexpr int KEY_BTAB       = 0x161;    /* back-tab = shift + tab */
+static constexpr int KEY_END        = 0x168;    /* End */
 
 // Platform independent key code (though largely based on SDL key code)
 //
@@ -148,8 +147,8 @@ enum : int {
 };
 } // namespace keycode
 
-constexpr int LEGEND_HEIGHT = 8;
-constexpr int BORDER_SPACE = 2;
+static constexpr int LEGEND_HEIGHT = 11;
+static constexpr int BORDER_SPACE = 2;
 
 bool is_mouse_enabled();
 bool is_keycode_mode_supported();
@@ -167,13 +166,7 @@ enum class MouseInput : int {
     ScrollWheelUp,
     ScrollWheelDown,
 
-    Move,
-
-    X1ButtonPressed,
-    X1ButtonReleased,
-
-    X2ButtonPressed,
-    X2ButtonReleased
+    Move
 
 };
 
@@ -491,7 +484,7 @@ class input_manager
          * Load keybindings from a json file, override existing bindings.
          * Throws std::string on errors
          */
-        void load( const cata_path &file_name, bool is_user_preferences );
+        void load( const std::string &file_name, bool is_user_preferences );
 
         int input_timeout;
 
@@ -561,7 +554,6 @@ class input_context
             input_context_stack.push_back( this );
             allow_text_entry = false;
 #endif
-            register_action( "toggle_language_to_en" );
         }
         // TODO: consider making the curses WINDOW an argument to the constructor, so that mouse input
         // outside that window can be ignored
@@ -574,7 +566,6 @@ class input_context
             input_context_stack.push_back( this );
             allow_text_entry = false;
 #endif
-            register_action( "toggle_language_to_en" );
         }
 
 #if defined(__ANDROID__)
@@ -787,12 +778,12 @@ class input_context
          * the delta vector associated with it. Otherwise returns an empty value.
          * The returned vector will always have a z component of 0.
          */
-        std::optional<tripoint> get_direction( const std::string &action ) const;
+        cata::optional<tripoint> get_direction( const std::string &action ) const;
 
         /**
          * Get the coordinates associated with the last mouse click (if any).
          */
-        std::optional<tripoint> get_coordinates( const catacurses::window &capture_win_,
+        cata::optional<tripoint> get_coordinates( const catacurses::window &capture_win_,
                 const point &offset = point_zero, bool center_cursor = false ) const;
 
         // Below here are shortcuts for registering common key combinations.
@@ -800,7 +791,6 @@ class input_context
         void register_updown();
         void register_leftright();
         void register_cardinal();
-        void register_navigate_ui_list();
 
         /**
          * Displays the possible actions in the current context and their
@@ -820,7 +810,7 @@ class input_context
         /**
          * Get coordinate of text level from mouse input, difference between this and get_coordinates is that one is getting pixel level coordinate.
          */
-        std::optional<point> get_coordinates_text( const catacurses::window &capture_win ) const;
+        cata::optional<point> get_coordinates_text( const catacurses::window &capture_win ) const;
 
         /**
          * Get the human-readable name for an action.
@@ -931,7 +921,7 @@ class input_context
          * @return A vector of the filtered strings
          */
         std::vector<std::string> filter_strings_by_phrase( const std::vector<std::string> &strings,
-                std::string_view phrase ) const;
+                const std::string &phrase ) const;
 };
 
 /**

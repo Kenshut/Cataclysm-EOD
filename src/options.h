@@ -4,20 +4,20 @@
 
 #include <algorithm>
 #include <functional>
+#include <functional>
 #include <iosfwd>
 #include <map>
-#include <optional>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
 
+#include "optional.h"
 #include "translations.h"
 #include "type_id.h"
 
-class cata_path;
-class JsonArray;
+class JsonIn;
 class JsonOut;
 class JsonObject;
 
@@ -40,10 +40,6 @@ class options_manager
         static void search_resource(
             std::map<std::string, std::string> &storage, std::vector<id_and_option> &option_list,
             const std::vector<std::string> &search_paths, const std::string &resource_name,
-            const std::string &resource_filename );
-        static void search_resource(
-            std::map<std::string, cata_path> &storage, std::vector<id_and_option> &option_list,
-            const std::vector<cata_path> &search_paths, const std::string &resource_name,
             const std::string &resource_filename );
         static std::vector<id_and_option> build_tilesets_list();
         static std::vector<id_and_option> build_soundpacks_list();
@@ -106,7 +102,7 @@ class options_manager
                 std::vector<id_and_option> getItems() const;
 
                 int getIntPos( int iSearch ) const;
-                std::optional<int_and_option> findInt( int iSearch ) const;
+                cata::optional<int_and_option> findInt( int iSearch ) const;
 
                 int getMaxLength() const;
 
@@ -210,13 +206,10 @@ class options_manager
                         const translation &lvalname );
 
         void serialize( JsonOut &json ) const;
-        void deserialize( const JsonArray &ja );
+        void deserialize( JsonIn &jsin );
 
         std::string migrateOptionName( const std::string &name ) const;
         std::string migrateOptionValue( const std::string &name, const std::string &val ) const;
-
-        // updates the caches in options_cache.h
-        static void update_options_cache();
 
         /**
          * Returns a copy of the options in the "world default" page. The options have their
@@ -277,46 +270,7 @@ class options_manager
 
     private:
         options_container options;
-        std::optional<options_container *> world_options; // NOLINT(cata-serialize)
-
-        /** Option group. */
-        class Group
-        {
-            public:
-                /** Group identifier. Should be unique across all pages. */
-                std::string id_;
-                /** Group name */
-                translation name_;
-                /** Tooltip with description */
-                translation tooltip_;
-
-                Group() = default;
-                Group( const std::string &id, const translation &name, const translation &tooltip )
-                    : id_( id ), name_( name ), tooltip_( tooltip ) { }
-        };
-
-        /** Page item type. */
-        enum class ItemType {
-            BlankLine,
-            GroupHeader,
-            Option,
-        };
-
-        /** Single page item (entry). */
-        class PageItem
-        {
-            public:
-                ItemType type;
-                std::string data;
-                /** Empty if not assigned to any group. */
-                std::string group;
-
-                PageItem() : type( ItemType::BlankLine ) { }
-                PageItem( ItemType type, const std::string &data, const std::string &group )
-                    : type( type ), data( data ), group( group ) { }
-
-                std::string fmt_tooltip( const Group &group, const options_container &cont ) const;
-        };
+        cata::optional<options_container *> world_options; // NOLINT(cata-serialize)
 
         /**
          * A page (or tab) to be displayed in the options UI.
@@ -329,41 +283,24 @@ class options_manager
         class Page
         {
             public:
-                /** Page identifier */
                 std::string id_;
-                /** Page name */
                 translation name_;
-                /** Page items (entries) */
-                std::vector<PageItem> items_;
+
+                std::vector<cata::optional<std::string>> items_;
 
                 void removeRepeatedEmptyLines();
 
                 Page( const std::string &id, const translation &name ) : id_( id ), name_( name ) { }
         };
 
-        std::vector<Page> pages_; // NOLINT(cata-serialize)
-        std::string adding_to_group_; // NOLINT(cata-serialize)
-        std::vector<Group> groups_; // NOLINT(cata-serialize)
+        Page general_page_; // NOLINT(cata-serialize)
+        Page interface_page_; // NOLINT(cata-serialize)
+        Page graphics_page_; // NOLINT(cata-serialize)
+        Page world_default_page_; // NOLINT(cata-serialize)
+        Page debug_page_; // NOLINT(cata-serialize)
+        Page android_page_; // NOLINT(cata-serialize)
 
-        /**
-        * Specify option group.
-        *
-        * Option groups are used for visual separation of options on pages,
-        * and allow some additional UI functionality (i.e. collapse/expand).
-        *
-        * @param page_id Page to create group at.
-        * @param group Group to create.
-        * @param entries Page entries added within this closure will be assigned to the group.
-        *                Receives "page_id" as it's only argument.
-        */
-        void add_option_group( const std::string &page_id, const Group &group,
-                               const std::function<void( const std::string & )> &entries );
-
-        /** Add empty line to page. */
-        void add_empty_line( const std::string &sPageIn );
-
-        /** Find group by id. */
-        const Group &find_group( const std::string &id ) const;
+        std::vector<std::reference_wrapper<Page>> pages_; // NOLINT(cata-serialize)
 };
 
 struct option_slider {
@@ -421,7 +358,8 @@ struct option_slider {
         static void reset();
         static void finalize_all();
         static void check_consistency();
-        void load( const JsonObject &jo, std::string_view src );
+        void load( const JsonObject &jo, const std::string &src );
+        void finalize();
         void check() const;
         static const std::vector<option_slider> &get_all();
 
@@ -473,23 +411,20 @@ struct option_slider {
         int random_level() const;
 };
 
+bool use_narrow_sidebar(); // short-circuits to on if terminal is too small
+
 /** A mapping(string:string) that stores all tileset values.
  * Firsts string is tileset NAME from config.
  * Second string is directory that contain tileset.
  */
-extern std::map<std::string, cata_path> TILESETS;
+extern std::map<std::string, std::string> TILESETS;
 /** A mapping(string:string) that stores all soundpack values.
  * Firsts string is soundpack NAME from config.
  * Second string is directory that contains soundpack.
  */
-extern std::map<std::string, cata_path> SOUNDPACKS;
+extern std::map<std::string, std::string> SOUNDPACKS;
 
 options_manager &get_options();
-
-inline bool has_option( const std::string &name )
-{
-    return get_options().has_option( name );
-}
 
 template<typename T>
 inline T get_option( const std::string &name )

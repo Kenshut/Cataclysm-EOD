@@ -193,9 +193,12 @@ enum legacy_mission_type_id {
 static const std::map<std::string, std::function<void( mission * )>> mission_function_map = {{
         // Starts
         { "standard", { } },
+        { "place_dog", mission_start::place_dog },
         { "place_zombie_mom", mission_start::place_zombie_mom },
+        { "kill_horde_master", mission_start::kill_horde_master },
         { "kill_nemesis", mission_start::kill_nemesis },
         { "place_npc_software", mission_start::place_npc_software },
+        { "place_priest_diary", mission_start::place_priest_diary },
         { "place_deposit_box", mission_start::place_deposit_box },
         { "find_safety", mission_start::find_safety },
         { "place_book", mission_start::place_book },
@@ -203,7 +206,9 @@ static const std::map<std::string, std::function<void( mission * )>> mission_fun
         { "create_lab_console", mission_start::create_lab_console },
         { "create_hidden_lab_console", mission_start::create_hidden_lab_console },
         { "create_ice_lab_console", mission_start::create_ice_lab_console },
+        { "reveal_lab_train_depot", mission_start::reveal_lab_train_depot },
         // Endings
+        { "deposit_box", mission_end::deposit_box }
         // Failures
     }
 };
@@ -251,7 +256,6 @@ std::string enum_to_string<mission_goal>( mission_goal data )
         case MGOAL_FIND_NPC: return "MGOAL_FIND_NPC";
         case MGOAL_ASSASSINATE: return "MGOAL_ASSASSINATE";
         case MGOAL_KILL_MONSTER: return "MGOAL_KILL_MONSTER";
-        case MGOAL_KILL_MONSTERS: return "MGOAL_KILL_MONSTERS";
         case MGOAL_KILL_MONSTER_TYPE: return "MGOAL_KILL_MONSTER_TYPE";
         case MGOAL_KILL_MONSTER_SPEC: return "MGOAL_KILL_MONSTER_SPEC";
         case MGOAL_KILL_NEMESIS: return "MGOAL_KILL_NEMESIS";
@@ -312,7 +316,7 @@ static DynamicDataLoader::deferred_json deferred;
 
 void mission_type::load( const JsonObject &jo, const std::string &src )
 {
-    const bool strict = src == "dda";
+    const bool strict = src == "rc";
 
     mandatory( jo, was_loaded, "name", name );
 
@@ -363,7 +367,7 @@ void mission_type::load( const JsonObject &jo, const std::string &src )
         } else if( jo.has_member( phase ) ) {
             JsonObject j_start = jo.get_object( phase );
             if( !parse_funcs( j_start, phase_func ) ) {
-                deferred.emplace_back( jo, src );
+                deferred.emplace_back( jo.get_source_location(), src );
                 jo.allow_omitted_members();
                 j_start.allow_omitted_members();
                 return false;
@@ -402,13 +406,11 @@ void mission_type::load( const JsonObject &jo, const std::string &src )
     assign( jo, "destination", target_id, strict );
 
     if( jo.has_member( "goal_condition" ) ) {
-        read_condition( jo, "goal_condition", goal_condition, true );
+        read_condition<mission_goal_condition_context>( jo, "goal_condition", goal_condition, true );
     }
-
-    optional( jo, was_loaded, "invisible_on_complete", invisible_on_complete, false );
 }
 
-bool mission_type::test_goal_condition( struct dialogue &d ) const
+bool mission_type::test_goal_condition( const mission_goal_condition_context &d ) const
 {
     if( goal_condition ) {
         return goal_condition( d );

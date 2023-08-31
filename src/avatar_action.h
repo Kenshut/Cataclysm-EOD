@@ -3,10 +3,10 @@
 #define CATA_SRC_AVATAR_ACTION_H
 
 #include <iosfwd>
-#include <optional>
 #include <vector>
 
 #include "activity_type.h"
+#include "optional.h"
 #include "point.h"
 #include "units_fwd.h"
 
@@ -21,15 +21,14 @@ namespace avatar_action
 {
 
 /** Eat food or fuel  'E' (or 'a') */
-void eat( avatar &you, const item_location &loc );
+void eat( avatar &you, const item_location &loc, bool refuel = false );
 void eat( avatar &you, const item_location &loc,
           const std::vector<int> &consume_menu_selections,
           const std::vector<item_location> &consume_menu_selected_items,
-          const std::string &consume_menu_filter, activity_id type );
+          const std::string &consume_menu_filter, activity_id type, bool refuel = false );
 // special rules for eating: grazing etc
 // returns false if no rules are needed
 bool eat_here( avatar &you );
-void eat_or_use( avatar &you, item_location loc );
 
 // Standard movement; handles attacks, traps, &c. Returns false if auto move
 // should be canceled
@@ -63,24 +62,23 @@ void fire_wielded_weapon( avatar &you );
 void fire_ranged_mutation( Character &you, const item &fake_gun );
 
 /** Stores fake gun specified by the bionic and starts interactive aiming */
-void fire_ranged_bionic( avatar &you, const item &fake_gun );
+void fire_ranged_bionic( avatar &you, const item &fake_gun, const units::energy &cost_per_shot );
 
 /**
  * Checks if the player can manually (with their 2 hands, not via vehicle controls)
  * fire a turret and then starts interactive aiming.
  * Assumes that the turret is on player position.
- * @return true if attempt to fire was successful (aim then cancel is also considered success)
  */
-bool fire_turret_manual( avatar &you, map &m, turret_data &turret );
+void fire_turret_manual( avatar &you, map &m, turret_data &turret );
 
 // Throw an item  't'
 void plthrow( avatar &you, item_location loc,
-              const std::optional<tripoint> &blind_throw_from_pos = std::nullopt );
+              const cata::optional<tripoint> &blind_throw_from_pos = cata::nullopt );
 
 void unload( avatar &you );
 
 // Use item; also tries E,R,W  'a'
-void use_item( avatar &you, item_location &loc, std::string const &method = {} );
+void use_item( avatar &you, item_location &loc );
 void use_item( avatar &you );
 } // namespace avatar_action
 

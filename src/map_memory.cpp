@@ -11,20 +11,26 @@
 #include "string_formatter.h"
 #include "translations.h"
 
-const memorized_tile mm_submap::default_tile = {};
+const memorized_terrain_tile mm_submap::default_tile{ "", 0, 0 };
+const int mm_submap::default_symbol = 0;
 
-static constexpr int MM_SIZE = MAPSIZE * 2;
+#define MM_SIZE (MAPSIZE * 2)
 
 #define dbg(x) DebugLog((x),D_MMAP) << __FILE__ << ":" << __LINE__ << ": "
 
-static cata_path find_mm_dir()
+static std::string find_legacy_mm_file()
 {
-    return PATH_INFO::player_base_save_path_path() + ".mm1";
+    return PATH_INFO::player_base_save_path() + SAVE_EXTENSION_MAP_MEMORY;
 }
 
-static cata_path find_region_path( const cata_path &dirname, const tripoint &p )
+static std::string find_mm_dir()
 {
-    return dirname / string_format( "%d.%d.%d.mmr", p.x, p.y, p.z );
+    return string_format( "%s.mm1", PATH_INFO::player_base_save_path() );
+}
+
+static std::string find_region_path( const std::string &dirname, const tripoint &p )
+{
+    return string_format( "%s/%d.%d.%d.mmr", dirname, p.x, p.y, p.z );
 }
 
 /**
@@ -40,35 +46,8 @@ struct reg_coord_pair {
     }
 };
 
+mm_submap::mm_submap() = default;
 mm_submap::mm_submap( bool make_valid ) : valid( make_valid ) {}
-
-bool mm_submap::is_empty() const
-{
-    return tiles.empty();
-}
-
-bool mm_submap::is_valid() const
-{
-    return valid;
-}
-
-const memorized_tile &mm_submap::get_tile( const point &p ) const
-{
-    if( tiles.empty() ) {
-        return default_tile;
-    }
-    return tiles[p.y * SEEX + p.x];
-}
-
-void mm_submap::set_tile( const point &p, const memorized_tile &value )
-{
-    if( tiles.empty() ) {
-        // call 'reserve' first to force allocation of exact size
-        tiles.reserve( SEEX * SEEY );
-        tiles.resize( SEEX * SEEY, default_tile );
-    }
-    tiles[p.y * SEEX + p.x] = value;
-}
 
 mm_region::mm_region() : submaps( nullptr ) {}
 
@@ -85,97 +64,6 @@ bool mm_region::is_empty() const
     return true;
 }
 
-const std::string &memorized_tile::get_ter_id() const
-{
-    return ter_id.str();
-}
-
-const std::string &memorized_tile::get_dec_id() const
-{
-    return dec_id;
-}
-
-void memorized_tile::set_ter_id( const std::string_view id )
-{
-    ter_id = ter_str_id( id );
-}
-
-void memorized_tile::set_dec_id( const std::string_view id )
-{
-    dec_id = id;
-}
-
-int memorized_tile::get_ter_rotation() const
-{
-    return ter_rotation;
-}
-
-void memorized_tile::set_ter_rotation( int rotation )
-{
-    if( rotation < std::numeric_limits<decltype( ter_rotation )>::min() ||
-        rotation > std::numeric_limits<decltype( ter_rotation )>::max() ) {
-        debugmsg( "map memory can't store rotation value %d", rotation );
-        rotation = 0;
-    }
-    ter_rotation = rotation;
-}
-
-int memorized_tile::get_dec_rotation() const
-{
-    return dec_rotation;
-}
-
-void memorized_tile::set_dec_rotation( int rotation )
-{
-    if( rotation < std::numeric_limits<decltype( dec_rotation )>::min() ||
-        rotation > std::numeric_limits<decltype( dec_rotation )>::max() ) {
-        debugmsg( "map memory can't store rotation value %d", rotation );
-        rotation = 0;
-    }
-    dec_rotation = rotation;
-}
-
-int memorized_tile::get_ter_subtile() const
-{
-    return ter_subtile;
-}
-
-void memorized_tile::set_ter_subtile( int subtile )
-{
-    if( subtile < std::numeric_limits<decltype( ter_subtile )>::min() ||
-        subtile > std::numeric_limits<decltype( ter_subtile )>::max() ) {
-        debugmsg( "map memory can't store terrain subtile value %d", subtile );
-        subtile = 0;
-    }
-    ter_subtile = subtile;
-}
-
-int memorized_tile::get_dec_subtile() const
-{
-    return dec_subtile;
-}
-
-void memorized_tile::set_dec_subtile( int subtile )
-{
-    if( subtile < std::numeric_limits<decltype( dec_subtile )>::min() ||
-        subtile > std::numeric_limits<decltype( dec_subtile )>::max() ) {
-        debugmsg( "map memory can't store decoration subtile value %d", subtile );
-        subtile = 0;
-    }
-    dec_subtile = subtile;
-}
-
-bool memorized_tile::operator==( const memorized_tile &rhs ) const
-{
-    return symbol == rhs.symbol &&
-           ter_rotation == rhs.ter_rotation &&
-           dec_rotation == rhs.dec_rotation &&
-           ter_subtile == rhs.ter_subtile &&
-           dec_subtile == rhs.dec_subtile &&
-           ter_id == rhs.ter_id &&
-           dec_id == rhs.dec_id;
-}
-
 map_memory::coord_pair::coord_pair( const tripoint &p ) : loc( p.xy() )
 {
     sm = tripoint( ms_to_sm_remain( loc.x, loc.y ), p.z );
@@ -186,70 +74,50 @@ map_memory::map_memory()
     clear_cache();
 }
 
-const memorized_tile &map_memory::get_tile( const tripoint &pos ) const
+const memorized_terrain_tile &map_memory::get_tile( const tripoint &pos ) const
 {
-    const coord_pair p( pos );
+    coord_pair p( pos );
     const mm_submap &sm = get_submap( p.sm );
-    return sm.get_tile( p.loc );
+    return sm.tile( p.loc );
 }
 
-void map_memory::set_tile_terrain( const tripoint &pos, const std::string_view id,
-                                   int subtile, int rotation )
+void map_memory::memorize_tile( const tripoint &pos, const std::string &ter,
+                                const int subtile, const int rotation )
 {
-    const coord_pair p( pos );
+    coord_pair p( pos );
     mm_submap &sm = get_submap( p.sm );
     if( !sm.is_valid() ) {
         return;
     }
-    memorized_tile mt = sm.get_tile( p.loc );
-    mt.set_ter_id( id );
-    mt.set_ter_subtile( subtile );
-    mt.set_ter_rotation( rotation );
-    sm.set_tile( p.loc, mt );
+    sm.set_tile( p.loc, memorized_terrain_tile{ ter, subtile, rotation } );
 }
 
-void map_memory::set_tile_decoration( const tripoint &pos, const std::string_view id,
-                                      int subtile, int rotation )
+int map_memory::get_symbol( const tripoint &pos ) const
 {
-    const coord_pair p( pos );
+    coord_pair p( pos );
+    const mm_submap &sm = get_submap( p.sm );
+    return sm.symbol( p.loc );
+}
+
+void map_memory::memorize_symbol( const tripoint &pos, const int symbol )
+{
+    coord_pair p( pos );
     mm_submap &sm = get_submap( p.sm );
     if( !sm.is_valid() ) {
         return;
     }
-    memorized_tile mt = sm.get_tile( p.loc );
-    mt.set_dec_id( id );
-    mt.set_dec_subtile( subtile );
-    mt.set_dec_rotation( rotation );
-    sm.set_tile( p.loc, mt );
+    sm.set_symbol( p.loc, symbol );
 }
 
-void map_memory::set_tile_symbol( const tripoint &pos, char32_t symbol )
+void map_memory::clear_memorized_tile( const tripoint &pos )
 {
-    const coord_pair p( pos );
+    coord_pair p( pos );
     mm_submap &sm = get_submap( p.sm );
     if( !sm.is_valid() ) {
         return;
     }
-    memorized_tile mt = sm.get_tile( p.loc );
-    mt.symbol = symbol;
-    sm.set_tile( p.loc, mt );
-}
-
-void map_memory::clear_tile_decoration( const tripoint &pos, std::string_view prefix )
-{
-    const coord_pair p( pos );
-    mm_submap &sm = get_submap( p.sm );
-    if( !sm.is_valid() ) {
-        return;
-    }
-    memorized_tile mt = sm.get_tile( p.loc );
-    if( string_starts_with( mt.get_dec_id(), prefix ) ) {
-        mt.set_dec_id( "" );
-        mt.set_dec_rotation( 0 );
-        mt.set_dec_subtile( 0 );
-        mt.symbol = 0;
-    }
-    sm.set_tile( p.loc, mt );
+    sm.set_symbol( p.loc, mm_submap::default_symbol );
+    sm.set_tile( p.loc, mm_submap::default_tile );
 }
 
 bool map_memory::prepare_region( const tripoint &p1, const tripoint &p2 )
@@ -275,15 +143,10 @@ bool map_memory::prepare_region( const tripoint &p1, const tripoint &p2 )
     cache_pos = sm_pos;
     cache_size = sm_size;
     cached.clear();
-    // Loop through each z-level in vision range
-    for( int z = std::max( sm_pos.z - fov_3d_z_range, -OVERMAP_DEPTH );
-         z <= std::min( sm_pos.z + fov_3d_z_range, OVERMAP_HEIGHT ); z++ ) {
-        cached[z].reserve( static_cast<std::size_t>( cache_size.x ) * cache_size.y );
-        for( int dy = 0; dy < cache_size.y; dy++ ) {
-            for( int dx = 0; dx < cache_size.x; dx++ ) {
-                // Store submap pointer in cache, categorized by z-level
-                cached[z].push_back( fetch_submap( tripoint( cache_pos.xy(), z ) + point( dx, dy ) ) );
-            }
+    cached.reserve( static_cast<std::size_t>( cache_size.x ) * cache_size.y );
+    for( int dy = 0; dy < cache_size.y; dy++ ) {
+        for( int dx = 0; dx < cache_size.x; dx++ ) {
+            cached.push_back( fetch_submap( cache_pos + point( dx, dy ) ) );
         }
     }
     return true;
@@ -341,11 +204,17 @@ shared_ptr_fast<mm_submap> map_memory::load_submap( const tripoint &sm_pos )
         return nullptr;
     }
 
-    const reg_coord_pair p( sm_pos );
-    const cata_path path = find_region_path( find_mm_dir(), p.reg );
+    const std::string dirname = find_mm_dir();
+    reg_coord_pair p( sm_pos );
+    const std::string path = find_region_path( dirname, p.reg );
+
+    if( !dir_exist( dirname ) ) {
+        // Old saves don't have [plname].mm1 folder
+        return nullptr;
+    }
 
     mm_region mmr;
-    const auto loader = [&mmr]( const JsonValue & jsin ) {
+    const auto loader = [&]( JsonIn & jsin ) {
         mmr.deserialize( jsin );
     };
 
@@ -371,7 +240,7 @@ shared_ptr_fast<mm_submap> map_memory::load_submap( const tripoint &sm_pos )
             if( pos == sm_pos ) {
                 ret = sm;
             }
-            submaps.emplace( pos, sm );
+            submaps.insert( std::make_pair( pos, sm ) );
         }
     }
 
@@ -388,9 +257,8 @@ const mm_submap &map_memory::get_submap( const tripoint &sm_pos ) const
         return invalid_mz_submap;
     }
     const point idx = ( sm_pos - cache_pos ).xy();
-    if( idx.x > 0 && idx.y > 0 && idx.x < cache_size.x && idx.y < cache_size.y &&
-        !cached[sm_pos.z].empty() ) {
-        return *cached[sm_pos.z][idx.y * cache_size.x + idx.x];
+    if( idx.x > 0 && idx.y > 0 && idx.x < cache_size.x && idx.y < cache_size.y ) {
+        return *cached[idx.y * cache_size.x + idx.x];
     } else {
         return null_mz_submap;
     }
@@ -402,9 +270,8 @@ mm_submap &map_memory::get_submap( const tripoint &sm_pos )
         return invalid_mz_submap;
     }
     const point idx = ( sm_pos - cache_pos ).xy();
-    if( idx.x > 0 && idx.y > 0 && idx.x < cache_size.x && idx.y < cache_size.y &&
-        !cached[sm_pos.z].empty() ) {
-        return *cached[sm_pos.z][idx.y * cache_size.x + idx.x];
+    if( idx.x > 0 && idx.y > 0 && idx.x < cache_size.x && idx.y < cache_size.y ) {
+        return *cached[idx.y * cache_size.x + idx.x];
     } else {
         return null_mz_submap;
     }
@@ -412,11 +279,29 @@ mm_submap &map_memory::get_submap( const tripoint &sm_pos )
 
 void map_memory::load( const tripoint &pos )
 {
-    const coord_pair p( pos );
-    const tripoint start = p.sm - tripoint( MM_SIZE / 2, MM_SIZE / 2, 0 );
+    const std::string dirname = find_mm_dir();
+
+    clear_cache();
+
+    if( !dir_exist( dirname ) ) {
+        // Old saves have [plname].mm file and no [plname].mm1 folder
+        const std::string legacy_file = find_legacy_mm_file();
+        if( file_exist( legacy_file ) ) {
+            try {
+                read_from_file_optional_json( legacy_file, [&]( JsonIn & jsin ) {
+                    this->load_legacy( jsin );
+                } );
+            } catch( const std::exception &err ) {
+                debugmsg( "Failed to load legacy memory map file: %s", err.what() );
+            }
+        }
+        return;
+    }
+
+    coord_pair p( pos );
+    tripoint start = p.sm - tripoint( MM_SIZE / 2, MM_SIZE / 2, 0 );
     dbg( D_INFO ) << "[LOAD] Loading memory map around " << p.sm << ". Loading submaps within " << start
                   << "->" << start + tripoint( MM_SIZE, MM_SIZE, 0 );
-    clear_cache();
     for( int dy = 0; dy < MM_SIZE; dy++ ) {
         for( int dx = 0; dx < MM_SIZE; dx++ ) {
             fetch_submap( start + tripoint( dx, dy, 0 ) );
@@ -428,7 +313,7 @@ void map_memory::load( const tripoint &pos )
 bool map_memory::save( const tripoint &pos )
 {
     tripoint sm_center = coord_pair( pos ).sm;
-    const cata_path dirname = find_mm_dir();
+    const std::string dirname = find_mm_dir();
     assure_dir_exist( dirname );
 
     clear_cache();
@@ -456,7 +341,7 @@ bool map_memory::save( const tripoint &pos )
         const tripoint &regp = it.first;
         mm_region &reg = it.second;
         if( !reg.is_empty() ) {
-            const cata_path path = find_region_path( dirname, regp );
+            const std::string path = find_region_path( dirname, regp );
             const std::string descr = string_format(
                                           _( "memory map region for (%d,%d,%d)" ),
                                           regp.x, regp.y, regp.z

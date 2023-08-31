@@ -10,7 +10,6 @@
 #include "lightmap.h"
 #include "map.h"
 #include "map_helpers.h"
-#include "options_helpers.h"
 #include "player_helpers.h"
 #include "type_id.h"
 
@@ -48,7 +47,7 @@ static const trait_id trait_URSINE_EYE( "URSINE_EYE" );
 //
 // TODO: Test 'pos' (position) parameter to fine_detail_vision_mod
 //
-TEST_CASE( "light_and_fine_detail_vision_mod", "[character][sight][light][vision]" )
+TEST_CASE( "light and fine_detail_vision_mod", "[character][sight][light][vision]" )
 {
     Character &dummy = get_player_character();
     map &here = get_map();
@@ -56,7 +55,6 @@ TEST_CASE( "light_and_fine_detail_vision_mod", "[character][sight][light][vision
     clear_avatar();
     clear_map();
     g->reset_light_level();
-    scoped_weather_override weather_clear( WEATHER_CLEAR );
 
     SECTION( "full daylight" ) {
         // Set clock to noon
@@ -111,7 +109,7 @@ TEST_CASE( "light_and_fine_detail_vision_mod", "[character][sight][light][vision
 //
 // Character::sight_impaired() returns true if sight is thus restricted.
 //
-TEST_CASE( "character_sight_limits", "[character][sight][vision]" )
+TEST_CASE( "character sight limits", "[character][sight][vision]" )
 {
     Character &dummy = get_player_character();
     map &here = get_map();
@@ -119,7 +117,6 @@ TEST_CASE( "character_sight_limits", "[character][sight][vision]" )
     clear_avatar();
     clear_map();
     g->reset_light_level();
-    scoped_weather_override weather_clear( WEATHER_CLEAR );
 
     GIVEN( "it is midnight with a new moon" ) {
         calendar::turn = calendar::turn_zero;
@@ -207,7 +204,7 @@ TEST_CASE( "character_sight_limits", "[character][sight][vision]" )
 // FIXME: Rename unimpaired_range() to impaired_range()
 // (it specifically includes all the things that impair visibility)
 //
-TEST_CASE( "ursine_vision", "[character][ursine][vision]" )
+TEST_CASE( "ursine vision", "[character][ursine][vision]" )
 {
     Character &dummy = get_player_character();
     map &here = get_map();
@@ -215,7 +212,6 @@ TEST_CASE( "ursine_vision", "[character][ursine][vision]" )
     clear_avatar();
     clear_map();
     g->reset_light_level();
-    scoped_weather_override weather_clear( WEATHER_CLEAR );
 
     float light_here = 0.0f;
 

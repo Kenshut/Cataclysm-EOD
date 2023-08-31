@@ -286,6 +286,17 @@
     "type": "mapgen",
     "method": "json",
     "nested_mapgen_id": "exodii_special_tank",
+    "//": "A tank with a ton of phenol in it.",
+    "object": {
+      "mapgensize": [ 1, 1 ],
+      "rows": [ "X" ],
+      "mapping": { "X": { "furniture": [ "f_standing_tank" ], "liquids": { "liquid": "chem_phenol", "amount": [ 100, 200 ] } } }
+    }
+  },
+  {
+    "type": "mapgen",
+    "method": "json",
+    "nested_mapgen_id": "exodii_special_tank",
     "//": "A tank with a ton of formaldehyde in it.",
     "object": {
       "mapgensize": [ 1, 1 ],

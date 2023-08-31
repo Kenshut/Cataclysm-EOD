@@ -6,6 +6,7 @@
 
 #include "type_id.h"
 
+class JsonIn;
 class JsonObject;
 class JsonOut;
 template<typename T>
@@ -18,7 +19,7 @@ class mood_face
         static void load_mood_faces( const JsonObject &jo, const std::string &src );
         static void reset();
 
-        void load( const JsonObject &jo, std::string_view src );
+        void load( const JsonObject &jo, const std::string &src );
 
         static const std::vector<mood_face> &get_all();
 
@@ -47,7 +48,7 @@ class mood_face_value
     public:
         bool was_loaded = false;
         void load( const JsonObject &jo );
-        void deserialize( const JsonObject &jo );
+        void deserialize( JsonIn &jsin );
 
         int value() const {
             return value_;

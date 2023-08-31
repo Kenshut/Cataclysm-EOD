@@ -15,7 +15,6 @@
 #include "units.h"
 
 enum class time_accuracy;
-class JsonValue;
 
 /// <summary>
 /// diary page, to save current character progression
@@ -40,7 +39,7 @@ struct diary_page {
     std::map<mtype_id, int> kills;
     /*names of killed npc`s*/
     std::vector<std::string> npc_kills;
-    /*sex*/
+    /*gender*/
     bool male = false;
     /*base character stats*/
     int strength = 0;
@@ -83,6 +82,7 @@ class diary
         /*maps description to position in change list*/
         std::map<int, std::string> desc_map; // NOLINT(cata-serialize)
 
+
         //methods
     public:
         diary();
@@ -96,7 +96,8 @@ class diary
         bool store();
         void load();
         void serialize( std::ostream &fout );
-        void deserialize( const JsonValue &jsin );
+        void deserialize( std::istream &fin );
+        void deserialize( JsonIn &jsin );
         void serialize( JsonOut &jsout );
 
     private:
