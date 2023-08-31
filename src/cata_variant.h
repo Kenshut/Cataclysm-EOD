@@ -19,8 +19,8 @@
 #include "to_string_id.h"
 #include "type_id.h"
 
+class JsonIn;
 class JsonOut;
-class JsonValue;
 template <typename E> struct enum_traits;
 
 enum class mutagen_technique : int;
@@ -133,7 +133,7 @@ struct convert_string {
     static T from_string( const std::string &v ) {
         return v;
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         return true;
     }
 };
@@ -194,7 +194,7 @@ static_assert( static_cast<int>( cata_variant_type::num_types ) == 47,
 template<>
 struct convert<cata_variant_type::void_> {
     using type = void;
-    static bool is_valid( const std::string_view s ) {
+    static bool is_valid( const std::string &s ) {
         return s.empty();
     }
 };
@@ -236,7 +236,7 @@ struct convert<cata_variant_type::character_id> {
     static character_id from_string( const std::string &v ) {
         return character_id( std::stoi( v ) );
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         // TODO: check for int-ness
         return true;
     }
@@ -251,7 +251,7 @@ struct convert<cata_variant_type::chrono_seconds> {
     static std::chrono::seconds from_string( const std::string &v ) {
         return std::chrono::seconds( std::stoll( v ) );
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         // TODO: check for int-ness
         return true;
     }
@@ -293,7 +293,7 @@ struct convert<cata_variant_type::int_> {
     static int from_string( const std::string &v ) {
         return std::stoi( v );
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         // TODO: check for int-ness
         return true;
     }
@@ -348,7 +348,7 @@ struct convert<cata_variant_type::point> {
     static point from_string( const std::string &v ) {
         return point::from_string( v );
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         // TODO: check for point-ness
         return true;
     }
@@ -397,7 +397,7 @@ struct convert<cata_variant_type::tripoint> {
     static tripoint from_string( const std::string &v ) {
         return tripoint::from_string( v );
     }
-    static bool is_valid( const std::string_view ) {
+    static bool is_valid( const std::string & ) {
         // TODO: check for tripoint-ness
         return true;
     }
@@ -490,7 +490,7 @@ class cata_variant
         }
 
         void serialize( JsonOut & ) const;
-        void deserialize( const JsonValue &jsin );
+        void deserialize( JsonIn & );
 
 #define CATA_VARIANT_OPERATOR(op) \
     friend bool operator op( const cata_variant &l, const cata_variant &r ) { \

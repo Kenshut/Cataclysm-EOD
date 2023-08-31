@@ -14,7 +14,6 @@
 #include "item.h"
 #include "iteminfo_query.h"
 #include "itype.h"
-#include "make_static.h"
 #include "options_helpers.h"
 #include "output.h"
 #include "player_helpers.h"
@@ -42,7 +41,7 @@ static const itype_id itype_zentai( "zentai" );
 
 static const material_id material_wool( "wool" );
 
-static const recipe_id recipe_iodine( "iodine" );
+static const recipe_id recipe_pur_tablets( "pur_tablets" );
 
 static const skill_id skill_survival( "survival" );
 
@@ -112,7 +111,7 @@ static std::string item_info_str( const item &it, const std::vector<iteminfo_par
 //
 // Functions:
 // item::basic_info
-TEST_CASE( "item_volume_and_weight", "[iteminfo][volume][weight]" )
+TEST_CASE( "item volume and weight", "[iteminfo][volume][weight]" )
 {
     clear_avatar();
 
@@ -169,7 +168,7 @@ TEST_CASE( "item_volume_and_weight", "[iteminfo][volume][weight]" )
 //
 // Functions:
 // item::basic_info
-TEST_CASE( "item_material_category_description", "[iteminfo][material][category][description]" )
+TEST_CASE( "item material, category, description", "[iteminfo][material][category][description]" )
 {
     clear_avatar();
 
@@ -214,7 +213,7 @@ TEST_CASE( "item_material_category_description", "[iteminfo][material][category]
 //
 // Functions:
 // item::basic_info
-TEST_CASE( "item_owner", "[iteminfo][owner]" )
+TEST_CASE( "item owner", "[iteminfo][owner]" )
 {
     clear_avatar();
 
@@ -240,7 +239,7 @@ TEST_CASE( "item_owner", "[iteminfo][owner]" )
 //
 // Functions:
 // item::basic_info
-TEST_CASE( "item_requirements", "[iteminfo][requirements]" )
+TEST_CASE( "item requirements", "[iteminfo][requirements]" )
 {
     // TODO:
     // - get_min_str() - type->min_str with special gun/gunmod handling
@@ -271,7 +270,7 @@ TEST_CASE( "item_requirements", "[iteminfo][requirements]" )
 
 // Functions:
 // item::basic_info
-TEST_CASE( "iteminfo_contents", "[iteminfo][contents]" )
+TEST_CASE( "item contents", "[iteminfo][contents]" )
 {
     clear_avatar();
 
@@ -350,7 +349,7 @@ TEST_CASE( "med_info", "[iteminfo][med]" )
 //
 // Functions:
 // item::final_info
-TEST_CASE( "item_price_and_barter_value", "[iteminfo][price]" )
+TEST_CASE( "item price and barter value", "[iteminfo][price]" )
 {
     clear_avatar();
 
@@ -398,7 +397,7 @@ TEST_CASE( "item_price_and_barter_value", "[iteminfo][price]" )
 //
 // Functions:
 // item::armor_info
-TEST_CASE( "item_rigidity", "[iteminfo][rigidity]" )
+TEST_CASE( "item rigidity", "[iteminfo][rigidity]" )
 {
     clear_avatar();
 
@@ -480,7 +479,7 @@ TEST_CASE( "item_rigidity", "[iteminfo][rigidity]" )
 //
 // Functions:
 // item::combat_info
-TEST_CASE( "weapon_attack_ratings_and_moves", "[iteminfo][weapon]" )
+TEST_CASE( "weapon attack ratings and moves", "[iteminfo][weapon]" )
 {
     clear_avatar();
     Character &player_character = get_player_character();
@@ -562,10 +561,10 @@ TEST_CASE( "weapon_attack_ratings_and_moves", "[iteminfo][weapon]" )
         // Those calculations are outside the scope of these tests, but we can at least ensure
         // they have expected values before checking the item info string.
         // If one of these fails, it suggests attack_time() changed:
-        REQUIRE( rock.attack_time( player_character ) == 79 );
-        REQUIRE( halligan.attack_time( player_character ) == 145 );
-        REQUIRE( mr_pointy.attack_time( player_character ) == 100 );
-        REQUIRE( arrow.attack_time( player_character ) == 65 );
+        REQUIRE( rock.attack_time() == 79 );
+        REQUIRE( halligan.attack_time() == 145 );
+        REQUIRE( mr_pointy.attack_time() == 100 );
+        REQUIRE( arrow.attack_time() == 65 );
 
         std::vector<iteminfo_parts> moves = { iteminfo_parts::BASE_MOVES };
 
@@ -638,7 +637,7 @@ TEST_CASE( "weapon_attack_ratings_and_moves", "[iteminfo][weapon]" )
         CHECK( item_info_str( halligan, stam ) ==
                "--\n"
                "<color_c_white>Stamina use</color>:"
-               " Costs about <color_c_yellow>3.20</color>%"
+               " Costs about <color_c_yellow>3.10</color>%"
                " stamina to swing.\n" );
 
         CHECK( item_info_str( mr_pointy, stam ) ==
@@ -650,7 +649,7 @@ TEST_CASE( "weapon_attack_ratings_and_moves", "[iteminfo][weapon]" )
         CHECK( item_info_str( arrow, stam ) ==
                "--\n"
                "<color_c_white>Stamina use</color>:"
-               " Costs about <color_c_yellow>0.80</color>%"
+               " Costs about <color_c_yellow>0.70</color>%"
                " stamina to swing.\n" );
     }
 
@@ -698,7 +697,7 @@ TEST_CASE( "weapon_attack_ratings_and_moves", "[iteminfo][weapon]" )
 //
 // Functions:
 // item::combat_info
-TEST_CASE( "techniques_when_wielded", "[iteminfo][weapon][techniques]" )
+TEST_CASE( "techniques when wielded", "[iteminfo][weapon][techniques]" )
 {
     clear_avatar();
 
@@ -707,18 +706,18 @@ TEST_CASE( "techniques_when_wielded", "[iteminfo][weapon][techniques]" )
            "--\n"
            "<color_c_white>Techniques when wielded</color>:"
            " <color_c_light_blue>Brutal Strike</color>:"
-           " <color_c_cyan>Stun 1 turn, knockback 1 tile, crit only</color> <color_c_cyan>* Only works on a <color_c_cyan>non-stunned mundane</color> target of <color_c_cyan>similar or smaller</color> size, may fail on enemies grabbing you</color>,"
+           " <color_c_cyan>Stun 1 turn, knockback 1 tile, crit only</color>,"
            " <color_c_light_blue>Sweep Attack</color>:"
-           " <color_c_cyan>Down 2 turns</color> <color_c_cyan>* Only works on a <color_c_cyan>non-downed humanoid</color> target of <color_c_cyan>similar or smaller</color> size incapable of flight</color>, and"
+           " <color_c_cyan>Down 2 turns</color>, and"
            " <color_c_light_blue>Block</color>:"
-           " <color_c_cyan>Medium blocking ability</color> <color_c_cyan></color>\n" );
+           " <color_c_cyan>Medium blocking ability</color>\n" );
 
     item plank( "test_2x4" );
     CHECK( item_info_str( plank, { iteminfo_parts::DESCRIPTION_TECHNIQUES } ) ==
            "--\n"
            "<color_c_white>Techniques when wielded</color>:"
            " <color_c_light_blue>Block</color>:"
-           " <color_c_cyan>Medium blocking ability</color> <color_c_cyan></color>\n" );
+           " <color_c_cyan>Medium blocking ability</color>\n" );
 }
 
 static std::vector<bodypart_id> bodyparts_to_check()
@@ -767,7 +766,7 @@ static void verify_item_encumbrance( const item &i, item::encumber_flags flags, 
 //
 // Functions:
 // item::armor_info
-TEST_CASE( "armor_coverage_warmth_and_encumbrance", "[iteminfo][armor][coverage]" )
+TEST_CASE( "armor coverage, warmth, and encumbrance", "[iteminfo][armor][coverage]" )
 {
     clear_avatar();
 
@@ -857,6 +856,7 @@ TEST_CASE( "armor_coverage_warmth_and_encumbrance", "[iteminfo][armor][coverage]
                " The <color_c_cyan>arms</color>."
                " The <color_c_cyan>legs</color>."
                " The <color_c_cyan>torso</color>.\n" );
+
 
         std::vector<iteminfo_parts> cov_warm_swat = { iteminfo_parts::ARMOR_COVERAGE, iteminfo_parts::ARMOR_WARMTH };
         REQUIRE( swat_armor.get_avg_coverage() == 95 );
@@ -1162,7 +1162,7 @@ TEST_CASE( "armor_coverage_warmth_and_encumbrance", "[iteminfo][armor][coverage]
 // Related JSON fields:
 // material softness
 // padded flag
-TEST_CASE( "armor_rigidity", "[iteminfo][armor][coverage]" )
+TEST_CASE( "armor rigidity", "[iteminfo][armor][coverage]" )
 {
     clear_avatar();
 
@@ -1183,7 +1183,7 @@ TEST_CASE( "armor_rigidity", "[iteminfo][armor][coverage]" )
 //
 // Functions:
 // item::armor_fit_info
-TEST_CASE( "armor_fit_and_sizing", "[iteminfo][armor][fit]" )
+TEST_CASE( "armor fit and sizing", "[iteminfo][armor][fit]" )
 {
     clear_avatar();
 
@@ -1208,6 +1208,10 @@ TEST_CASE( "armor_fit_and_sizing", "[iteminfo][armor][fit]" )
     CHECK( item_info_str( briefcase, sided ) ==
            "--\n"
            "* This item can be worn on <color_c_cyan>either side</color> of the body.\n" );
+
+    item power_armor( "test_power_armor" );
+    CHECK_THAT( item_info_str( power_armor, powerarmor ),
+                Catch::EndsWith( "* This gear is a part of power armor.\n" ) );
 }
 
 static void expected_armor_values( const item &armor, float bash, float cut, float stab,
@@ -1215,12 +1219,12 @@ static void expected_armor_values( const item &armor, float bash, float cut, flo
                                    float acid = 0.0f, float fire = 0.0f, float env = 0.0f )
 {
     CAPTURE( armor.typeId().str() );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "bash" ) ) ) == Approx( bash ) );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "cut" ) ) ) == Approx( cut ) );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "stab" ) ) ) == Approx( stab ) );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "bullet" ) ) ) == Approx( bullet ) );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "acid" ) ) ) == Approx( acid ) );
-    REQUIRE( armor.resist( STATIC( damage_type_id( "heat" ) ) ) == Approx( fire ) );
+    REQUIRE( armor.bash_resist() == Approx( bash ) );
+    REQUIRE( armor.cut_resist() == Approx( cut ) );
+    REQUIRE( armor.stab_resist() == Approx( stab ) );
+    REQUIRE( armor.bullet_resist() == Approx( bullet ) );
+    REQUIRE( armor.acid_resist() == Approx( acid ) );
+    REQUIRE( armor.fire_resist() == Approx( fire ) );
     REQUIRE( armor.get_env_resist() == Approx( env ) );
 }
 
@@ -1243,7 +1247,7 @@ TEST_CASE( "armor_stats", "[armor][protection]" )
 // Materials and protection calculations are not tested here; only their display in item info.
 //
 // item::armor_protection_info
-TEST_CASE( "armor_protection", "[iteminfo][armor][protection]" )
+TEST_CASE( "armor protection", "[iteminfo][armor][protection]" )
 {
     clear_avatar();
 
@@ -1291,7 +1295,6 @@ TEST_CASE( "armor_protection", "[iteminfo][armor][protection]" )
                "  Bash: <color_c_yellow>4.00</color>\n"
                "  Cut: <color_c_yellow>4.00</color>\n"
                "  Ballistic: <color_c_yellow>4.00</color>\n"
-               "  Pierce: <color_c_yellow>3.20</color>\n"
                "  Acid: <color_c_yellow>9.00</color>\n"
                "  Fire: <color_c_yellow>1.00</color>\n"
                "  Environmental: <color_c_yellow>20</color>\n"
@@ -1316,7 +1319,6 @@ TEST_CASE( "armor_protection", "[iteminfo][armor][protection]" )
                "  Bash:  <color_c_red>1.00</color>, <color_c_yellow>12.00</color>, <color_c_green>23.00</color>\n"
                "  Cut:  <color_c_red>1.00</color>, <color_c_yellow>12.00</color>, <color_c_green>23.00</color>\n"
                "  Ballistic:  <color_c_red>1.00</color>, <color_c_yellow>8.50</color>, <color_c_green>16.00</color>\n"
-               "  Pierce:  <color_c_red>0.80</color>, <color_c_yellow>9.60</color>, <color_c_green>18.40</color>\n"
              );
     }
 
@@ -1351,7 +1353,7 @@ TEST_CASE( "armor_protection", "[iteminfo][armor][protection]" )
 //
 // Functions:
 // item::book_info
-TEST_CASE( "book_info", "[iteminfo][book]" )
+TEST_CASE( "book info", "[iteminfo][book]" )
 {
     clear_avatar();
 
@@ -1473,7 +1475,7 @@ TEST_CASE( "book_info", "[iteminfo][book]" )
 //
 // Functions:
 // item::gun_info
-TEST_CASE( "gun_or_other_ranged_weapon_attributes", "[iteminfo][weapon][gun]" )
+TEST_CASE( "gun or other ranged weapon attributes", "[iteminfo][weapon][gun]" )
 {
     clear_avatar();
 
@@ -1586,16 +1588,16 @@ TEST_CASE( "gun_or_other_ranged_weapon_attributes", "[iteminfo][weapon][gun]" )
         std::vector<iteminfo_parts> aim_stats = { iteminfo_parts::GUN_AIMING_STATS };
         CHECK( item_info_str( glock, aim_stats ) ==
                "--\n"
-               "<color_c_white>Base aim speed</color>: <color_c_yellow>29</color>\n"
+               "<color_c_white>Base aim speed</color>: <color_c_yellow>48</color>\n"
                "<color_c_cyan>Regular</color>\n"
-               "Even chance of good hit at range: <color_c_yellow>2</color>\n"
-               "Time to reach aim level: <color_c_yellow>233</color> moves\n"
-               "<color_c_cyan>Careful</color>\n"
                "Even chance of good hit at range: <color_c_yellow>3</color>\n"
-               "Time to reach aim level: <color_c_yellow>399</color> moves\n"
+               "Time to reach aim level: <color_c_yellow>99</color> moves\n"
+               "<color_c_cyan>Careful</color>\n"
+               "Even chance of good hit at range: <color_c_yellow>6</color>\n"
+               "Time to reach aim level: <color_c_yellow>165</color> moves\n"
                "<color_c_cyan>Precise</color>\n"
-               "Even chance of good hit at range: <color_c_yellow>4</color>\n"
-               "Time to reach aim level: <color_c_yellow>645</color> moves\n" );
+               "Even chance of good hit at range: <color_c_yellow>8</color>\n"
+               "Time to reach aim level: <color_c_yellow>263</color> moves\n" );
     }
 
     SECTION( "compatible magazines" ) {
@@ -1646,15 +1648,9 @@ TEST_CASE( "gun_or_other_ranged_weapon_attributes", "[iteminfo][weapon][gun]" )
     SECTION( "weapon mods" ) {
         CHECK( item_info_str( compbow, { iteminfo_parts::DESCRIPTION_GUN_MODS } ) ==
                "--\n"
-               "<color_c_white>Mods</color>:\n"
-               "<color_cyan># </color>dampening:\n"
-               "    <color_dark_gray>[-empty-]</color>\n"
-               "<color_cyan># </color>sights:\n"
-               "    <color_dark_gray>[-empty-]</color>\n"
-               "<color_cyan># </color>stabilizer:\n"
-               "    <color_dark_gray>[-empty-]</color>\n"
-               "<color_cyan># </color>underbarrel:\n"
-               "    <color_dark_gray>[-empty-]</color>\n" );
+               "<color_c_white>Mods</color>: <color_c_white>0/2</color> accessories;"
+               " <color_c_white>0/1</color> dampening; <color_c_white>0/1</color> sights;"
+               " <color_c_white>0/1</color> stabilizer; <color_c_white>0/1</color> underbarrel.\n" );
     }
 
     SECTION( "weapon dispersion" ) {
@@ -1674,7 +1670,7 @@ TEST_CASE( "gun_or_other_ranged_weapon_attributes", "[iteminfo][weapon][gun]" )
 
 // Functions:
 // item::gun_info
-TEST_CASE( "gun_armor_piercing_dispersion_and_other_stats", "[iteminfo][gun][misc]" )
+TEST_CASE( "gun armor piercing, dispersion and other stats", "[iteminfo][gun][misc]" )
 {
     clear_avatar();
 
@@ -1731,7 +1727,7 @@ TEST_CASE( "gun_armor_piercing_dispersion_and_other_stats", "[iteminfo][gun][mis
 //
 // Functions:
 // item::gunmod_info
-TEST_CASE( "gunmod_info", "[iteminfo][gunmod]" )
+TEST_CASE( "gunmod info", "[iteminfo][gunmod]" )
 {
     clear_avatar();
 
@@ -1860,7 +1856,7 @@ TEST_CASE( "ammunition", "[iteminfo][ammo]" )
 
 // Functions:
 // item::food_info
-TEST_CASE( "nutrients_in_food", "[iteminfo][food]" )
+TEST_CASE( "nutrients in food", "[iteminfo][food]" )
 {
     clear_avatar();
 
@@ -1886,13 +1882,13 @@ TEST_CASE( "nutrients_in_food", "[iteminfo][food]" )
                "--\n"
                "Nutrition will <color_cyan>vary with chosen ingredients</color>.\n"
                "<color_c_white>Calories (kcal)</color>:"
-               " <color_c_yellow>52</color>-<color_c_yellow>532</color>"
+               " <color_c_yellow>56</color>-<color_c_yellow>532</color>"
                "  Quench: <color_c_yellow>0</color>\n" );
         // Values end up rounded slightly
         CHECK( item_info_str( ice_cream, { iteminfo_parts::FOOD_VITAMINS } ) ==
                "--\n"
                "Nutrition will <color_cyan>vary with chosen ingredients</color>.\n"
-               "Vitamins (RDA): Calcium (6-35%), Iron (0-128%), and Vitamin C (0-56%)\n" );
+               "Vitamins (RDA): Calcium (6-35%), Iron (0-128%), and Vitamin C (0-79%)\n" );
     }
 }
 
@@ -1901,7 +1897,7 @@ TEST_CASE( "nutrients_in_food", "[iteminfo][food]" )
 //
 // Functions:
 // item::food_info
-TEST_CASE( "food_freshness_and_lifetime", "[iteminfo][food]" )
+TEST_CASE( "food freshness and lifetime", "[iteminfo][food]" )
 {
     clear_avatar();
 
@@ -1944,7 +1940,7 @@ TEST_CASE( "food_freshness_and_lifetime", "[iteminfo][food]" )
 //
 // Functions:
 // item::food_info
-TEST_CASE( "basic_food_info", "[iteminfo][food]" )
+TEST_CASE( "basic food info", "[iteminfo][food]" )
 {
     clear_avatar();
 
@@ -1991,7 +1987,7 @@ TEST_CASE( "basic_food_info", "[iteminfo][food]" )
 //
 // Functions:
 // item::food_info
-TEST_CASE( "food_character_is_allergic_to", "[iteminfo][food][allergy]" )
+TEST_CASE( "food character is allergic to", "[iteminfo][food][allergy]" )
 {
     clear_avatar();
     Character &player_character = get_player_character();
@@ -2023,7 +2019,7 @@ TEST_CASE( "food_character_is_allergic_to", "[iteminfo][food][allergy]" )
 //
 // Functions:
 // item::food_info
-TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][hallu]" )
+TEST_CASE( "food with hidden poison or hallucinogen", "[iteminfo][food][poison][hallu]" )
 {
     clear_avatar();
 
@@ -2048,7 +2044,7 @@ TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][
     // At low level, no info is shown
     GIVEN( "survival 2" ) {
         player_character.set_skill_level( skill_survival, 2 );
-        REQUIRE( static_cast<int>( player_character.get_skill_level( skill_survival ) ) == 2 );
+        REQUIRE( player_character.get_skill_level( skill_survival ) == 2 );
 
         THEN( "cannot see hidden poison or hallucinogen" ) {
             CHECK( item_info_str( almond, poison ).empty() );
@@ -2059,7 +2055,7 @@ TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][
     // Hidden poison is visible at survival level 3
     GIVEN( "survival 3" ) {
         player_character.set_skill_level( skill_survival, 3 );
-        REQUIRE( static_cast<int>( player_character.get_skill_level( skill_survival ) ) == 3 );
+        REQUIRE( player_character.get_skill_level( skill_survival ) == 3 );
 
         THEN( "can see hidden poison" ) {
             CHECK( item_info_str( almond, poison ) ==
@@ -2076,7 +2072,7 @@ TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][
     // Hidden hallucinogen is not visible until survival level 5
     GIVEN( "survival 4" ) {
         player_character.set_skill_level( skill_survival, 4 );
-        REQUIRE( static_cast<int>( player_character.get_skill_level( skill_survival ) ) == 4 );
+        REQUIRE( player_character.get_skill_level( skill_survival ) == 4 );
 
         THEN( "still cannot see hidden hallucinogen" ) {
             CHECK( item_info_str( nutmeg, hallu ).empty() );
@@ -2085,7 +2081,7 @@ TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][
 
     GIVEN( "survival 5" ) {
         player_character.set_skill_level( skill_survival, 5 );
-        REQUIRE( static_cast<int>( player_character.get_skill_level( skill_survival ) ) == 5 );
+        REQUIRE( player_character.get_skill_level( skill_survival ) == 5 );
 
         THEN( "can see hidden hallucinogen" ) {
             CHECK( item_info_str( nutmeg, hallu ) ==
@@ -2101,7 +2097,7 @@ TEST_CASE( "food_with_hidden_poison_or_hallucinogen", "[iteminfo][food][poison][
 //
 // Functions:
 // item::food_info
-TEST_CASE( "food_that_is_made_of_human_flesh", "[iteminfo][food][cannibal]" )
+TEST_CASE( "food that is made of human flesh", "[iteminfo][food][cannibal]" )
 {
     // TODO: Test food that is_tainted(): "This food is *tainted* and will poison you"
 
@@ -2142,7 +2138,7 @@ TEST_CASE( "food_that_is_made_of_human_flesh", "[iteminfo][food][cannibal]" )
 // Functions:
 // item::final_info
 // FIXME: Move conducivity out of final_info
-TEST_CASE( "item_conductivity", "[iteminfo][conductivity]" )
+TEST_CASE( "item conductivity", "[iteminfo][conductivity]" )
 {
     clear_avatar();
 
@@ -2192,7 +2188,7 @@ TEST_CASE( "item_conductivity", "[iteminfo][conductivity]" )
 //
 // Functions:
 // item::qualities_info
-TEST_CASE( "list_of_item_qualities", "[iteminfo][quality]" )
+TEST_CASE( "list of item qualities", "[iteminfo][quality]" )
 {
     clear_avatar();
 
@@ -2276,7 +2272,7 @@ TEST_CASE( "list_of_item_qualities", "[iteminfo][quality]" )
 //
 // Functions:
 // item::actions_info
-TEST_CASE( "list_of_item_actions", "[iteminfo][action]" )
+TEST_CASE( "list of item actions", "[iteminfo][action]" )
 {
     clear_avatar();
 
@@ -2295,7 +2291,7 @@ TEST_CASE( "list_of_item_actions", "[iteminfo][action]" )
 //
 // Functions:
 // item::tool_info
-TEST_CASE( "tool_info", "[iteminfo][tool]" )
+TEST_CASE( "tool info", "[iteminfo][tool]" )
 {
     // TODO: Find a tool using this
     //std::vector<iteminfo_parts> mag_current = { iteminfo_parts::TOOL_MAGAZINE_CURRENT };
@@ -2373,7 +2369,7 @@ TEST_CASE( "tool_info", "[iteminfo][tool]" )
         CHECK( item_info_str( oxy_torch, magazine_compat ) ==
                "--\n"
                "<color_c_white>Compatible magazines</color>:\n"
-               "<color_c_white>Types</color>: small welding tank, makeshift small welding tank, welding tank, and makeshift welding tank\n" );
+               "<color_c_white>Types</color>: small welding tank and welding tank\n" );
     }
 }
 
@@ -2386,7 +2382,7 @@ TEST_CASE( "tool_info", "[iteminfo][tool]" )
 //
 // Functions:
 // item::bionic_info
-TEST_CASE( "bionic_info", "[iteminfo][bionic]" )
+TEST_CASE( "bionic info", "[iteminfo][bionic]" )
 {
     // TODO: Add a test for this
     //std::vector<iteminfo_parts> slots = { iteminfo_parts::DESCRIPTION_CBM_SLOTS };
@@ -2441,12 +2437,12 @@ TEST_CASE( "bionic_info", "[iteminfo][bionic]" )
     CHECK( item_info_str( purifier, {} ) ==
            "--\n"
            "<color_c_white>Environmental Protection</color>: "
-           "mouth <color_c_yellow>15</color>" );
+           "mouth <color_c_yellow>9</color>" );
 }
 
 // Functions:
 // item::repair_info
-TEST_CASE( "repairable_and_with_what_tools", "[iteminfo][repair]" )
+TEST_CASE( "repairable and with what tools", "[iteminfo][repair]" )
 {
     clear_avatar();
 
@@ -2456,16 +2452,25 @@ TEST_CASE( "repairable_and_with_what_tools", "[iteminfo][repair]" )
 
     std::vector<iteminfo_parts> repaired = { iteminfo_parts::DESCRIPTION_REPAIREDWITH };
 
+    // TODO: Move reinforcement to a different part flag ? Repair tools interfere here (especially
+    // with Magiclysm, which has enchanted tailor's kit)
+    /*
+    item socks( "test_socks" );
+    CHECK( item_info_str( socks, repaired ) ==
+           "--\n"
+           "* This item can be <color_c_green>reinforced</color>.\n" );
+    */
+
     CHECK( item_info_str( halligan, repaired ) ==
            "--\n"
-           "<color_c_white>Repair</color> using integrated multitool, arc welder, makeshift arc welder, or high-temperature welding kit.\n"
+           "<color_c_white>Repair</color> using extended multitool, arc welder, makeshift arc welder, or welding kit.\n"
            "<color_c_white>With</color> <color_c_cyan>Steel</color>.\n"
          );
 
     // FIXME: Use an item that can only be repaired by test tools
     CHECK( item_info_str( hazmat, repaired ) ==
            "--\n"
-           "<color_c_white>Repair</color> using gunsmith repair kit, firearm repair kit, soldering iron, TEST soldering iron, or integrated multitool.\n"
+           "<color_c_white>Repair</color> using gunsmith repair kit, firearm repair kit, soldering iron, TEST soldering iron, or extended multitool.\n"
            "<color_c_white>With</color> <color_c_cyan>Plastic</color>.\n" );
 
     CHECK( item_info_str( rock, repaired ) ==
@@ -2475,7 +2480,7 @@ TEST_CASE( "repairable_and_with_what_tools", "[iteminfo][repair]" )
 
 // Functions:
 // item::disassembly_info
-TEST_CASE( "disassembly_time_and_yield", "[iteminfo][disassembly]" )
+TEST_CASE( "disassembly time and yield", "[iteminfo][disassembly]" )
 {
     clear_avatar();
 
@@ -2507,7 +2512,7 @@ TEST_CASE( "disassembly_time_and_yield", "[iteminfo][disassembly]" )
 // Functions:
 // item::final_info
 // FIXME: Factor out of final_info
-TEST_CASE( "item_description_flags", "[iteminfo][flags]" )
+TEST_CASE( "item description flags", "[iteminfo][flags]" )
 {
     clear_avatar();
 
@@ -2540,21 +2545,20 @@ TEST_CASE( "item_description_flags", "[iteminfo][flags]" )
            " <color_c_cyan>any gas</color>.\n"
            "* This gear is generally <color_c_cyan>worn over</color> clothing.\n"
            "* This clothing <color_c_green>completely protects</color> you from"
-           " <color_c_cyan>radiation</color> if it completely covers you.  Otherwise, it"
-           " provides only partial protection.\n"
+           " <color_c_cyan>radiation</color>.\n"
            "* This clothing is designed to keep you <color_c_cyan>dry</color> in the rain.\n"
            "* This clothing <color_c_cyan>won't let water through</color>."
-           "  Even if you jump into a river.\n" );
+           "  Unless you jump in the river or something like that.\n" );
 }
 
 // Functions:
 // item::final_info
-TEST_CASE( "show_available_recipes_with_item_as_an_ingredient", "[iteminfo][recipes]" )
+TEST_CASE( "show available recipes with item as an ingredient", "[iteminfo][recipes]" )
 {
     clear_avatar();
     avatar &player_character = get_avatar();
 
-    const recipe *iodine = &recipe_iodine.obj();
+    const recipe *purtab = &recipe_pur_tablets.obj();
     recipe_subset &known_recipes = const_cast<recipe_subset &>
                                    ( player_character.get_learned_recipes() );
     known_recipes.clear();
@@ -2562,36 +2566,35 @@ TEST_CASE( "show_available_recipes_with_item_as_an_ingredient", "[iteminfo][reci
     // FIXME: Factor out of final_info
     std::vector<iteminfo_parts> crafting = { iteminfo_parts::DESCRIPTION_APPLICABLE_RECIPES };
 
-    GIVEN( "character has iodine crystals and no skill" ) {
+    GIVEN( "character has a potassium iodide tablet and no skill" ) {
         player_character.worn.wear_item( player_character, item( "backpack" ), false, false );
-        item_location crystal = player_character.i_add( item( "iodine_crystal" ) );
+        item_location iodine = player_character.i_add( item( "iodine" ) );
         player_character.empty_skills();
-        REQUIRE( !player_character.knows_recipe( iodine ) );
+        REQUIRE( !player_character.knows_recipe( purtab ) );
 
         THEN( "nothing is craftable from it" ) {
-            CHECK( item_info_str( *crystal, crafting ) ==
+            CHECK( item_info_str( *iodine, crafting ) ==
                    "--\nYou know of nothing you could craft with it.\n" );
         }
 
         WHEN( "they acquire the needed skills" ) {
-            player_character.set_skill_level( iodine->skill_used, iodine->difficulty );
-            REQUIRE( static_cast<int>( player_character.get_skill_level( iodine->skill_used ) ) ==
-                     iodine->difficulty );
+            player_character.set_skill_level( purtab->skill_used, purtab->difficulty );
+            REQUIRE( player_character.get_skill_level( purtab->skill_used ) == purtab->difficulty );
 
             THEN( "still nothing is craftable from it" ) {
-                CHECK( item_info_str( *crystal, crafting ) ==
+                CHECK( item_info_str( *iodine, crafting ) ==
                        "--\nYou know of nothing you could craft with it.\n" );
             }
 
             WHEN( "they have no book, but have the recipe memorized" ) {
-                player_character.learn_recipe( iodine );
-                REQUIRE( player_character.knows_recipe( iodine ) );
+                player_character.learn_recipe( purtab );
+                REQUIRE( player_character.knows_recipe( purtab ) );
 
-                THEN( "they can use iodine crystals to craft it" ) {
-                    CHECK( item_info_str( *crystal, crafting ) ==
+                THEN( "they can use potassium iodide tablets to craft it" ) {
+                    CHECK( item_info_str( *iodine, crafting ) ==
                            "--\n"
                            "You could use it to craft: "
-                           "<color_c_dark_gray>potassium iodide tablet</color>\n" );
+                           "<color_c_dark_gray>water purification tablet</color>\n" );
                 }
             }
 
@@ -2599,13 +2602,14 @@ TEST_CASE( "show_available_recipes_with_item_as_an_ingredient", "[iteminfo][reci
                 item_location textbook = player_character.i_add( item( "textbook_chemistry" ) );
                 player_character.identify( *textbook );
                 REQUIRE( player_character.has_identified( itype_textbook_chemistry ) );
-                player_character.invalidate_crafting_inventory();
+                // update the crafting inventory cache
+                player_character.moves++;
 
-                THEN( "they can use iodine crystals to craft it" ) {
-                    CHECK( item_info_str( *crystal, crafting ) ==
+                THEN( "they can use potassium iodide tablets to craft it" ) {
+                    CHECK( item_info_str( *iodine, crafting ) ==
                            "--\n"
                            "You could use it to craft: "
-                           "<color_c_dark_gray>potassium iodide tablet</color>\n" );
+                           "<color_c_dark_gray>water purification tablet</color>\n" );
                 }
             }
         }
@@ -2625,7 +2629,7 @@ TEST_CASE( "show_available_recipes_with_item_as_an_ingredient", "[iteminfo][reci
 // Functions:
 // item_contents::info
 // item_pocket::general_info
-TEST_CASE( "pocket_info_for_a_simple_container", "[iteminfo][pocket][container]" )
+TEST_CASE( "pocket info for a simple container", "[iteminfo][pocket][container]" )
 {
     clear_avatar();
 
@@ -2651,7 +2655,7 @@ TEST_CASE( "pocket_info_for_a_simple_container", "[iteminfo][pocket][container]"
 // Functions:
 // item_contents::info
 // item_pocket::general_info
-TEST_CASE( "pocket_info_units_-_imperial_or_metric", "[iteminfo][pocket][units]" )
+TEST_CASE( "pocket info units - imperial or metric", "[iteminfo][pocket][units]" )
 {
     clear_avatar();
 
@@ -2698,7 +2702,7 @@ TEST_CASE( "pocket_info_units_-_imperial_or_metric", "[iteminfo][pocket][units]"
 // Functions:
 // item_contents::info
 // item_pocket::general_info
-TEST_CASE( "pocket_info_for_a_multi-pocket_item", "[iteminfo][pocket][multiple]" )
+TEST_CASE( "pocket info for a multi-pocket item", "[iteminfo][pocket][multiple]" )
 {
     clear_avatar();
 
@@ -2731,7 +2735,7 @@ TEST_CASE( "pocket_info_for_a_multi-pocket_item", "[iteminfo][pocket][multiple]"
            "* <color_c_white>or</color> Item must fit in a sheath\n" );
 }
 
-TEST_CASE( "ammo_restriction_info", "[iteminfo][ammo_restriction]" )
+TEST_CASE( "ammo restriction info", "[iteminfo][ammo_restriction]" )
 {
     SECTION( "container pocket with ammo restriction" ) {
         // For non-MAGAZINE pockets with ammo_restriction, pocket info shows what it can hold
@@ -2772,7 +2776,6 @@ TEST_CASE( "ammo_restriction_info", "[iteminfo][ammo_restriction]" )
         CHECK( item_info_str( compbow, mag_cap ) ==
                "--\n"
                "Capacity: <color_c_yellow>1</color> round of arrows\n" );
-
 
     }
 }
@@ -2827,7 +2830,7 @@ TEST_CASE( "weight_to_info", "[iteminfo][weight]" )
 
 // Functions:
 // item::final_info
-TEST_CASE( "final_info", "[iteminfo][final]" )
+TEST_CASE( "final info", "[iteminfo][final]" )
 {
     clear_avatar();
     Character &player_character = get_player_character();
@@ -2889,7 +2892,7 @@ TEST_CASE( "final_info", "[iteminfo][final]" )
 // Functions:
 // item::debug_info
 // FIXME: This fails when run with other tests. May not be worth having a test on...
-TEST_CASE( "item_debug_info", "[iteminfo][debug][!mayfail][.]" )
+TEST_CASE( "item debug info", "[iteminfo][debug][!mayfail][.]" )
 {
     clear_avatar();
 
@@ -2933,7 +2936,7 @@ TEST_CASE( "item_debug_info", "[iteminfo][debug][!mayfail][.]" )
     }
 }
 
-TEST_CASE( "Armor_values_preserved_after_copy-from", "[iteminfo][armor][protection]" )
+TEST_CASE( "Armor values preserved after copy-from", "[iteminfo][armor][protection]" )
 {
     // Normal item definition, no copy
     item armor( itype_test_armor_chitin );
@@ -2969,7 +2972,6 @@ TEST_CASE( "Armor_values_preserved_after_copy-from", "[iteminfo][armor][protecti
         "  Bash: <color_c_yellow>10.00</color>\n"
         "  Cut: <color_c_yellow>16.00</color>\n"
         "  Ballistic: <color_c_yellow>5.60</color>\n"
-        "  Pierce: <color_c_yellow>12.80</color>\n"
         "  Acid: <color_c_yellow>3.60</color>\n"
         "  Fire: <color_c_yellow>1.50</color>\n"
         "  Environmental: <color_c_yellow>6</color>\n";
@@ -2987,7 +2989,6 @@ TEST_CASE( "Armor_values_preserved_after_copy-from", "[iteminfo][armor][protecti
         "  Bash: <color_c_yellow>12.00</color>\n"
         "  Cut: <color_c_yellow>19.20</color>\n"
         "  Ballistic: <color_c_yellow>6.72</color>\n"
-        "  Pierce: <color_c_yellow>15.36</color>\n"
         "  Acid: <color_c_yellow>4.20</color>\n"
         "  Fire: <color_c_yellow>1.75</color>\n"
         "  Environmental: <color_c_yellow>7</color>\n";
@@ -3004,7 +3005,6 @@ TEST_CASE( "Armor_values_preserved_after_copy-from", "[iteminfo][armor][protecti
         "  Bash: <color_c_yellow>15.00</color>\n"
         "  Cut: <color_c_yellow>24.00</color>\n"
         "  Ballistic: <color_c_yellow>8.40</color>\n"
-        "  Pierce: <color_c_yellow>19.20</color>\n"
         "  Acid: <color_c_yellow>4.80</color>\n"
         "  Fire: <color_c_yellow>2.00</color>\n"
         "  Environmental: <color_c_yellow>8</color>\n";

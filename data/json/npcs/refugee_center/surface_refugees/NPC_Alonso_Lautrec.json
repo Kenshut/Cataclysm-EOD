@@ -18,7 +18,7 @@
     "name": { "str": "Refugee" },
     "job_description": "I'm just trying to survive.",
     "common": false,
-    "//": "Alonso wants to be the town bicycle, but isn't getting as much interest as he'd hoped.  He'll provide a morale bonus if his quest is completed.",
+    "//": "Alonso wants to be the town bicycle, but isn't getting as much interest as he'd hoped.  He'll trade a morale bonus for condoms.",
     "bonus_str": { "rng": [ -2, 1 ] },
     "bonus_dex": { "rng": [ -2, 4 ] },
     "bonus_int": { "rng": [ -2, 2 ] },
@@ -26,12 +26,7 @@
     "worn_override": "REFUGEE_Alonso_worn",
     "carry_override": "REFUGEE_Alonso_carried",
     "weapon_override": "REFUGEE_Alonso_wield",
-    "traits": [
-      { "trait": "PRETTY" },
-      { "group": "Appearance_demographics" },
-      { "trait": "NO_BASH" },
-      { "trait": "RETURN_TO_START_POS" }
-    ],
+    "traits": [ { "trait": "PRETTY" }, { "group": "Appearance_demographics" } ],
     "skills": [
       { "skill": "ALL", "level": { "mul": [ { "one_in": 3 }, { "sum": [ { "dice": [ 2, 2 ] }, { "rng": [ 0, -5 ] } ] } ] } },
       { "skill": "speech", "bonus": { "rng": [ 0, 1 ] } }
@@ -95,10 +90,11 @@
       },
       { "text": "You seem a little forward…", "topic": "TALK_REFUGEE_Alonso_Forward" },
       {
-        "text": "What is up with you?  What's with the fake accent, and speaking in the third person?",
+        "text": "[PERCEPTION 10] What is up with you?  What's with the fake accent, and speaking in the third person?",
         "topic": "TALK_REFUGEE_Alonso_CalledOut1",
         "condition": {
           "and": [
+            { "u_has_perception": 10 },
             { "not": { "npc_has_var": "Alonso_accent", "type": "general", "context": "none", "value": "asked" } },
             { "not": { "npc_has_var": "Alonso_accent", "type": "general", "context": "none", "value": "accepted" } }
           ]
@@ -110,16 +106,33 @@
         "condition": { "not": { "u_has_var": "Alonso_pants", "type": "mission", "context": "flag", "value": "yes" } }
       },
       {
-        "text": "About those special pants…",
+        "text": "About those special pants a sexy clown hid in a shop for mysterious reasons…",
         "topic": "TALK_MISSION_INQUIRE",
         "condition": { "u_has_var": "Alonso_pants", "type": "mission", "context": "flag", "value": "in_progress" }
       },
       { "text": "What's your story?", "topic": "TALK_REFUGEE_Alonso_Background" },
       { "text": "How are things here?", "topic": "TALK_REFUGEE_Alonso_Situation" },
       {
-        "text": "You wanna spend some time together?",
+        "text": "[PRETTY] Remember that nice thing I did for you?  Can you do something nice for me?",
+        "topic": "TALK_REFUGEE_Alonso_Pretty_Action",
+        "condition": { "and": [ { "u_has_trait": "PRETTY" }, { "npc_has_effect": "Alonso_pants_restored" }, { "u_has_item": "condom" } ] }
+      },
+      {
+        "text": "So about those condoms.  I thought of a good use for them…",
         "topic": "TALK_REFUGEE_Alonso_Normal_Action",
-        "condition": { "npc_has_effect": "Alonso_pants_restored" }
+        "condition": {
+          "and": [
+            { "not": { "u_has_trait": "PRETTY" } },
+            { "not": { "u_has_trait": "UGLY" } },
+            { "npc_has_effect": "Alonso_pants_restored" },
+            { "u_has_item": "condom" }
+          ]
+        }
+      },
+      {
+        "text": "[UGLY] I'm desperate.  You're my only chance.",
+        "topic": "TALK_REFUGEE_Alonso_Ugly_Action",
+        "condition": { "and": [ { "u_has_trait": "UGLY" }, { "npc_has_effect": "Alonso_pants_restored" }, { "u_has_item": "condom" } ] }
       }
     ]
   },
@@ -128,13 +141,13 @@
     "id": "TALK_REFUGEE_Alonso_1",
     "dynamic_line": {
       "concatenate": [
-        "Oh my, ",
+        "*is an uncharacteristically well-groomed young man, his hair trim and slicked back.  In this stark setting, he looks like a cartoon character on a live-action set piece.  \"",
         {
           "u_male": true,
-          "yes": "it's good to see such a strong and handsome fellow around here",
-          "no": "you're a beautiful lady, so nice to see you"
+          "yes": "Oh my, it's good to see such a strong and handsome fellow around here",
+          "no": "Oh my, you're a beautiful lady, so nice to see you"
         },
-        ".  They call me Alonso."
+        ".\"  He slides his hand through his hair and smiles, his eyes half-lidded.  \"They call me Alonso.\""
       ]
     },
     "speaker_effect": {
@@ -151,7 +164,7 @@
   {
     "type": "talk_topic",
     "id": "TALK_REFUGEE_Alonso_1a",
-    "dynamic_line": "Hello again.",
+    "dynamic_line": "*leans casually against the brick wall of the shelter.  \"Hello again, gorgeous\"",
     "responses": [
       { "text": "Hi, Alonso.  What's up?", "topic": "TALK_REFUGEE_Alonso_2" },
       { "text": "Hi Alonso.  I can't stay to talk.", "topic": "TALK_DONE" }
@@ -160,7 +173,7 @@
   {
     "type": "talk_topic",
     "id": "TALK_REFUGEE_Alonso_1_firstmeet",
-    "dynamic_line": "Nice to meet you too.  Very nice.",
+    "dynamic_line": "Nice to meet you too.  Very nice.  It gets so lonely here in the center.",
     "responses": [
       { "text": "What's up?", "topic": "TALK_REFUGEE_Alonso_2" },
       { "text": "Actually I'm just heading out.", "topic": "TALK_DONE" }
@@ -174,7 +187,7 @@
       "type": "general",
       "context": "none",
       "value": "asked",
-      "no": "Now that you are here, everything.  Is there anything Alonso can do for you?",
+      "no": "Now that you are here, everything.  Is there anything Alonso can… *do for you*?",
       "yes": "Well, it's a lot better now that you're here.  Nice to see a familiar face."
     },
     "responses": [
@@ -201,14 +214,14 @@
   {
     "type": "talk_topic",
     "id": "TALK_REFUGEE_Alonso_CalledOut1",
-    "dynamic_line": "Aw come on, why you gotta be like that?  I'm just tryin' to get an air of mystery okay?  Nobody wants to be with a slutty guy from Brooklyn, but Alonso the mysterious is another story.",
+    "dynamic_line": {
+      "concatenate": [
+        { "u_male": true, "yes": "Aw man", "no": "Aw come on" },
+        ", why you gotta be like that?  I'm just tryin' to get an air of mystery okay?  Nobody wants to be with a slutty guy from Brooklyn, but Alonso the mysterious is another story."
+      ]
+    },
     "responses": [
       { "text": "And how is that working out for you?", "topic": "TALK_REFUGEE_Alonso_CalledOut2" },
-      {
-        "text": "Just stop talking like that around me, maybe?  It's really obnoxious.",
-        "topic": "TALK_REFUGEE_Alonso_CalledOut3",
-        "effect": { "npc_add_var": "Alonso_accent", "type": "general", "context": "none", "value": "asked" }
-      },
       { "text": "What were you saying before?", "topic": "TALK_NONE" },
       { "text": "I'd better get going.", "topic": "TALK_DONE" }
     ]
@@ -321,14 +334,34 @@
     "dialogue": {
       "describe": "I think I might know where those special pants might be though…",
       "offer": "This clown was into some of the different things, not the vanilla, you understand me?  Yes.  I think you will find my valuables in a toy shop not so so far.",
-      "accepted": "You make me so happy.",
-      "rejected": "I will wait, and perhaps someone else will help me instead?",
-      "advice": "It may be crowded no?  A popular place before, maybe is better to visit at night.",
-      "inquire": "Have you found what it is that you seek?",
-      "success": "This is the best news since those lonely teachers asked me to be a nude model at the college for the blind.  Alas, the special condoms have all been used.  This is not a surprise, few could resist this seductive clown.  If you ever want to spend some time with Alonso, go for it, for he is always ready.",
+      "accepted": "You make me so happy I could give you little kisses, and some big kisses, and then something else maybe.",
+      "rejected": "I know that you cannot resist me long.  I will wait, and perhaps some other pretty thing will help me instead?",
+      "advice": "It may be crowded no?  A popular place before, maybe is better to visit at night.  Sounds like Alonso's apartment no?",
+      "inquire": "Have you found what it is that you seek?  There may be something in it for you no?  Something big, but we take it slow yes?",
+      "success": "This is the best news since those lonely teachers asked me to be a nude model at the college for the blind.  Alas, the special condoms have all been used.  This is not a surprise, few could resist this seductive clown.  You find a condom, I find a use for it.  Safety, she was never more important than now, in *so* many ways.",
       "success_lie": "You give me confidence.  I trust you.  I do not know why this is.",
-      "failure": "Disaster, but I thank you for to try."
+      "failure": "Disaster, but I thank you for to try.  You want a backrub some time, it will happen for sure.  And maybe you give me a rub too?"
     }
+  },
+  {
+    "type": "talk_topic",
+    "id": "TALK_REFUGEE_Alonso_Pretty_Action",
+    "dynamic_line": {
+      "npc_has_var": "Alonso_accent",
+      "type": "general",
+      "context": "none",
+      "value": "asked",
+      "no": "My jewel of the New England, I give to you my biggest prize.",
+      "yes": "Yo, you're crazy hot!  I'm not stupid!"
+    },
+    "speaker_effect": {
+      "sentinel": "service_provided",
+      "effect": [ { "u_add_effect": "al_relaxed", "duration": 400 }, { "u_consume_item": "condom" } ]
+    },
+    "responses": [
+      { "text": "Sigh.  What were you saying before?", "topic": "TALK_NONE" },
+      { "text": "All done, I'd better get going.", "topic": "TALK_DONE" }
+    ]
   },
   {
     "type": "talk_topic",
@@ -339,9 +372,32 @@
       "context": "none",
       "value": "asked",
       "no": "I give to you what of I got.  And this is Alonso so I mean it's a lot.",
-      "yes": "Sure, I'd certainly not mind that."
+      "yes": "Yeeeeah it's on!"
     },
-    "speaker_effect": { "sentinel": "service_provided", "effect": [ { "u_add_effect": "al_relaxed", "duration": 360 } ] },
+    "speaker_effect": {
+      "sentinel": "service_provided",
+      "effect": [ { "u_add_effect": "al_relaxed", "duration": 360 }, { "u_consume_item": "condom" } ]
+    },
+    "responses": [
+      { "text": "Sigh.  What were you saying before?", "topic": "TALK_NONE" },
+      { "text": "Yeah, I'd better get going.", "topic": "TALK_DONE" }
+    ]
+  },
+  {
+    "type": "talk_topic",
+    "id": "TALK_REFUGEE_Alonso_Ugly_Action",
+    "dynamic_line": {
+      "npc_has_var": "Alonso_accent",
+      "type": "general",
+      "context": "none",
+      "value": "asked",
+      "no": "My jewel of the New England, I give to you my biggest prize.",
+      "yes": "Yo, you're crazy hot!  I'm not stupid!"
+    },
+    "speaker_effect": {
+      "sentinel": "service_provided",
+      "effect": [ { "u_add_effect": "al_relaxed", "duration": 300 }, { "u_consume_item": "condom" } ]
+    },
     "responses": [
       { "text": "Sigh.  What were you saying before?", "topic": "TALK_NONE" },
       { "text": "Yeah, I'd better get going.", "topic": "TALK_DONE" }

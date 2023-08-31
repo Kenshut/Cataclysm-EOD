@@ -19,7 +19,6 @@
 #include <vector>
 
 #include "cached_options.h"
-#include "cata_scope_helpers.h"
 #include "cata_utility.h"
 #include "debug.h"
 #include "output.h"
@@ -39,11 +38,9 @@ static bool is_whitespace( char ch )
 // binary.
 std::string utf32_to_utf8( uint32_t ch )
 {
-    std::array<char, 5> out;
-    char *buf = out.data();
-    static constexpr std::array<unsigned char, 7> utf8FirstByte = {
-        0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC
-    };
+    char out[5];
+    char *buf = out;
+    static const unsigned char utf8FirstByte[7] = { 0x00, 0x00, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC };
     int utf8Bytes;
     if( ch < 0x80 ) {
         utf8Bytes = 1;
@@ -76,40 +73,34 @@ std::string utf32_to_utf8( uint32_t ch )
             *--buf = ch | utf8FirstByte[utf8Bytes];
     }
     out[utf8Bytes] = '\0';
-    return out.data();
+    return out;
 }
 
-void TextJsonValue::string_error( const std::string &err ) const
+void JsonValue::string_error( const std::string &err ) const
 {
     string_error( 0, err );
 }
 
-void TextJsonValue::string_error( int offset, const std::string &err ) const
+void JsonValue::string_error( int offset, const std::string &err ) const
 {
     seek().string_error( offset, err );
 }
 
-void TextJsonValue::throw_error( const std::string &err ) const
+void JsonValue::throw_error( const std::string &err ) const
 {
     throw_error( 0, err );
 }
 
-void TextJsonValue::throw_error( int offset, const std::string &err ) const
+void JsonValue::throw_error( int offset, const std::string &err ) const
 {
     seek().error( offset, err );
 }
 
-void TextJsonValue::throw_error_after( const std::string &err ) const
-{
-    seek().skip_value();
-    jsin_.error( err );
-}
-
-/* class TextJsonObject
+/* class JsonObject
  * represents a JSON object,
  * providing access to the underlying data.
  */
-TextJsonObject::TextJsonObject( TextJsonIn &j )
+JsonObject::JsonObject( JsonIn &j )
 {
     jsin = &j;
     start = jsin->tell();
@@ -128,7 +119,7 @@ TextJsonObject::TextJsonObject( TextJsonIn &j )
     final_separator = jsin->get_ate_separator();
 }
 
-void TextJsonObject::mark_visited( const std::string_view name ) const
+void JsonObject::mark_visited( const std::string &name ) const
 {
 #ifndef CATA_IN_TOOL
     visited_members.emplace( name );
@@ -137,11 +128,11 @@ void TextJsonObject::mark_visited( const std::string_view name ) const
 #endif
 }
 
-void TextJsonObject::report_unvisited() const
+void JsonObject::report_unvisited() const
 {
 #ifndef CATA_IN_TOOL
     if( report_unvisited_members && !reported_unvisited_members &&
-        !std::uncaught_exceptions() ) {
+        !std::uncaught_exception() ) {
         reported_unvisited_members = true;
         for( const std::pair<const std::string, int> &p : positions ) {
             const std::string &name = p.first;
@@ -160,7 +151,7 @@ void TextJsonObject::report_unvisited() const
 #endif
 }
 
-void TextJsonObject::finish()
+void JsonObject::finish()
 {
     report_unvisited();
     if( jsin && jsin->good() ) {
@@ -169,23 +160,23 @@ void TextJsonObject::finish()
     }
 }
 
-size_t TextJsonObject::size() const
+size_t JsonObject::size() const
 {
     return positions.size();
 }
-bool TextJsonObject::empty() const
+bool JsonObject::empty() const
 {
     return positions.empty();
 }
 
-void TextJsonObject::allow_omitted_members() const
+void JsonObject::allow_omitted_members() const
 {
 #ifndef CATA_IN_TOOL
     report_unvisited_members = false;
 #endif
 }
 
-void TextJsonObject::copy_visited_members( const TextJsonObject &rhs ) const
+void JsonObject::copy_visited_members( const JsonObject &rhs ) const
 {
 #ifndef CATA_IN_TOOL
     visited_members = rhs.visited_members;
@@ -194,12 +185,12 @@ void TextJsonObject::copy_visited_members( const TextJsonObject &rhs ) const
 #endif
 }
 
-int TextJsonObject::verify_position( const std::string_view name,
-                                     const bool throw_exception ) const
+int JsonObject::verify_position( const std::string &name,
+                                 const bool throw_exception ) const
 {
     if( !jsin ) {
         if( throw_exception ) {
-            throw JsonError( str_cat( "member lookup on empty object: ", name ) );
+            throw JsonError( std::string( "member lookup on empty object: " ) + name );
         }
         // 0 is always before the opening brace,
         // so it will never indicate a valid member position
@@ -209,7 +200,7 @@ int TextJsonObject::verify_position( const std::string_view name,
     if( iter == positions.end() ) {
         if( throw_exception ) {
             jsin->seek( start );
-            jsin->error( str_cat( "member not found: ", name ) );
+            jsin->error( "member not found: " + name );
         }
         // 0 is always before the opening brace,
         // so it will never indicate a valid member position
@@ -218,18 +209,18 @@ int TextJsonObject::verify_position( const std::string_view name,
     return iter->second;
 }
 
-bool TextJsonObject::has_member( const std::string &name ) const
+bool JsonObject::has_member( const std::string &name ) const
 {
     return positions.count( name ) > 0;
 }
 
-std::string TextJsonObject::line_number() const
+std::string JsonObject::line_number() const
 {
     jsin->seek( start );
     return jsin->line_number();
 }
 
-std::string TextJsonObject::str() const
+std::string JsonObject::str() const
 {
     // If we're getting the string form, we might be re-parsing later, so don't
     // complain about unvisited members.
@@ -242,7 +233,7 @@ std::string TextJsonObject::str() const
     }
 }
 
-void TextJsonObject::throw_error_at( const std::string_view name, const std::string &err ) const
+void JsonObject::throw_error_at( const std::string &name, const std::string &err ) const
 {
     mark_visited( name );
     if( !jsin ) {
@@ -255,7 +246,7 @@ void TextJsonObject::throw_error_at( const std::string_view name, const std::str
     jsin->error( err );
 }
 
-void TextJsonArray::throw_error( const std::string &err ) const
+void JsonArray::throw_error( const std::string &err ) const
 {
     if( !jsin ) {
         throw JsonError( err );
@@ -263,7 +254,7 @@ void TextJsonArray::throw_error( const std::string &err ) const
     jsin->error( err );
 }
 
-void TextJsonArray::throw_error( int idx, const std::string &err ) const
+void JsonArray::throw_error( int idx, const std::string &err ) const
 {
     if( !jsin ) {
         throw JsonError( err );
@@ -274,7 +265,7 @@ void TextJsonArray::throw_error( int idx, const std::string &err ) const
     jsin->error( err );
 }
 
-void TextJsonArray::string_error( const int idx, const int offset, const std::string &err ) const
+void JsonArray::string_error( const int idx, const int offset, const std::string &err )
 {
     if( jsin && idx >= 0 && static_cast<size_t>( idx ) < positions.size() ) {
         jsin->seek( positions[idx] );
@@ -284,7 +275,7 @@ void TextJsonArray::string_error( const int idx, const int offset, const std::st
     }
 }
 
-void TextJsonObject::throw_error( const std::string &err ) const
+void JsonObject::throw_error( const std::string &err ) const
 {
     if( !jsin ) {
         throw JsonError( err );
@@ -292,7 +283,7 @@ void TextJsonObject::throw_error( const std::string &err ) const
     jsin->error( err );
 }
 
-TextJsonIn *TextJsonObject::get_raw( const std::string_view name ) const
+JsonIn *JsonObject::get_raw( const std::string &name ) const
 {
     int pos = verify_position( name );
     mark_visited( name );
@@ -300,16 +291,16 @@ TextJsonIn *TextJsonObject::get_raw( const std::string_view name ) const
     return jsin;
 }
 
-json_source_location TextJsonObject::get_source_location() const
+json_source_location JsonObject::get_source_location() const
 {
     if( !jsin ) {
-        throw JsonError( "TextJsonObject::get_source_location called when stream is null" );
+        throw JsonError( "JsonObject::get_source_location called when stream is null" );
     }
     json_source_location loc;
     loc.path = jsin->get_path();
     if( !loc.path ) {
         jsin->seek( start );
-        jsin->error( "TextJsonObject::get_source_location called but the path is unknown" );
+        jsin->error( "JsonObject::get_source_location called but the path is unknown" );
     }
     loc.offset = start;
     return loc;
@@ -317,12 +308,12 @@ json_source_location TextJsonObject::get_source_location() const
 
 /* returning values by name */
 
-bool TextJsonObject::get_bool( const std::string_view name ) const
+bool JsonObject::get_bool( const std::string &name ) const
 {
     return get_member( name ).get_bool();
 }
 
-bool TextJsonObject::get_bool( const std::string_view name, const bool fallback ) const
+bool JsonObject::get_bool( const std::string &name, const bool fallback ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -333,12 +324,12 @@ bool TextJsonObject::get_bool( const std::string_view name, const bool fallback 
     return jsin->get_bool();
 }
 
-int TextJsonObject::get_int( const std::string_view name ) const
+int JsonObject::get_int( const std::string &name ) const
 {
     return get_member( name ).get_int();
 }
 
-int TextJsonObject::get_int( const std::string_view name, const int fallback ) const
+int JsonObject::get_int( const std::string &name, const int fallback ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -349,12 +340,12 @@ int TextJsonObject::get_int( const std::string_view name, const int fallback ) c
     return jsin->get_int();
 }
 
-double TextJsonObject::get_float( const std::string_view name ) const
+double JsonObject::get_float( const std::string &name ) const
 {
     return get_member( name ).get_float();
 }
 
-double TextJsonObject::get_float( const std::string_view name, const double fallback ) const
+double JsonObject::get_float( const std::string &name, const double fallback ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -365,13 +356,12 @@ double TextJsonObject::get_float( const std::string_view name, const double fall
     return jsin->get_float();
 }
 
-std::string TextJsonObject::get_string( const std::string_view name ) const
+std::string JsonObject::get_string( const std::string &name ) const
 {
     return get_member( name ).get_string();
 }
 
-std::string TextJsonObject::get_string( const std::string_view name,
-                                        const std::string &fallback ) const
+std::string JsonObject::get_string( const std::string &name, const std::string &fallback ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -384,18 +374,18 @@ std::string TextJsonObject::get_string( const std::string_view name,
 
 /* returning containers by name */
 
-TextJsonArray TextJsonObject::get_array( const std::string_view name ) const
+JsonArray JsonObject::get_array( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
-        return TextJsonArray();
+        return JsonArray();
     }
     mark_visited( name );
     jsin->seek( pos );
-    return TextJsonArray( *jsin );
+    return JsonArray( *jsin );
 }
 
-std::vector<int> TextJsonObject::get_int_array( const std::string_view name ) const
+std::vector<int> JsonObject::get_int_array( const std::string &name ) const
 {
     std::vector<int> ret;
     for( const int entry : get_array( name ) ) {
@@ -404,7 +394,7 @@ std::vector<int> TextJsonObject::get_int_array( const std::string_view name ) co
     return ret;
 }
 
-std::vector<std::string> TextJsonObject::get_string_array( const std::string_view name ) const
+std::vector<std::string> JsonObject::get_string_array( const std::string &name ) const
 {
     std::vector<std::string> ret;
     for( const std::string entry : get_array( name ) ) {
@@ -413,24 +403,11 @@ std::vector<std::string> TextJsonObject::get_string_array( const std::string_vie
     return ret;
 }
 
-std::vector<std::string> TextJsonObject::get_as_string_array( const std::string_view name ) const
-{
-    std::vector<std::string> ret;
-    if( has_array( name ) ) {
-        for( const std::string entry : get_array( name ) ) {
-            ret.push_back( entry );
-        }
-    } else {
-        ret.push_back( get_string( name ) );
-    }
-    return ret;
-}
-
-TextJsonObject TextJsonObject::get_object( const std::string_view name ) const
+JsonObject JsonObject::get_object( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
-        return TextJsonObject();
+        return JsonObject();
     }
     mark_visited( name );
     jsin->seek( pos );
@@ -439,7 +416,7 @@ TextJsonObject TextJsonObject::get_object( const std::string_view name ) const
 
 /* non-fatal member existence and type testing */
 
-bool TextJsonObject::has_null( const std::string_view name ) const
+bool JsonObject::has_null( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -450,7 +427,7 @@ bool TextJsonObject::has_null( const std::string_view name ) const
     return jsin->test_null();
 }
 
-bool TextJsonObject::has_bool( const std::string_view name ) const
+bool JsonObject::has_bool( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -460,7 +437,7 @@ bool TextJsonObject::has_bool( const std::string_view name ) const
     return jsin->test_bool();
 }
 
-bool TextJsonObject::has_number( const std::string_view name ) const
+bool JsonObject::has_number( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -470,7 +447,7 @@ bool TextJsonObject::has_number( const std::string_view name ) const
     return jsin->test_number();
 }
 
-bool TextJsonObject::has_string( const std::string_view name ) const
+bool JsonObject::has_string( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -480,7 +457,7 @@ bool TextJsonObject::has_string( const std::string_view name ) const
     return jsin->test_string();
 }
 
-bool TextJsonObject::has_array( const std::string_view name ) const
+bool JsonObject::has_array( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -490,7 +467,7 @@ bool TextJsonObject::has_array( const std::string_view name ) const
     return jsin->test_array();
 }
 
-bool TextJsonObject::has_object( const std::string_view name ) const
+bool JsonObject::has_object( const std::string &name ) const
 {
     int pos = verify_position( name, false );
     if( !pos ) {
@@ -500,11 +477,11 @@ bool TextJsonObject::has_object( const std::string_view name ) const
     return jsin->test_object();
 }
 
-/* class TextJsonArray
+/* class JsonArray
  * represents a JSON array,
  * providing access to the underlying data.
  */
-TextJsonArray::TextJsonArray( TextJsonIn &j )
+JsonArray::JsonArray( JsonIn &j )
 {
     jsin = &j;
     start = jsin->tell();
@@ -519,13 +496,13 @@ TextJsonArray::TextJsonArray( TextJsonIn &j )
     final_separator = jsin->get_ate_separator();
 }
 
-TextJsonArray::TextJsonArray( const TextJsonArray &ja )
+JsonArray::JsonArray( const JsonArray &ja )
 {
     *this = ja;
 }
 
 // NOLINTNEXTLINE(bugprone-unhandled-self-assignment,cert-oop54-cpp)
-TextJsonArray &TextJsonArray::operator=( const TextJsonArray &ja )
+JsonArray &JsonArray::operator=( const JsonArray &ja )
 {
     jsin = ja.jsin;
     start = ja.start;
@@ -537,7 +514,7 @@ TextJsonArray &TextJsonArray::operator=( const TextJsonArray &ja )
     return *this;
 }
 
-void TextJsonArray::finish()
+void JsonArray::finish()
 {
     if( jsin && jsin->good() ) {
         jsin->seek( end_ );
@@ -545,20 +522,20 @@ void TextJsonArray::finish()
     }
 }
 
-bool TextJsonArray::has_more() const
+bool JsonArray::has_more() const
 {
     return index < positions.size();
 }
-size_t TextJsonArray::size() const
+size_t JsonArray::size() const
 {
     return positions.size();
 }
-bool TextJsonArray::empty()
+bool JsonArray::empty()
 {
     return positions.empty();
 }
 
-std::string TextJsonArray::str()
+std::string JsonArray::str()
 {
     if( jsin ) {
         return jsin->substr( start, end_ - start );
@@ -567,7 +544,7 @@ std::string TextJsonArray::str()
     }
 }
 
-void TextJsonArray::verify_index( const size_t i ) const
+void JsonArray::verify_index( const size_t i ) const
 {
     if( !jsin ) {
         throw JsonError( "tried to access empty array." );
@@ -581,56 +558,62 @@ void TextJsonArray::verify_index( const size_t i ) const
 
 /* iterative access */
 
-TextJsonValue TextJsonArray::next_value()
+JsonValue JsonArray::next()
 {
     verify_index( index );
-    jsin->seek( positions[index++] );
-    return jsin->get_value();
+    return JsonValue( *jsin, positions[index++] );
 }
 
-bool TextJsonArray::next_bool()
+bool JsonArray::next_bool()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_bool();
 }
 
-int TextJsonArray::next_int()
+int JsonArray::next_int()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_int();
 }
 
-double TextJsonArray::next_float()
+double JsonArray::next_float()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_float();
 }
 
-std::string TextJsonArray::next_string()
+std::string JsonArray::next_string()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_string();
 }
 
-TextJsonArray TextJsonArray::next_array()
+JsonArray JsonArray::next_array()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_array();
 }
 
-TextJsonObject TextJsonArray::next_object()
+JsonObject JsonArray::next_object()
 {
     verify_index( index );
     jsin->seek( positions[index++] );
     return jsin->get_object();
 }
 
-void TextJsonArray::skip_value()
+JsonValue JsonArray::next_value()
+{
+    verify_index( index );
+    jsin->seek( positions[ index++ ] );
+    return jsin->get_value();
+}
+
+void JsonArray::skip_value()
 {
     verify_index( index );
     ++index;
@@ -638,42 +621,42 @@ void TextJsonArray::skip_value()
 
 /* static access */
 
-bool TextJsonArray::get_bool( const size_t i ) const
+bool JsonArray::get_bool( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->get_bool();
 }
 
-int TextJsonArray::get_int( const size_t i ) const
+int JsonArray::get_int( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->get_int();
 }
 
-double TextJsonArray::get_float( const size_t i ) const
+double JsonArray::get_float( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->get_float();
 }
 
-std::string TextJsonArray::get_string( const size_t i ) const
+std::string JsonArray::get_string( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->get_string();
 }
 
-TextJsonArray TextJsonArray::get_array( const size_t i ) const
+JsonArray JsonArray::get_array( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->get_array();
 }
 
-TextJsonObject TextJsonArray::get_object( const size_t i ) const
+JsonObject JsonArray::get_object( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
@@ -682,7 +665,7 @@ TextJsonObject TextJsonArray::get_object( const size_t i ) const
 
 /* iterative type checking */
 
-bool TextJsonArray::test_null() const
+bool JsonArray::test_null() const
 {
     if( !has_more() ) {
         return false;
@@ -691,7 +674,7 @@ bool TextJsonArray::test_null() const
     return jsin->test_null();
 }
 
-bool TextJsonArray::test_bool() const
+bool JsonArray::test_bool() const
 {
     if( !has_more() ) {
         return false;
@@ -700,7 +683,7 @@ bool TextJsonArray::test_bool() const
     return jsin->test_bool();
 }
 
-bool TextJsonArray::test_number() const
+bool JsonArray::test_number() const
 {
     if( !has_more() ) {
         return false;
@@ -709,7 +692,7 @@ bool TextJsonArray::test_number() const
     return jsin->test_number();
 }
 
-bool TextJsonArray::test_string() const
+bool JsonArray::test_string() const
 {
     if( !has_more() ) {
         return false;
@@ -718,7 +701,7 @@ bool TextJsonArray::test_string() const
     return jsin->test_string();
 }
 
-bool TextJsonArray::test_bitset() const
+bool JsonArray::test_bitset() const
 {
     if( !has_more() ) {
         return false;
@@ -727,7 +710,7 @@ bool TextJsonArray::test_bitset() const
     return jsin->test_bitset();
 }
 
-bool TextJsonArray::test_array() const
+bool JsonArray::test_array() const
 {
     if( !has_more() ) {
         return false;
@@ -736,7 +719,7 @@ bool TextJsonArray::test_array() const
     return jsin->test_array();
 }
 
-bool TextJsonArray::test_object() const
+bool JsonArray::test_object() const
 {
     if( !has_more() ) {
         return false;
@@ -747,76 +730,75 @@ bool TextJsonArray::test_object() const
 
 /* random-access type checking */
 
-bool TextJsonArray::has_null( const size_t i ) const
+bool JsonArray::has_null( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_null();
 }
 
-bool TextJsonArray::has_bool( const size_t i ) const
+bool JsonArray::has_bool( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_bool();
 }
 
-bool TextJsonArray::has_number( const size_t i ) const
+bool JsonArray::has_number( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_number();
 }
 
-bool TextJsonArray::has_string( const size_t i ) const
+bool JsonArray::has_string( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_string();
 }
 
-bool TextJsonArray::has_array( const size_t i ) const
+bool JsonArray::has_array( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_array();
 }
 
-bool TextJsonArray::has_object( const size_t i ) const
+bool JsonArray::has_object( const size_t i ) const
 {
     verify_index( i );
     jsin->seek( positions[i] );
     return jsin->test_object();
 }
 
-void add_array_to_set( std::set<std::string> &s, const TextJsonObject &json,
-                       const std::string_view name )
+void add_array_to_set( std::set<std::string> &s, const JsonObject &json, const std::string &name )
 {
     for( const std::string line : json.get_array( name ) ) {
         s.insert( line );
     }
 }
 
-TextJsonIn::TextJsonIn( std::istream &s ) : stream( &s )
+JsonIn::JsonIn( std::istream &s ) : stream( &s )
 {
     sanity_check_stream();
 }
 
-TextJsonIn::TextJsonIn( std::istream &s, const std::string &path )
+JsonIn::JsonIn( std::istream &s, const std::string &path )
     : stream( &s )
     , path( make_shared_fast<std::string>( path ) )
 {
     sanity_check_stream();
 }
 
-TextJsonIn::TextJsonIn( std::istream &s, const json_source_location &loc )
+JsonIn::JsonIn( std::istream &s, const json_source_location &loc )
     : stream( &s ), path( loc.path )
 {
     seek( loc.offset );
     sanity_check_stream();
 }
 
-void TextJsonIn::sanity_check_stream()
+void JsonIn::sanity_check_stream()
 {
     char c = stream->peek();
     if( c == '\xef' ) {
@@ -824,34 +806,34 @@ void TextJsonIn::sanity_check_stream()
     }
 }
 
-int TextJsonIn::tell()
+int JsonIn::tell()
 {
     return stream->tellg();
 }
-char TextJsonIn::peek()
+char JsonIn::peek()
 {
     return static_cast<char>( stream->peek() );
 }
-bool TextJsonIn::good()
+bool JsonIn::good()
 {
     return stream->good();
 }
 
-void TextJsonIn::seek( int pos )
+void JsonIn::seek( int pos )
 {
     stream->clear();
     stream->seekg( pos );
     ate_separator = false;
 }
 
-void TextJsonIn::eat_whitespace()
+void JsonIn::eat_whitespace()
 {
     while( is_whitespace( peek() ) ) {
         stream->get();
     }
 }
 
-void TextJsonIn::uneat_whitespace()
+void JsonIn::uneat_whitespace()
 {
     while( tell() > 0 ) {
         stream->seekg( -1, std::istream::cur );
@@ -861,20 +843,20 @@ void TextJsonIn::uneat_whitespace()
     }
 }
 
-void TextJsonIn::end_value()
+void JsonIn::end_value()
 {
     ate_separator = false;
     skip_separator();
 }
 
-void TextJsonIn::skip_member()
+void JsonIn::skip_member()
 {
     skip_string();
     skip_pair_separator();
     skip_value();
 }
 
-void TextJsonIn::skip_separator()
+void JsonIn::skip_separator()
 {
     eat_whitespace();
     signed char ch = peek();
@@ -907,7 +889,7 @@ void TextJsonIn::skip_separator()
     }
 }
 
-void TextJsonIn::skip_pair_separator()
+void JsonIn::skip_pair_separator()
 {
     char ch;
     eat_whitespace();
@@ -922,7 +904,7 @@ void TextJsonIn::skip_pair_separator()
     ate_separator = true;
 }
 
-void TextJsonIn::skip_string()
+void JsonIn::skip_string()
 {
     char ch;
     eat_whitespace();
@@ -946,7 +928,7 @@ void TextJsonIn::skip_string()
     end_value();
 }
 
-void TextJsonIn::skip_value()
+void JsonIn::skip_value()
 {
     eat_whitespace();
     char ch = peek();
@@ -978,7 +960,7 @@ void TextJsonIn::skip_value()
     // skip_* end value automatically
 }
 
-void TextJsonIn::skip_object()
+void JsonIn::skip_object()
 {
     start_object();
     while( !end_object() ) {
@@ -987,7 +969,7 @@ void TextJsonIn::skip_object()
     // end_value called by end_object
 }
 
-void TextJsonIn::skip_array()
+void JsonIn::skip_array()
 {
     start_array();
     while( !end_array() ) {
@@ -996,9 +978,8 @@ void TextJsonIn::skip_array()
     // end_value called by end_array
 }
 
-void TextJsonIn::skip_true()
+void JsonIn::skip_true()
 {
-    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     char text[5];
     eat_whitespace();
     stream->get( text, 5 );
@@ -1010,9 +991,8 @@ void TextJsonIn::skip_true()
     end_value();
 }
 
-void TextJsonIn::skip_false()
+void JsonIn::skip_false()
 {
-    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     char text[6];
     eat_whitespace();
     stream->get( text, 6 );
@@ -1024,9 +1004,8 @@ void TextJsonIn::skip_false()
     end_value();
 }
 
-void TextJsonIn::skip_null()
+void JsonIn::skip_null()
 {
-    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     char text[5];
     eat_whitespace();
     stream->get( text, 5 );
@@ -1038,7 +1017,7 @@ void TextJsonIn::skip_null()
     end_value();
 }
 
-void TextJsonIn::skip_number()
+void JsonIn::skip_number()
 {
     char ch;
     eat_whitespace();
@@ -1054,7 +1033,7 @@ void TextJsonIn::skip_number()
     end_value();
 }
 
-std::string TextJsonIn::get_member_name()
+std::string JsonIn::get_member_name()
 {
     std::string s = get_string();
     skip_pair_separator();
@@ -1190,7 +1169,7 @@ static bool get_escaped_or_unicode( std::istream &stream, std::string &s, std::s
     return true;
 }
 
-std::string TextJsonIn::get_string()
+std::string JsonIn::get_string()
 {
     eat_whitespace();
     std::string s;
@@ -1264,7 +1243,7 @@ constexpr static uint64_t neg_INT64_MIN()
     }
 }
 
-number_sci_notation TextJsonIn::get_any_int()
+number_sci_notation JsonIn::get_any_int()
 {
     number_sci_notation n = get_any_number();
     if( n.exp < 0 ) {
@@ -1281,10 +1260,10 @@ number_sci_notation TextJsonIn::get_any_int()
     return n;
 }
 
-int TextJsonIn::get_int()
+int JsonIn::get_int()
 {
     static_assert( sizeof( int ) <= sizeof( int64_t ),
-                   "TextJsonIn::get_int() assumed sizeof( int ) <= sizeof( int64_t )" );
+                   "JsonIn::get_int() assumed sizeof( int ) <= sizeof( int64_t )" );
     number_sci_notation n = get_any_int();
     if( !n.negative && n.number > static_cast<uint64_t>( std::numeric_limits<int>::max() ) ) {
         error( "Found a number greater than " + std::to_string( std::numeric_limits<int>::max() ) +
@@ -1297,7 +1276,7 @@ int TextJsonIn::get_int()
         static_assert( neg_INT_MIN() <= static_cast<uint64_t>( std::numeric_limits<int>::max() )
                        || neg_INT_MIN() - static_cast<uint64_t>( std::numeric_limits<int>::max() )
                        <= static_cast<uint64_t>( std::numeric_limits<int>::max() ),
-                       "TextJsonIn::get_int() assumed -INT_MIN - INT_MAX <= INT_MAX" );
+                       "JsonIn::get_int() assumed -INT_MIN - INT_MAX <= INT_MAX" );
         if( n.number > static_cast<uint64_t>( std::numeric_limits<int>::max() ) ) {
             const uint64_t x = n.number - static_cast<uint64_t>( std::numeric_limits<int>::max() );
             return -std::numeric_limits<int>::max() - static_cast<int>( x );
@@ -1309,7 +1288,7 @@ int TextJsonIn::get_int()
     }
 }
 
-unsigned int TextJsonIn::get_uint()
+unsigned int JsonIn::get_uint()
 {
     number_sci_notation n = get_any_int();
     if( n.number > std::numeric_limits<unsigned int>::max() ) {
@@ -1323,7 +1302,7 @@ unsigned int TextJsonIn::get_uint()
     return static_cast<unsigned int>( n.number );
 }
 
-int64_t TextJsonIn::get_int64()
+int64_t JsonIn::get_int64()
 {
     number_sci_notation n = get_any_int();
     if( !n.negative && n.number > static_cast<uint64_t>( std::numeric_limits<int64_t>::max() ) ) {
@@ -1337,7 +1316,7 @@ int64_t TextJsonIn::get_int64()
         static_assert( neg_INT64_MIN() <= static_cast<uint64_t>( std::numeric_limits<int64_t>::max() )
                        || neg_INT64_MIN() - static_cast<uint64_t>( std::numeric_limits<int64_t>::max() )
                        <= static_cast<uint64_t>( std::numeric_limits<int64_t>::max() ),
-                       "TextJsonIn::get_int64() assumed -INT64_MIN - INT64_MAX <= INT64_MAX" );
+                       "JsonIn::get_int64() assumed -INT64_MIN - INT64_MAX <= INT64_MAX" );
         if( n.number > static_cast<uint64_t>( std::numeric_limits<int64_t>::max() ) ) {
             const uint64_t x = n.number - static_cast<uint64_t>( std::numeric_limits<int64_t>::max() );
             return -std::numeric_limits<int64_t>::max() - static_cast<int64_t>( x );
@@ -1349,7 +1328,7 @@ int64_t TextJsonIn::get_int64()
     }
 }
 
-uint64_t TextJsonIn::get_uint64()
+uint64_t JsonIn::get_uint64()
 {
     number_sci_notation n = get_any_int();
     if( n.negative ) {
@@ -1358,13 +1337,13 @@ uint64_t TextJsonIn::get_uint64()
     return n.number;
 }
 
-double TextJsonIn::get_float()
+double JsonIn::get_float()
 {
     number_sci_notation n = get_any_number();
     return n.number * std::pow( 10.0f, n.exp ) * ( n.negative ? -1.f : 1.f );
 }
 
-number_sci_notation TextJsonIn::get_any_number()
+number_sci_notation JsonIn::get_any_number()
 {
     // this could maybe be prettier?
     char ch;
@@ -1435,10 +1414,9 @@ number_sci_notation TextJsonIn::get_any_number()
     return ret;
 }
 
-bool TextJsonIn::get_bool()
+bool JsonIn::get_bool()
 {
     char ch;
-    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     char text[5];
     std::stringstream err;
     eat_whitespace();
@@ -1468,20 +1446,20 @@ bool TextJsonIn::get_bool()
     error( -1, err.str() );
 }
 
-TextJsonObject TextJsonIn::get_object()
+JsonObject JsonIn::get_object()
 {
-    return TextJsonObject( *this );
+    return JsonObject( *this );
 }
-TextJsonArray TextJsonIn::get_array()
+JsonArray JsonIn::get_array()
 {
-    return TextJsonArray( *this );
+    return JsonArray( *this );
 }
-TextJsonValue TextJsonIn::get_value()
+JsonValue JsonIn::get_value()
 {
-    return TextJsonValue( *this, tell() );
+    return JsonValue( *this, tell() );
 }
 
-void TextJsonIn::start_array()
+void JsonIn::start_array()
 {
     eat_whitespace();
     if( peek() == '[' ) {
@@ -1497,7 +1475,7 @@ void TextJsonIn::start_array()
     }
 }
 
-bool TextJsonIn::end_array()
+bool JsonIn::end_array()
 {
     eat_whitespace();
     if( peek() == ']' ) {
@@ -1514,7 +1492,7 @@ bool TextJsonIn::end_array()
     }
 }
 
-void TextJsonIn::start_object()
+void JsonIn::start_object()
 {
     eat_whitespace();
     if( peek() == '{' ) {
@@ -1530,7 +1508,7 @@ void TextJsonIn::start_object()
     }
 }
 
-bool TextJsonIn::end_object()
+bool JsonIn::end_object()
 {
     eat_whitespace();
     if( peek() == '}' ) {
@@ -1547,45 +1525,45 @@ bool TextJsonIn::end_object()
     }
 }
 
-bool TextJsonIn::test_null()
+bool JsonIn::test_null()
 {
     eat_whitespace();
     return peek() == 'n';
 }
 
-bool TextJsonIn::test_bool()
+bool JsonIn::test_bool()
 {
     eat_whitespace();
     const char ch = peek();
     return ch == 't' || ch == 'f';
 }
 
-bool TextJsonIn::test_number()
+bool JsonIn::test_number()
 {
     eat_whitespace();
     const char ch = peek();
     return ch == '-' || ch == '+' || ch == '.' || ( ch >= '0' && ch <= '9' );
 }
 
-bool TextJsonIn::test_string()
+bool JsonIn::test_string()
 {
     eat_whitespace();
     return peek() == '"';
 }
 
-bool TextJsonIn::test_bitset()
+bool JsonIn::test_bitset()
 {
     eat_whitespace();
     return peek() == '"';
 }
 
-bool TextJsonIn::test_array()
+bool JsonIn::test_array()
 {
     eat_whitespace();
     return peek() == '[';
 }
 
-bool TextJsonIn::test_object()
+bool JsonIn::test_object()
 {
     eat_whitespace();
     return peek() == '{';
@@ -1593,12 +1571,11 @@ bool TextJsonIn::test_object()
 
 /* non-fatal value setting by reference */
 
-bool TextJsonIn::read_null( bool throw_on_error )
+bool JsonIn::read_null( bool throw_on_error )
 {
     if( !test_null() ) {
         return error_or_false( throw_on_error, "Expected null" );
     }
-    // NOLINTNEXTLINE(modernize-avoid-c-arrays)
     char text[5];
     if( !stream->get( text, 5 ) ) {
         error( "Unexpected end of stream reading null" );
@@ -1610,7 +1587,7 @@ bool TextJsonIn::read_null( bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( bool &b, bool throw_on_error )
+bool JsonIn::read( bool &b, bool throw_on_error )
 {
     if( !test_bool() ) {
         return error_or_false( throw_on_error, "Expected bool" );
@@ -1619,7 +1596,7 @@ bool TextJsonIn::read( bool &b, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( char &c, bool throw_on_error )
+bool JsonIn::read( char &c, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1628,17 +1605,7 @@ bool TextJsonIn::read( char &c, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( signed char &c, bool throw_on_error )
-{
-    if( !test_number() ) {
-        return error_or_false( throw_on_error, "Expected number" );
-    }
-    // TODO: test for overflow
-    c = get_int();
-    return true;
-}
-
-bool TextJsonIn::read( unsigned char &c, bool throw_on_error )
+bool JsonIn::read( signed char &c, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1648,7 +1615,17 @@ bool TextJsonIn::read( unsigned char &c, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( short unsigned int &s, bool throw_on_error )
+bool JsonIn::read( unsigned char &c, bool throw_on_error )
+{
+    if( !test_number() ) {
+        return error_or_false( throw_on_error, "Expected number" );
+    }
+    // TODO: test for overflow
+    c = get_int();
+    return true;
+}
+
+bool JsonIn::read( short unsigned int &s, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1658,7 +1635,7 @@ bool TextJsonIn::read( short unsigned int &s, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( short int &s, bool throw_on_error )
+bool JsonIn::read( short int &s, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1668,7 +1645,7 @@ bool TextJsonIn::read( short int &s, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( int &i, bool throw_on_error )
+bool JsonIn::read( int &i, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1677,7 +1654,7 @@ bool TextJsonIn::read( int &i, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( std::int64_t &i, bool throw_on_error )
+bool JsonIn::read( std::int64_t &i, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1686,7 +1663,7 @@ bool TextJsonIn::read( std::int64_t &i, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( std::uint64_t &i, bool throw_on_error )
+bool JsonIn::read( std::uint64_t &i, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1695,7 +1672,7 @@ bool TextJsonIn::read( std::uint64_t &i, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( unsigned int &u, bool throw_on_error )
+bool JsonIn::read( unsigned int &u, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1704,7 +1681,7 @@ bool TextJsonIn::read( unsigned int &u, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( float &f, bool throw_on_error )
+bool JsonIn::read( float &f, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1713,7 +1690,7 @@ bool TextJsonIn::read( float &f, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( double &d, bool throw_on_error )
+bool JsonIn::read( double &d, bool throw_on_error )
 {
     if( !test_number() ) {
         return error_or_false( throw_on_error, "Expected number" );
@@ -1722,7 +1699,7 @@ bool TextJsonIn::read( double &d, bool throw_on_error )
     return true;
 }
 
-bool TextJsonIn::read( std::string &s, bool throw_on_error )
+bool JsonIn::read( std::string &s, bool throw_on_error )
 {
     if( !test_string() ) {
         return error_or_false( throw_on_error, "Expected string" );
@@ -1732,7 +1709,7 @@ bool TextJsonIn::read( std::string &s, bool throw_on_error )
 }
 
 template<size_t N>
-bool TextJsonIn::read( std::bitset<N> &b, bool throw_on_error )
+bool JsonIn::read( std::bitset<N> &b, bool throw_on_error )
 {
     if( !test_bitset() ) {
         return error_or_false( throw_on_error, "Expected bitset" );
@@ -1833,7 +1810,7 @@ static std::string escape_data( std::string str )
 /* error display */
 
 // WARNING: for occasional use only.
-std::string TextJsonIn::line_number( int offset_modifier )
+std::string JsonIn::line_number( int offset_modifier )
 {
     const std::string name = escape_property( path ? normalize_relative_path( *path )
                              : "<unknown source file>" );
@@ -1890,12 +1867,12 @@ std::string TextJsonIn::line_number( int offset_modifier )
     return ret.str();
 }
 
-void TextJsonIn::error( const std::string &message )
+void JsonIn::error( const std::string &message )
 {
     error( 0, message );
 }
 
-void TextJsonIn::error( int offset, const std::string &message )
+void JsonIn::error( int offset, const std::string &message )
 {
     std::ostringstream err_header;
     switch( error_log_format ) {
@@ -1925,7 +1902,7 @@ void TextJsonIn::error( int offset, const std::string &message )
     rewind( 3, 240 );
     size_t startpos = tell();
     std::string buffer( pos - startpos, '\0' );
-    stream->read( buffer.data(), pos - startpos );
+    stream->read( &buffer[0], pos - startpos );
     auto it = buffer.begin();
     for( ; it < buffer.end() && ( *it == '\r' || *it == '\n' ); ++it ) {
         // skip starting newlines
@@ -1990,7 +1967,7 @@ void TextJsonIn::error( int offset, const std::string &message )
     throw JsonError( err_header.str() + escape_data( msg ) );
 }
 
-void TextJsonIn::string_error( const int offset, const std::string &message )
+void JsonIn::string_error( const int offset, const std::string &message )
 {
     if( test_string() ) {
         // skip quote mark
@@ -2006,12 +1983,12 @@ void TextJsonIn::string_error( const int offset, const std::string &message )
     error( -1, message );
 }
 
-bool TextJsonIn::error_or_false( bool throw_, const std::string &message )
+bool JsonIn::error_or_false( bool throw_, const std::string &message )
 {
     return error_or_false( throw_, 0, message );
 }
 
-bool TextJsonIn::error_or_false( bool throw_, int offset, const std::string &message )
+bool JsonIn::error_or_false( bool throw_, int offset, const std::string &message )
 {
     if( throw_ ) {
         error( offset, message );
@@ -2019,7 +1996,7 @@ bool TextJsonIn::error_or_false( bool throw_, int offset, const std::string &mes
     return false;
 }
 
-void TextJsonIn::rewind( int max_lines, int max_chars )
+void JsonIn::rewind( int max_lines, int max_chars )
 {
     if( max_lines < 0 && max_chars < 0 ) {
         // just rewind to the beginning i guess
@@ -2064,7 +2041,7 @@ void TextJsonIn::rewind( int max_lines, int max_chars )
     }
 }
 
-std::string TextJsonIn::substr( size_t pos, size_t len )
+std::string JsonIn::substr( size_t pos, size_t len )
 {
     std::string ret;
     if( len == std::string::npos ) {
@@ -2074,7 +2051,7 @@ std::string TextJsonIn::substr( size_t pos, size_t len )
     }
     ret.resize( len );
     stream->seekg( pos );
-    stream->read( ret.data(), len );
+    stream->read( &ret[0], len );
     return ret;
 }
 
@@ -2215,7 +2192,7 @@ void JsonOut::write_null()
     need_separator = true;
 }
 
-void JsonOut::write( const std::string_view val )
+void JsonOut::write( const std::string &val )
 {
     if( need_separator ) {
         write_separator();
@@ -2274,13 +2251,13 @@ void JsonOut::write( const std::bitset<N> &b )
     need_separator = true;
 }
 
-void JsonOut::member( const std::string_view name )
+void JsonOut::member( const std::string &name )
 {
     write( name );
     write_member_separator();
 }
 
-void JsonOut::null_member( const std::string_view name )
+void JsonOut::null_member( const std::string &name )
 {
     member( name );
     write_null();
@@ -2300,20 +2277,20 @@ std::ostream &operator<<( std::ostream &stream, const JsonError &err )
 // Currently only bitsets of size 12 are loaded / stored, if you need other sizes, either explicitly
 // instantiate them here, or move the templated read/write functions into the header.
 template void JsonOut::write<12>( const std::bitset<12> & );
-template bool TextJsonIn::read<12>( std::bitset<12> &, bool throw_on_error );
+template bool JsonIn::read<12>( std::bitset<12> &, bool throw_on_error );
 
-TextJsonIn &TextJsonValue::seek() const
+JsonIn &JsonValue::seek() const
 {
     jsin_.seek( pos_ );
     return jsin_;
 }
 
-TextJsonValue TextJsonObject::get_member( const std::string_view name ) const
+JsonValue JsonObject::get_member( const std::string &name ) const
 {
     const auto iter = positions.find( name );
     if( !jsin || iter == positions.end() ) {
-        throw_error( str_cat( "missing required field \"", name, "\" in object: ", str() ) );
+        throw_error( "missing required field \"" + name + "\" in object: " + str() );
     }
     mark_visited( name );
-    return TextJsonValue( *jsin, iter->second );
+    return JsonValue( *jsin, iter->second );
 }

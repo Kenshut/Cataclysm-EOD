@@ -97,8 +97,8 @@ def main(args):
         pass
 
     existing_tags_lines = [
-        line.rstrip(b'\n') for line in existing_tags_lines if
-        not is_json_tag_line(line)]
+        l.rstrip(b'\n') for l in existing_tags_lines if
+        not is_json_tag_line(l)]
 
     all_tags_lines = sorted(json_tags_lines + existing_tags_lines)
 

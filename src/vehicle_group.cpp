@@ -19,9 +19,7 @@
 
 using vplacement_id = string_id<VehiclePlacement>;
 
-static const vgroup_id VehicleGroup_city_pileup( "city_pileup" );
 static const vgroup_id VehicleGroup_parkinglot( "parkinglot" );
-static const vgroup_id VehicleGroup_police_pileup( "police_pileup" );
 static const vgroup_id VehicleGroup_semi_truck( "semi_truck" );
 static const vgroup_id VehicleGroup_truck_trailer( "truck_trailer" );
 
@@ -97,7 +95,7 @@ void VehicleGroup::reset()
     vgroups.clear();
 }
 
-VehicleFacings::VehicleFacings( const JsonObject &jo, const std::string_view key )
+VehicleFacings::VehicleFacings( const JsonObject &jo, const std::string &key )
 {
     if( jo.has_array( key ) ) {
         for( const int i : jo.get_array( key ) ) {
@@ -160,11 +158,9 @@ void VehicleFunction_json::apply( map &m, const std::string &terrain_name ) cons
                 debugmsg( "vehiclefunction_json: unable to get location to place vehicle." );
                 return;
             }
-            const tripoint pos = tripoint( loc->pick_point(), m.get_abs_sub().z() );
-            m.add_vehicle( vehicle->pick(), pos, loc->pick_facing(), fuel, status );
+            m.add_vehicle( vehicle, loc->pick_point(), loc->pick_facing(), fuel, status );
         } else {
-            const tripoint pos = tripoint( location->pick_point(), m.get_abs_sub().z() );
-            m.add_vehicle( vehicle->pick(), pos, location->pick_facing(), fuel, status );
+            m.add_vehicle( vehicle, location->pick_point(), location->pick_facing(), fuel, status );
         }
     }
 }
@@ -230,12 +226,12 @@ void VehicleSpawn::apply( const vspawn_id &id, map &m, const std::string &terrai
 namespace VehicleSpawnFunction
 {
 
-static void builtin_no_vehicles( map &, const std::string_view )
+static void builtin_no_vehicles( map &, const std::string & )
 {}
 
-static void builtin_jackknifed_semi( map &m, const std::string_view terrainid )
+static void builtin_jackknifed_semi( map &m, const std::string &terrainid )
 {
-    const VehicleLocation *loc = vplacement_id( str_cat( terrainid, "_semi" ) ).obj().pick();
+    const VehicleLocation *loc = vplacement_id( terrainid + "_semi" ).obj().pick();
     if( !loc ) {
         debugmsg( "builtin_jackknifed_semi unable to get location to place vehicle.  placement %s_semi",
                   terrainid );
@@ -244,8 +240,8 @@ static void builtin_jackknifed_semi( map &m, const std::string_view terrainid )
 
     const units::angle facing = loc->pick_facing();
     int facing_degrees = std::lround( to_degrees( facing ) );
-    const tripoint semi_p = tripoint( loc->pick_point(), m.get_abs_sub().z() );
-    tripoint trailer_p( 0, 0, semi_p.z );
+    const point semi_p = loc->pick_point();
+    point trailer_p;
 
     if( facing_degrees == 0 ) {
         trailer_p.x = semi_p.x + 4;
@@ -261,13 +257,13 @@ static void builtin_jackknifed_semi( map &m, const std::string_view terrainid )
         trailer_p.y = semi_p.y - 1;
     }
 
-    m.add_vehicle( VehicleGroup_semi_truck->pick(), semi_p,
+    m.add_vehicle( VehicleGroup_semi_truck, semi_p,
                    units::fmod( facing + 135_degrees, 360_degrees ), -1, 1 );
-    m.add_vehicle( VehicleGroup_truck_trailer->pick(), trailer_p,
+    m.add_vehicle( VehicleGroup_truck_trailer, trailer_p,
                    units::fmod( facing + 90_degrees, 360_degrees ), -1, 1 );
 }
 
-static void builtin_pileup( map &m, const std::string_view, const vgroup_id &vgid )
+static void builtin_pileup( map &m, const std::string &, const std::string &vg )
 {
     vehicle *last_added_car = nullptr;
     const int num_cars = rng( 5, 12 );
@@ -279,8 +275,8 @@ static void builtin_pileup( map &m, const std::string_view, const vgroup_id &vgi
             return;
         }
 
-        const tripoint pos( loc->pick_point(), m.get_abs_sub().z() );
-        last_added_car = m.add_vehicle( vgid->pick(), pos, loc->pick_facing(), -1, 1 );
+        last_added_car = m.add_vehicle( vgroup_id( vg ), loc->pick_point(),
+                                        loc->pick_facing(), -1, 1 );
         if( last_added_car != nullptr ) {
             last_added_car->name = _( "pile-up" );
         } else {
@@ -289,17 +285,17 @@ static void builtin_pileup( map &m, const std::string_view, const vgroup_id &vgi
     }
 }
 
-static void builtin_citypileup( map &m, const std::string_view t )
+static void builtin_citypileup( map &m, const std::string &t )
 {
-    builtin_pileup( m, t, VehicleGroup_city_pileup );
+    builtin_pileup( m, t, "city_pileup" );
 }
 
-static void builtin_policepileup( map &m, const std::string_view t )
+static void builtin_policepileup( map &m, const std::string &t )
 {
-    builtin_pileup( m, t, VehicleGroup_police_pileup );
+    builtin_pileup( m, t, "police_pileup" );
 }
 
-static void builtin_parkinglot( map &m, const std::string_view )
+static void builtin_parkinglot( map &m, const std::string & )
 {
     for( int v = 0; v < rng( 1, 4 ); v++ ) {
         tripoint pos_p;
@@ -314,7 +310,7 @@ static void builtin_parkinglot( map &m, const std::string_view )
             } else {
                 facing = one_in( 2 ) ? 0_degrees : 180_degrees;
             }
-            m.add_vehicle( VehicleGroup_parkinglot->pick(), pos_p, facing, -1, -1 );
+            m.add_vehicle( VehicleGroup_parkinglot, pos_p, facing, -1, -1 );
         }
     }
 }

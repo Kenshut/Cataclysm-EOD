@@ -21,10 +21,11 @@
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
     "skill_used": "fabrication",
+    "skills_required": [ "traps", 1 ],
     "difficulty": 1,
     "time": "25 m",
-    "reversible": true,
     "autolearn": true,
+    "qualities": [ { "id": "HAMMER", "level": 1 } ],
     "components": [ [ [ "glass_shard", 4 ] ], [ [ "superglue", 1 ], [ "bone_glue", 1 ] ] ]
   },
   {
@@ -41,7 +42,7 @@
     "autolearn": true,
     "qualities": [ { "id": "HAMMER", "level": 1 } ],
     "tools": [ [ [ "boltcutters", -1 ], [ "toolset", -1 ] ] ],
-    "components": [ [ [ "wire_barbed", 1 ], [ "wire", 2 ], [ "nail", 66 ] ] ]
+    "components": [ [ [ "wire_barbed", 3 ], [ "wire", 9 ], [ "nail", 10 ] ] ]
   },
   {
     "type": "recipe",
@@ -63,18 +64,17 @@
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "result": "tripwire",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
-    "skill_used": "fabrication",
-    "time": "1 s",
-    "reversible": true,
+    "skill_used": "traps",
+    "difficulty": 1,
+    "time": "30 s",
     "autolearn": true,
-    "//": "Tripwire trap gives a long string on disarm, so to avoid beneficial item transmutations, it's the only component allowed.  Also, no additional adhesive material needed because tripwire trap placement already requires the tile to be between two solid tiles.",
+    "using": [ [ "cordage", 1 ] ],
     "proficiencies": [ { "proficiency": "prof_traps" } ],
-    "components": [ [ [ "string_36", 1 ] ] ],
-    "flags": [ "BLIND_EASY", "NEVER_FAIL" ]
+    "components": [ [ [ "superglue", 1 ] ] ]
   },
   {
     "type": "recipe",
@@ -88,7 +88,7 @@
     "reversible": true,
     "autolearn": true,
     "qualities": [ { "id": "HAMMER", "level": 1 } ],
-    "components": [ [ [ "2x4", 3 ] ], [ [ "nail", 18 ] ] ]
+    "components": [ [ [ "2x4", 3 ] ], [ [ "nail", 20 ] ] ]
   },
   {
     "type": "recipe",
@@ -98,11 +98,12 @@
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
     "skill_used": "fabrication",
-    "time": "1 s",
+    "proficiencies": [ { "proficiency": "prof_carpentry_basic" } ],
+    "time": "5 m",
     "reversible": true,
     "autolearn": true,
-    "components": [ [ [ "nailboard", 3 ] ] ],
-    "flags": [ "BLIND_EASY", "NEVER_FAIL" ]
+    "qualities": [ { "id": "HAMMER", "level": 1 } ],
+    "components": [ [ [ "nailboard", 3 ] ], [ [ "nail", 2 ] ] ]
   },
   {
     "type": "recipe",
@@ -132,37 +133,41 @@
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "result": "crossbow_trap",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
-    "skill_used": "fabrication",
-    "time": "1 s",
+    "skill_used": "traps",
+    "skills_required": [ [ "archery", 1 ] ],
+    "difficulty": 3,
+    "time": "25 m",
     "reversible": true,
-    "decomp_learn": 0,
+    "decomp_learn": 2,
     "autolearn": true,
-    "//": "Will need a tripwire, the crossbow itself, a bolt (only one type is supported to avoid bolt transmutation) and something to secure the grenade on a nearby object.  Considering that it's just putting together a kit, this recipe is trivial; installation may in turn get more difficult.  Only those strings are allowed to avoid transmutation.",
-    "components": [ [ [ "crossbow", 1 ] ], [ [ "bolt_steel", 1 ] ], [ [ "string_36", 1 ] ], [ [ "string_6", 1 ] ] ],
-    "flags": [ "BLIND_EASY", "NEVER_FAIL" ]
+    "using": [ [ "cordage", 1 ] ],
+    "proficiencies": [ { "proficiency": "prof_traps" }, { "proficiency": "prof_trapsetting" } ],
+    "components": [ [ [ "crossbow", 1 ] ], [ [ "bolt_steel", 1 ], [ "bolt_wood", 4 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "result": "shotgun_trap",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
-    "skill_used": "fabrication",
-    "time": "1 s",
+    "skill_used": "traps",
+    "skills_required": [ [ "gun", 1 ] ],
+    "difficulty": 3,
+    "time": "25 m",
     "reversible": true,
-    "decomp_learn": 0,
+    "decomp_learn": 2,
     "autolearn": true,
-    "//": "Will need a tripwire, the shotgun itself, two shells (only one type is supported to avoid ammo transmutation) and something to secure the gshotgun on a nearby object.  Considering that it's just putting together a kit, this recipe is trivial; installation may in turn get more difficult.  Only those strings are allowed to avoid transmutation.",
-    "components": [ [ [ "slamfire_shotgun_d", 1 ] ], [ [ "shot_00", 2 ] ], [ [ "string_36", 1 ] ], [ [ "string_6", 1 ] ] ],
-    "flags": [ "BLIND_EASY", "NEVER_FAIL" ]
+    "using": [ [ "cordage", 1 ] ],
+    "proficiencies": [ { "proficiency": "prof_traps" }, { "proficiency": "prof_trapsetting" } ],
+    "components": [ [ [ "slamfire_shotgun_d", 1 ] ], [ [ "shot_00", 2 ], [ "shot_slug", 2 ], [ "shot_flechette", 2 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "blade_trap",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
@@ -175,7 +180,7 @@
     "proficiencies": [ { "proficiency": "prof_traps" } ],
     "book_learn": [ [ "manual_mechanics", 3 ], [ "manual_traps", 3 ], [ "howto_traps", 3 ], [ "book_icef", 4 ] ],
     "qualities": [ { "id": "WRENCH", "level": 1 } ],
-    "components": [ [ [ "motor_small", 1 ] ], [ [ "blade", 2 ] ], [ [ "cordage", 1, "LIST" ] ] ]
+    "components": [ [ [ "motor", 1 ] ], [ [ "blade", 2 ] ], [ [ "cordage", 1, "LIST" ] ] ]
   },
   {
     "type": "recipe",
@@ -184,17 +189,18 @@
     "id_suffix": "closed_cans_such_as_drinks",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",
-    "skill_used": "fabrication",
-    "time": "1 s",
-    "reversible": true,
-    "book_learn": [ [ "manual_traps_mil_basic", 3 ], [ "manual_traps_mil", 3 ] ],
-    "//": "Will need a tripwire, the grenade itself, and something to secure the grenade on a nearby object.  Considering that it's just putting together a kit, this recipe is trivial; installation may in turn get more difficult.  Only those specific strings allowed, to avoid transmutation.",
-    "components": [ [ [ "grenade", 1 ] ], [ [ "string_36", 1 ] ], [ [ "string_6", 1 ] ] ],
-    "flags": [ "BLIND_EASY", "NEVER_FAIL" ]
+    "skill_used": "traps",
+    "difficulty": 3,
+    "time": "25 m",
+    "book_learn": [ [ "manual_traps_mil", 3 ] ],
+    "using": [ [ "cordage_short", 1 ] ],
+    "qualities": [ { "id": "CUT", "level": 2 } ],
+    "proficiencies": [ { "proficiency": "prof_traps" }, { "proficiency": "prof_trapsetting" } ],
+    "components": [ [ [ "grenade", 1 ] ], [ [ "clay_canister", 1 ], [ "can_drink", 1 ], [ "can_food", 1 ], [ "canister_empty", 1 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "landmine",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TRAPS",

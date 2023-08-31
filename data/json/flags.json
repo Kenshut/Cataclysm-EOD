@@ -1,35 +1,5 @@
 [
   {
-    "id": "ABLATIVE_CHAINMAIL_ARMS",
-    "type": "json_flag",
-    "info": "You can use this armor <info>with chainmail</info> with out encumbrance penalty",
-    "restriction": "Item must be a chainmail compatible armor piece"
-  },
-  {
-    "id": "ABLATIVE_CHAINMAIL_ELBOWS",
-    "type": "json_flag",
-    "info": "You can use this armor <info>with chainmail</info> with out encumbrance penalty",
-    "restriction": "Item must be a chainmail compatible armor piece"
-  },
-  {
-    "id": "ABLATIVE_CHAINMAIL_LEGS",
-    "type": "json_flag",
-    "info": "You can use this armor <info>with chainmail</info> with out encumbrance penalty",
-    "restriction": "Item must be a chainmail compatible armor piece"
-  },
-  {
-    "id": "ABLATIVE_CHAINMAIL_KNEES",
-    "type": "json_flag",
-    "info": "You can use this armor <info>with chainmail</info> with out encumbrance penalty",
-    "restriction": "Item must be a chainmail compatible armor piece"
-  },
-  {
-    "id": "ABLATIVE_CHAINMAIL_TORSO",
-    "type": "json_flag",
-    "info": "You can use this armor <info>with chainmail</info> with out encumbrance penalty",
-    "restriction": "Item must be a chainmail compatible armor piece"
-  },
-  {
     "id": "ABLATIVE_LARGE",
     "type": "json_flag",
     "info": "This plate will fit in <info>large</info> armor pockets",
@@ -42,24 +12,6 @@
     "restriction": "Item must be an armored mantle"
   },
   {
-    "id": "STAR_PLATE",
-    "type": "json_flag",
-    "info": "This can be supported by the ryūsei battle kit",
-    "restriction": "Item must be resonance plate"
-  },
-  {
-    "id": "STAR_SHOULDER",
-    "type": "json_flag",
-    "info": "This can be supported by the ryūsei battle kit",
-    "restriction": "Item must be resonance shoulder"
-  },
-  {
-    "id": "STAR_SKIRT",
-    "type": "json_flag",
-    "info": "This can be supported by the ryūsei battle kit",
-    "restriction": "Item must be resonance skirt"
-  },
-  {
     "id": "ABLATIVE_MEDIUM",
     "type": "json_flag",
     "info": "This plate will fit in <info>medium</info> armor pockets",
@@ -70,12 +22,6 @@
     "type": "json_flag",
     "info": "This will hook to a <info>Hub 01 proprietary</info> skirt connector",
     "restriction": "Item must be an armored skirt"
-  },
-  {
-    "id": "ABLATIVE_HELMET",
-    "type": "json_flag",
-    "info": "This will hook to a <info>Hub 01 proprietary</info> helmet connector",
-    "restriction": "Item must be an armored helmet"
   },
   {
     "id": "ACTIVE_CLOAKING",
@@ -94,11 +40,6 @@
     "id": "ALARMCLOCK",
     "type": "json_flag",
     "info": "This gear has an <info>alarm clock</info> feature."
-  },
-  {
-    "id": "ALLOWS_BODY_BLOCK",
-    "type": "json_flag",
-    "info": "This item <info>allows to block with your body</info> when wielded as a weapon."
   },
   {
     "id": "ALLOWS_NATURAL_ATTACKS",
@@ -170,6 +111,11 @@
     "info": "This item is a Compact Bionic Module.  You'll need to <info>use specialized machinery</info> or <info>ask a surgeon</info> to install it into your body."
   },
   {
+    "id": "CLIMATE_CONTROL",
+    "type": "json_flag",
+    "info": "This clothing has <info>built-in or attached climate control</info>, keeping you at a <good>comfortable temperature</good>."
+  },
+  {
     "id": "COLLAR",
     "type": "json_flag",
     "info": "This clothing has a <info>wide collar</info> that can keep your mouth warm if it is unencumbered."
@@ -201,11 +147,6 @@
     "type": "json_flag",
     "info": "As a weapon, this item is <good>well-made</good> and will <info>withstand the punishment of combat</info>.",
     "conflicts": [ "FRAGILE_MELEE" ]
-  },
-  {
-    "id": "EASY_CLEAN",
-    "type": "json_flag",
-    "info": "This gun is made of <info>relatively simple parts</info> which makes powder fouling <good>easier to clean</good>."
   },
   {
     "id": "FIELD_DRESS",
@@ -260,8 +201,7 @@
   {
     "id": "CANT_WEAR",
     "type": "json_flag",
-    "info": "This armor can't be worn directly.",
-    "inherit": false
+    "info": "This armor can't be worn directly."
   },
   {
     "id": "DECAY_EXPOSED_ATMOSPHERE",
@@ -275,12 +215,12 @@
   {
     "id": "EATEN_COLD",
     "type": "json_flag",
-    "info": "Tastes <good>better</good> while <color_light_cyan>cold</color>."
+    "info": "This tastes <good>better</good> while <color_light_cyan>cold</color>."
   },
   {
     "id": "EATEN_HOT",
     "type": "json_flag",
-    "info": "Tastes <good>better</good> while <color_red>hot</color>, providing a separate morale bonus (<good>+5</good>)."
+    "info": "This tastes <good>better</good> while <color_red>hot</color>."
   },
   {
     "id": "ELECTRIC_IMMUNE",
@@ -344,7 +284,7 @@
     "id": "HELMET_MANDIBLE_GUARD",
     "type": "json_flag",
     "info": "This item is attachable as a mandible guard in military <info>helmets</info> or headgear specifically adapted with rails for attachments.",
-    "restriction": "Item must be some kind of rail-mounted mandible guard"
+    "restriction": "Item must be some kind of mandible guard"
   },
   {
     "id": "HELMET_MANDIBLE_GUARD_STRAPPED",
@@ -357,18 +297,6 @@
     "type": "json_flag",
     "info": "This item is attachable in the back of <info>hard hats and helmets</info> as a counterweight pouch.",
     "restriction": "Item must be some kind of back pouch"
-  },
-  {
-    "id": "HELMET_HEAD_ATTACHMENT",
-    "type": "json_flag",
-    "info": "This item is attachable in <info>tactical helmets</info> as a flashlight.",
-    "restriction": "Item must be some kind of flashlight"
-  },
-  {
-    "id": "HELMET_AVENTAIL",
-    "type": "json_flag",
-    "info": "This item is attachable to metal cap helmets as a face and neck protective layer.",
-    "restriction": "Item must be some kind of chainmail veil"
   },
   {
     "id": "COLD_IMMUNE",
@@ -500,6 +428,11 @@
     "id": "NO_CVD",
     "type": "json_flag",
     "//": "Item can never be used with a CVD machine."
+  },
+  {
+    "id": "NO_QUICKDRAW",
+    "type": "json_flag",
+    "//": "Don't offer to draw items from this holster when the fire key is pressed whilst the player's hands are empty."
   },
   {
     "id": "NO_REPAIR",
@@ -655,13 +588,35 @@
   },
   {
     "id": "MC_MOBILE",
-    "type": "json_flag",
-    "info": "Can be used to <info>store data</info> for other devices."
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_RANDOM_STUFF",
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_SCIENCE_STUFF",
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_USED",
+    "type": "json_flag"
   },
   {
     "id": "MC_HAS_DATA",
-    "type": "json_flag",
-    "info": "Some of your data is <info>stored</info> here."
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_MAY_BE_ENCRYPTED",
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_ENCRYPTED",
+    "type": "json_flag"
+  },
+  {
+    "id": "MC_TURN_USED",
+    "type": "json_flag"
   },
   {
     "id": "NO_PARASITES",
@@ -723,7 +678,7 @@
   {
     "id": "RAD_PROOF",
     "type": "json_flag",
-    "info": "This clothing <good>completely protects</good> you from <info>radiation</info> if it completely covers you.  Otherwise, it provides only partial protection.",
+    "info": "This clothing <good>completely protects</good> you from <info>radiation</info>.",
     "conflicts": [ "RAD_RESIST" ]
   },
   {
@@ -901,7 +856,7 @@
     "id": "WATERPROOF",
     "type": "json_flag",
     "//": "Prevents the covered body-part(s) from getting wet in any circumstance.",
-    "info": "This clothing <info>won't let water through</info>.  Even if you jump into a river."
+    "info": "This clothing <info>won't let water through</info>.  Unless you jump in the river or something like that."
   },
   {
     "id": "WATER_FRIENDLY",
@@ -974,9 +929,10 @@
     "info": "This clothing has a wool lining sewn into it to <good>increase</good> its overall <info>warmth</info>."
   },
   {
-    "id": "WONT_TRAIN_MARKSMANSHIP",
+    "id": "UNARMED_WEAPON",
     "type": "json_flag",
-    "//": "This gun wont train marksmanship when fired.  Used in Aftershock smart guns."
+    "//": "Allows wielding with unarmed fighting styles and trains unarmed when used.",
+    "info": "This weapon <good>can be used with</good> <info>unarmed fighting styles</info>."
   },
   {
     "id": "NANOFAB_REPAIR",
@@ -1104,6 +1060,11 @@
     "//": "pain altering spells can't be resisted (like with the deadened trait)"
   },
   {
+    "id": "WITH_CONTAINER",
+    "type": "json_flag",
+    "//": "items spawned by spells are put in their containers."
+  },
+  {
     "id": "SPAWN_WITH_DEATH_DROPS",
     "type": "json_flag",
     "//": "Allows summoned monsters to drop their usual death drops.  Otherwise, summoned monsters drop nothing on death."
@@ -1186,12 +1147,7 @@
     "type": "json_flag"
   },
   {
-    "id": "ANIMAL_PRODUCT",
-    "type": "json_flag"
-  },
-  {
     "id": "ALWAYS_TWOHAND",
-    "info": "<bad>You must</bad> have two free hands to wield this item.",
     "type": "json_flag"
   },
   {
@@ -1216,10 +1172,6 @@
   },
   {
     "id": "CABLE_SPOOL",
-    "type": "json_flag"
-  },
-  {
-    "id": "AUTO_DELETE_CABLE",
     "type": "json_flag"
   },
   {
@@ -1327,8 +1279,7 @@
   },
   {
     "id": "EDIBLE_FROZEN",
-    "type": "json_flag",
-    "info": "This item is <info>edible</info> even while <color_light_cyan>frozen</color>."
+    "type": "json_flag"
   },
   {
     "id": "EFFECT_IMPEDING",
@@ -1360,6 +1311,14 @@
   },
   {
     "id": "FERTILIZER",
+    "type": "json_flag"
+  },
+  {
+    "id": "FISH_GOOD",
+    "type": "json_flag"
+  },
+  {
+    "id": "FISH_POOR",
     "type": "json_flag"
   },
   {
@@ -1446,8 +1405,7 @@
   {
     "id": "IS_UPS",
     "type": "json_flag",
-    "info": "This item provides power to <info>UPS compatible items</info>.",
-    "inherit": false
+    "info": "This item provides power to <info>UPS compatible items</info>."
   },
   {
     "id": "LEAK_DAM",
@@ -1489,7 +1447,6 @@
   },
   {
     "id": "MOUNTED_GUN",
-    "info": "This weapon is <bad>too unwieldy</bad> to fire on its own and <info>must be mounted</info> on a vehicle or furniture (window, table, mound of dirt, etc.) before use.",
     "type": "json_flag"
   },
   {
@@ -1571,14 +1528,8 @@
     "type": "json_flag"
   },
   {
-    "id": "NO_TURRET",
-    "type": "json_flag",
-    "//": "This flag should only be applied to GUN definitions, it will prevent generation of a turret vehicle part for the gun.  This blocks fake guns, or player unobtainable ones from appearing in turret list."
-  },
-  {
     "id": "NO_UNLOAD",
-    "type": "json_flag",
-    "inherit": false
+    "type": "json_flag"
   },
   {
     "id": "NO_UNWIELD",
@@ -1618,6 +1569,10 @@
   },
   {
     "id": "POWERED",
+    "type": "json_flag"
+  },
+  {
+    "id": "POWER_CORD",
     "type": "json_flag"
   },
   {
@@ -1722,15 +1677,7 @@
   },
   {
     "id": "SPEEDLOADER",
-    "info": "This item can quickly reload rounds into gun or magazine that <info>have enough space</info>.",
-    "type": "json_flag",
-    "conflicts": [ "SPEEDLOADER_CLIP" ]
-  },
-  {
-    "id": "SPEEDLOADER_CLIP",
-    "info": "This item can quickly reload rounds into gun or magazine that <info>don't have enough space</info>.",
-    "type": "json_flag",
-    "conflicts": [ "SPEEDLOADER" ]
+    "type": "json_flag"
   },
   {
     "id": "SPLINT",
@@ -1762,14 +1709,6 @@
   },
   {
     "id": "TOBACCO",
-    "type": "json_flag"
-  },
-  {
-    "id": "TOUGH_FEET",
-    "type": "json_flag"
-  },
-  {
-    "id": "PAIN_IMMUNE",
     "type": "json_flag"
   },
   {
@@ -1846,6 +1785,10 @@
     "info": "This gear <bad>prevents</bad> you from <info>speaking</info>."
   },
   {
+    "id": "NOT_FOOTWEAR",
+    "type": "json_flag"
+  },
+  {
     "id": "IRREPLACEABLE_CONSUMABLE",
     "type": "json_flag"
   },
@@ -1880,13 +1823,11 @@
   },
   {
     "id": "FIRE_TWOHAND",
-    "info": "<bad>You must</bad> have two free hands to fire this item.",
     "type": "json_flag"
   },
   {
     "id": "GRENADE",
-    "type": "json_flag",
-    "restriction": "Item must be a grenade"
+    "type": "json_flag"
   },
   {
     "id": "JAVELIN",
@@ -2011,11 +1952,6 @@
     "info": "You could probably use this to access a secure zone of a facility."
   },
   {
-    "id": "SCIENCE_CARD_MU_UNIVERSAL",
-    "type": "json_flag",
-    "info": "You could probably use this to access a secure zone of a facility."
-  },
-  {
     "id": "BATTERY_ULTRA_LIGHT",
     "type": "json_flag",
     "info": "This item fits in items that use ultra-light batteries.",
@@ -2063,7 +1999,7 @@
   {
     "id": "LASER_SIGHT",
     "type": "json_flag",
-    "info": "Laser sights are invalid when the target position is <bad>too far</bad> or <bad>too bright</bad>.",
+    "info": "Invalid when the target position is <bad>too far</bad> or <bad>too bright</bad>.",
     "name": "laser sight"
   },
   {
@@ -2150,96 +2086,5 @@
     "id": "VOLTMETER",
     "type": "json_flag",
     "info": "This tool can test for voltage."
-  },
-  {
-    "id": "SHREDDED",
-    "type": "json_flag",
-    "info": "This is a small fragment."
-  },
-  {
-    "id": "FROM_FROZEN_LIQUID",
-    "type": "json_flag"
-  },
-  {
-    "id": "SINGLE_USE",
-    "type": "json_flag",
-    "info": "This item is removed after use."
-  },
-  {
-    "id": "BIONIC_FUEL_SOURCE",
-    "type": "json_flag",
-    "info": "Contents of this item are used for fueling bionics."
-  },
-  {
-    "id": "BIONIC_WEAPON_MELEE",
-    "type": "json_flag",
-    "//": "This bionic weapon is meant to be used in melee."
-  },
-  {
-    "id": "ELECTRONIC",
-    "type": "json_flag"
-  },
-  {
-    "id": "AFS_CS_LOCKER_CARD",
-    "type": "json_flag",
-    "info": "ID card granting access to the crashing ship's locker room."
-  },
-  {
-    "id": "AFS_CS_ARMORY_CARD",
-    "type": "json_flag",
-    "info": "ID card granting access to the crashing ship's armory."
-  },
-  {
-    "id": "AFS_CS_EXOBAY_CARD",
-    "type": "json_flag",
-    "info": "ID card granting access to the crashing ship's exobay."
-  },
-  {
-    "id": "CREDIT_CARD_SHAPED",
-    "type": "json_flag",
-    "restriction": "Item must be shaped like a credit card"
-  },
-  {
-    "id": "BANK_NOTE_SHAPED",
-    "type": "json_flag",
-    "restriction": "Item must be shaped like a bank note"
-  },
-  {
-    "id": "COIN_SHAPED",
-    "type": "json_flag",
-    "restriction": "Item must be shaped like a coin"
-  },
-  {
-    "id": "BANK_NOTE_STRAP_SHAPED",
-    "type": "json_flag",
-    "restriction": "Item must be shaped like a bank note strap"
-  },
-  {
-    "id": "GASFILTER_SM",
-    "type": "json_flag",
-    "info": "A small-sized gasmask filter.",
-    "name": "filter mask cartridge"
-  },
-  {
-    "id": "GASFILTER_MED",
-    "type": "json_flag",
-    "info": "A medium-sized gasmask filter.",
-    "name": "gas mask cartridge"
-  },
-  {
-    "id": "REBREATHER_CART",
-    "type": "json_flag",
-    "info": "A filter for a rebreather.",
-    "name": "rebreather cartridge"
-  },
-  {
-    "id": "OLD_GUN",
-    "type": "json_flag",
-    "info": "An old gun, WWII or earlier."
-  },
-  {
-    "id": "USE_POWER_WHEN_HIT",
-    "type": "json_flag",
-    "info": "This armor <info>expends energy when hit</info>."
   }
 ]

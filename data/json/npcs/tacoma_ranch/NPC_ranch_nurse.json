@@ -63,10 +63,12 @@
         "morphine",
         "nyquil",
         "oxycodone",
-        "laudanum",
+        "poppy_pain",
+        "poppysyrup",
         "quikclot",
         "thyme_oil",
         "tramadol",
+        "vaccine_shot",
         "weak_antibiotic",
         "cattail_jelly"
       ],
@@ -144,7 +146,7 @@
               "faction": "tacoma_commune"
             }
           ],
-          "place_item": [ { "item": "bandages", "x": 17, "y": 7, "amount": [ 3, 9 ], "faction": "tacoma_commune" } ]
+          "place_item": [ { "item": "bandages", "x": 17, "y": 7, "amount": [ 1, 3 ], "faction": "tacoma_commune" } ]
         }
       ]
     }

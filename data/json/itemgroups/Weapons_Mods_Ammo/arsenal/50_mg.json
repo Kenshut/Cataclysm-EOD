@@ -15,11 +15,7 @@
     "type": "item_group",
     "id": "milspec_arsenal_50_mg_gun&mags",
     "subtype": "collection",
-    "items": [
-      { "item": "m2browning", "count": 1, "prob": 70 },
-      { "item": "m2browning", "count": 1, "prob": 15 },
-      { "item": "gau19", "count": 1, "prob": 15 }
-    ]
+    "items": [ { "item": "m2browning", "count": 1, "prob": 70 }, { "item": "m2browning", "count": 1, "prob": 15 } ]
   },
   {
     "type": "item_group",

@@ -6,7 +6,6 @@
     "weight": 100,
     "method": "json",
     "object": {
-      "faction_owner": [ { "id": "exodii", "x": [ 5, 17 ], "y": [ 5, 18 ] } ],
       "rows": [
         "        .........       ",
         "     ....,,,,,,,....    ",
@@ -74,7 +73,6 @@
     "weight": 100,
     "method": "json",
     "object": {
-      "faction_owner": [ { "id": "exodii", "x": [ 5, 17 ], "y": [ 5, 18 ] } ],
       "fill_ter": "t_junk_floor",
       "rows": [
         "vvvvvvvvvvvvvvvvvvvvvvvv",
@@ -112,7 +110,6 @@
     "weight": 100,
     "method": "json",
     "object": {
-      "faction_owner": [ { "id": "exodii", "x": [ 5, 17 ], "y": [ 5, 18 ] } ],
       "fill_ter": "t_tile_flat_roof",
       "rows": [
         "vvvvvvvvvvvvvvvvvvvvvvvv",

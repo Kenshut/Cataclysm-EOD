@@ -214,7 +214,7 @@ static distribution load_distribution( const JsonObject &jo )
     jo.throw_error( "Invalid distribution" );
 }
 
-static distribution load_distribution( const JsonObject &jo, const std::string_view name )
+static distribution load_distribution( const JsonObject &jo, const std::string &name )
 {
     if( !jo.has_member( name ) ) {
         return distribution();
@@ -234,7 +234,7 @@ static distribution load_distribution( const JsonObject &jo, const std::string_v
 
 bool shopkeeper_item_group::can_sell( npc const &guy ) const
 {
-    dialogue temp( get_talker_for( get_avatar() ), get_talker_for( guy ) );
+    dialogue const temp( get_talker_for( get_avatar() ), get_talker_for( guy ) );
     faction *const fac = guy.get_faction();
 
     return ( fac == nullptr || trust <= guy.get_faction()->trusts_u ) &&
@@ -263,11 +263,11 @@ void shopkeeper_item_group::deserialize( const JsonObject &jo )
     optional( jo, false, "rigid", rigid, false );
     optional( jo, false, "refusal", refusal );
     if( jo.has_member( "condition" ) ) {
-        read_condition( jo, "condition", condition, false );
+        read_condition<dialogue>( jo, "condition", condition, false );
     }
 }
 
-void npc_class::load( const JsonObject &jo, const std::string_view )
+void npc_class::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "name", name );
     mandatory( jo, was_loaded, "job_description", job_description );
@@ -312,7 +312,7 @@ void npc_class::load( const JsonObject &jo, const std::string_view )
     }
 
     optional( jo, was_loaded, "proficiencies", _starting_proficiencies );
-    optional( jo, was_loaded, "sells_belongings", sells_belongings, true );
+    optional( jo, was_loaded, "sells_belongings", sells_belongings );
     /* Mutation rounds can be specified as follows:
      *   "mutation_rounds": {
      *     "ANY" : { "constant": 1 },

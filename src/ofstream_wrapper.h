@@ -5,7 +5,7 @@
 #include "filesystem.h"
 
 /**
- * Wrapper around std::ofstream that handles error checking and throws on errors.
+ * Wrapper around cata::ofstream that handles error checking and throws on errors.
  *
  * Use like a normal ofstream: the stream is opened in the constructor and
  * closed via @ref close. Both functions check for success and throw std::exception
@@ -22,7 +22,7 @@
 class ofstream_wrapper
 {
     private:
-        std::ofstream file_stream;
+        cata::ofstream file_stream;
         fs::path path;
         fs::path temp_path;
 

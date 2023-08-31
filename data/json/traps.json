@@ -134,21 +134,6 @@
   },
   {
     "type": "trap",
-    "id": "tr_microlab_portal_elevator_physics_shift",
-    "name": "microlab shifting elevator",
-    "color": "magenta",
-    "memorial_male": { "ctxt": "memorial_male", "str": "Triggered a dimensional anomaly." },
-    "memorial_female": { "ctxt": "memorial_female", "str": "Triggered a dimensional anomaly." },
-    "symbol": ".",
-    "visibility": 99,
-    "avoidance": 99,
-    "difficulty": 99,
-    "action": "map_regen",
-    "map_regen": "microlab_portal_elevator_physics_shift",
-    "benign": false
-  },
-  {
-    "type": "trap",
     "id": "tr_glimmer_floor",
     "name": "glimmering floor",
     "color": "yellow",
@@ -160,17 +145,6 @@
     "action": "telepad",
     "always_invisible": true,
     "benign": false
-  },
-  {
-    "type": "trap",
-    "id": "tr_light_snare",
-    "name": "light snare trap",
-    "color": "brown",
-    "symbol": "^",
-    "visibility": 1,
-    "avoidance": 8,
-    "difficulty": 0,
-    "action": "snare_light"
   },
   {
     "type": "trap",
@@ -242,7 +216,7 @@
     "name": "caltrops",
     "color": "dark_gray",
     "memorial_male": { "ctxt": "memorial_male", "str": "Stepped on a caltrop." },
-    "memorial_female": { "ctxt": "memorial_female", "str": "Stepped on a caltrop." },
+    "memorial_female": { "ctxt": "memorial_female", "str": "stepped on a caltrop." },
     "symbol": "_",
     "visibility": 4,
     "avoidance": 6,
@@ -278,7 +252,7 @@
     "avoidance": 4,
     "difficulty": 0,
     "action": "tripwire",
-    "drops": [ "tripwire" ]
+    "drops": [ "string_36" ]
   },
   {
     "type": "trap",
@@ -293,7 +267,7 @@
     "avoidance": 4,
     "difficulty": 5,
     "action": "crossbow",
-    "drops": [ "crossbow_trap" ],
+    "drops": [ "string_36", "crossbow", "bolt_steel" ],
     "vehicle_data": {
       "chance": 30,
       "damage": 300,
@@ -302,14 +276,14 @@
       "sound_type": "fire_gun",
       "sound_variant": "crossbow",
       "remove_trap": true,
-      "spawn_items": [ "crossbow", "string_36", "string_6", { "id": "bolt_steel", "chance": 0.9 } ]
+      "spawn_items": [ "crossbow", "string_6", { "id": "bolt_steel", "chance": 0.9 } ]
     }
   },
   {
     "type": "trap",
     "id": "tr_shotgun_2",
     "trigger_weight": "200 g",
-    "name": "double shotgun trap",
+    "name": "shotgun trap",
     "color": "red",
     "memorial_male": { "ctxt": "memorial_male", "str": "Triggered a shotgun trap." },
     "memorial_female": { "ctxt": "memorial_female", "str": "Triggered a shotgun trap." },
@@ -318,7 +292,7 @@
     "avoidance": 5,
     "difficulty": 6,
     "action": "shotgun",
-    "drops": [ "shotgun_trap" ],
+    "drops": [ "string_36", "slamfire_shotgun_d", { "item": "shot_00", "quantity": 2, "charges": 1 } ],
     "vehicle_data": {
       "chance": 70,
       "damage": 300,
@@ -333,7 +307,7 @@
     "type": "trap",
     "id": "tr_shotgun_2_1",
     "trigger_weight": "200 g",
-    "name": "single-shot double shotgun trap",
+    "name": "shotgun trap",
     "color": "red",
     "memorial_male": { "ctxt": "memorial_male", "str": "Triggered a shotgun trap." },
     "memorial_female": { "ctxt": "memorial_female", "str": "Triggered a shotgun trap." },
@@ -342,13 +316,7 @@
     "avoidance": 5,
     "difficulty": 6,
     "action": "shotgun",
-    "drops": [
-      "string_36",
-      "string_6",
-      "slamfire_shotgun_d",
-      { "item": "shot_00", "quantity": 1, "charges": 1 },
-      { "item": "shot_hull", "quantity": 1, "charges": 1 }
-    ],
+    "drops": [ "string_36", "slamfire_shotgun_d", { "item": "shot_00", "quantity": 1, "charges": 1 } ],
     "vehicle_data": {
       "chance": 70,
       "damage": 300,
@@ -357,7 +325,7 @@
       "sound_type": "fire_gun",
       "sound_variant": "shotgun_d",
       "remove_trap": true,
-      "spawn_items": [ "slamfire_shotgun_d", "string_36", "string_6", "shot_hull", "shot_hull" ]
+      "spawn_items": [ "slamfire_shotgun_d", "string_6" ]
     }
   },
   {
@@ -373,7 +341,7 @@
     "avoidance": 5,
     "difficulty": 6,
     "action": "shotgun",
-    "drops": [ "shotgun_trap_single" ],
+    "drops": [ "string_36", "slamfire_shotgun", { "item": "shot_00", "quantity": 1, "charges": 1 } ],
     "vehicle_data": {
       "chance": 70,
       "damage": 300,
@@ -382,7 +350,7 @@
       "sound_type": "fire_gun",
       "sound_variant": "shotgun_s",
       "remove_trap": true,
-      "spawn_items": [ "slamfire_shotgun", "string_36", "string_6", "shot_hull" ]
+      "spawn_items": [ "four_winds_shotgun", "string_6" ]
     }
   },
   {
@@ -397,7 +365,7 @@
     "difficulty": 2,
     "trap_radius": 1,
     "action": "none",
-    "drops": [ "motor_small", "blade", "blade", "string_36" ]
+    "drops": [ "motor", "blade", "blade", "string_36" ]
   },
   {
     "type": "trap",
@@ -571,8 +539,8 @@
     "id": "tr_portal",
     "name": "shimmering portal",
     "color": "magenta",
-    "memorial_male": { "ctxt": "memorial_male", "str": "Triggered a teleport trap." },
-    "memorial_female": { "ctxt": "memorial_female", "str": "Triggered a teleport trap." },
+    "memorial_male": { "ctxt": "memorial_male", "str": "Triggered a teleoport trap." },
+    "memorial_female": { "ctxt": "memorial_female", "str": "Triggered a teleoport trap." },
     "symbol": "%",
     "visibility": 0,
     "avoidance": 99,
@@ -714,17 +682,17 @@
     "name": "Summon Trapdoor Spider",
     "description": "This spell summons hostile trapdoor spiders from the earth.",
     "effect": "summon",
-    "effect_str": "mon_spider_trapdoor_small",
+    "effect_str": "mon_spider_trapdoor_giant",
     "shape": "blast",
     "valid_targets": [ "ground" ],
-    "flags": [ "PERMANENT", "HOSTILE_SUMMON", "NO_EXPLOSION_SFX" ],
+    "flags": [ "PERMANENT", "HOSTILE_SUMMON" ],
     "max_level": 15,
     "min_aoe": 2,
-    "max_aoe": 2,
+    "max_aoe": 3,
     "min_damage": 1,
     "max_damage": 1,
     "min_range": 1,
-    "max_range": 1,
+    "max_range": 3,
     "min_duration": 30000,
     "max_duration": 120000,
     "duration_increment": 6000,

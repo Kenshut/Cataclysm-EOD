@@ -4,8 +4,8 @@
 
 #include <memory>
 
-class JsonOut;
 class JsonValue;
+class JsonOut;
 
 namespace cata
 {

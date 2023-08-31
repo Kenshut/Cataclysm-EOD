@@ -18,7 +18,6 @@
       [ "seed_sunflower", 60 ],
       [ "seed_watermelon", 60 ],
       [ "seed_pumpkin", 60 ],
-      [ "seed_bottle_gourd", 5 ],
       [ "seed_corn", 60 ],
       [ "seed_oats", 60 ],
       [ "soybean_seed", 60 ],
@@ -44,8 +43,6 @@
     "type": "item_group",
     "id": "farming_tools",
     "items": [
-      { "item": "chem_sodium_nitrate", "prob": 15, "charges-min": 10, "charges-max": 50 },
-      { "item": "chem_urea", "prob": 15 },
       [ "hoe", 60 ],
       [ "shovel", 60 ],
       [ "g_shovel", 60 ],
@@ -122,7 +119,6 @@
       [ "seed_carrot", 1 ],
       [ "seed_watermelon", 1 ],
       [ "seed_pumpkin", 1 ],
-      [ "seed_bottle_gourd", 1 ],
       [ "seed_sunflower", 1 ],
       [ "seed_flower", 1 ],
       [ "seed_cactus", 1 ],
@@ -194,11 +190,5 @@
       { "item": "wooden_barrel", "prob": 100, "sealed": true },
       { "item": "juice_pulp", "prob": 100, "charges": [ 7, 77 ], "container-item": "wooden_barrel" }
     ]
-  },
-  {
-    "type": "item_group",
-    "id": "sometimes_manure",
-    "subtype": "distribution",
-    "entries": [ { "item": "null", "prob": 3 }, { "item": "feces_manure", "prob": 1 } ]
   }
 ]

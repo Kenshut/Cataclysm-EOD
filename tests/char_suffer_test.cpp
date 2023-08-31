@@ -13,7 +13,6 @@
 #include "flag.h"
 #include "game.h"
 #include "item.h"
-#include "map.h"
 #include "map_helpers.h"
 #include "player_helpers.h"
 #include "test_statistics.h"
@@ -98,7 +97,7 @@ static int test_suffer_pain_felt( Character &dummy, const time_duration &dur )
 // - Most of the time (59/60 chance), 1 focus is lost, or 2 without sunglasses
 // - Sometimes (1/60 chance), there is 1 pain instead, or 2 without sunglasses
 //
-TEST_CASE( "suffering_from_albinism", "[char][suffer][albino]" )
+TEST_CASE( "suffering from albinism", "[char][suffer][albino]" )
 {
     clear_map();
     avatar &dummy = get_avatar();
@@ -133,9 +132,9 @@ TEST_CASE( "suffering_from_albinism", "[char][suffer][albino]" )
             dummy.worn.clear();
 
             // 60 times * 12 bodyparts * 0.25 chance for medium effect
-            THEN( "they lose 80 to 280 focus per hour" ) {
+            THEN( "they lose about 165 focus per hour" ) {
                 focus_lost = test_suffer_focus_lost( dummy, 1_hours );
-                CHECK( focus_lost == Approx( 180 ).margin( 100 ) );
+                CHECK( focus_lost == Approx( 180 ).margin( 90 ) );
             }
 
             // THEN( "they suffer about 2 pain per hour" ) {
@@ -203,7 +202,7 @@ TEST_CASE( "suffering_from_albinism", "[char][suffer][albino]" )
 // - Chance of pain and HP loss is directly proportional to skin exposure on each body part
 // -
 //
-TEST_CASE( "suffering_from_sunburn", "[char][suffer][sunburn]" )
+TEST_CASE( "suffering from sunburn", "[char][suffer][sunburn]" )
 {
     clear_map();
     clear_avatar();
@@ -368,7 +367,7 @@ TEST_CASE( "suffering_from_sunburn", "[char][suffer][sunburn]" )
     }
 }
 
-TEST_CASE( "suffering_from_asphyxiation", "[char][suffer][oxygen][grab]" )
+TEST_CASE( "suffering from asphyxiation", "[char][suffer][oxygen]" )
 {
     clear_map();
     clear_avatar();
@@ -458,12 +457,10 @@ TEST_CASE( "suffering_from_asphyxiation", "[char][suffer][oxygen][grab]" )
         REQUIRE( dummy.oxygen == 46 );
         REQUIRE( !dummy.is_underwater() );
         REQUIRE( dummy.get_stamina() == dummy.get_stamina_max() );
-        // Always spawn the first two grabbers, no need for intensity checks
-        spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_east );
-        spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_west );
-        dummy.add_effect( effect_grabbed, 20_turns, body_part_torso, false, 2, true );
-        REQUIRE( dummy.has_effect( effect_grabbed, body_part_torso ) );
-        WHEN( "two grabbers" ) {
+        WHEN( "grabbed intensity = 2" ) {
+            dummy.add_effect( effect_grabbed, 20_turns, body_part_torso, false, 2, true );
+            REQUIRE( dummy.has_effect( effect_grabbed, body_part_torso ) );
+            REQUIRE( dummy.get_effect_int( effect_grabbed, body_part_torso ) == 2 );
 
             THEN( "they lose 0 or 1 oxygen per turn" ) {
                 test_suffer( dummy, 10_turns, true );
@@ -471,49 +468,36 @@ TEST_CASE( "suffering_from_asphyxiation", "[char][suffer][oxygen][grab]" )
             }
         }
 
-        WHEN( "four grabbers" ) {
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south );
+        WHEN( "grabbed intensity = 4" ) {
+            dummy.add_effect( effect_grabbed, 20_turns, body_part_torso, false, 4, true );
+            REQUIRE( dummy.has_effect( effect_grabbed, body_part_torso ) );
+            REQUIRE( dummy.get_effect_int( effect_grabbed, body_part_torso ) == 4 );
+
             THEN( "they lose 1 oxygen per turn" ) {
                 test_suffer( dummy, 10_turns, true );
                 CHECK( dummy.oxygen == 36 );
             }
         }
 
-        WHEN( "six grabbers" ) {
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north_west );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south_west );
+        WHEN( "grabbed intensity = 6" ) {
+            dummy.add_effect( effect_grabbed, 20_turns, body_part_torso, false, 6, true );
+            REQUIRE( dummy.has_effect( effect_grabbed, body_part_torso ) );
+            REQUIRE( dummy.get_effect_int( effect_grabbed, body_part_torso ) == 6 );
+
             THEN( "they lose 1 or 2 oxygen per turn" ) {
                 test_suffer( dummy, 10_turns, true );
                 CHECK( dummy.oxygen == Approx( 31 ).margin( 5 ) );
             }
         }
 
-        WHEN( "eight grabbers" ) {
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north_west );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south_west );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_north_east );
-            spawn_test_monster( "mon_debug_memory", dummy.pos() + tripoint_south_east );
+        WHEN( "grabbed intensity = 8" ) {
+            dummy.add_effect( effect_grabbed, 20_turns, body_part_torso, false, 8, true );
+            REQUIRE( dummy.has_effect( effect_grabbed, body_part_torso ) );
+            REQUIRE( dummy.get_effect_int( effect_grabbed, body_part_torso ) == 8 );
+
             THEN( "they lose 2 oxygen per turn" ) {
                 test_suffer( dummy, 10_turns, true );
                 CHECK( dummy.oxygen == 26 );
-            }
-        }
-
-        map &here = get_map();
-        WHEN( "crushed against two walls by two grabbers" ) {
-            here.ter_set( dummy.pos() + tripoint_south, t_rock_wall );
-            here.ter_set( dummy.pos() + tripoint_north, t_rock_wall );
-            REQUIRE( here.impassable( dummy.pos() + tripoint_south ) );
-            REQUIRE( here.impassable( dummy.pos() + tripoint_north ) );
-
-            THEN( "they lose 1 oxygen per turn, just like four grabbers" ) {
-                test_suffer( dummy, 10_turns, true );
-                CHECK( dummy.oxygen == 36 );
             }
         }
     }

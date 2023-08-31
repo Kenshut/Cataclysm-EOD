@@ -16,7 +16,7 @@ struct kobject {
     uint8_t character = 0;
 };
 
-constexpr int MAXMESSAGES = 1200;
+static constexpr int MAXMESSAGES = 1200;
 
 class robot_finds_kitten
 {
@@ -34,7 +34,7 @@ class robot_finds_kitten
         kobject kitten;
         kobject empty;
         static constexpr int numbogus = 20;
-        std::array<kobject, MAXMESSAGES> bogus;
+        kobject bogus[MAXMESSAGES];
         std::vector<std::string> bogus_messages;
         static constexpr int rfkLINES = 20;
         static constexpr int rfkCOLS = 60;

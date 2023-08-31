@@ -99,7 +99,7 @@ void trait_group::debug_spawn()
         // Spawn traits from the group 100 times
         std::map<std::string, int> traitnames;
         for( size_t a = 0; a < 100; a++ ) {
-            const Trait_list traits = traits_from( groups[index] );
+            const auto traits = traits_from( groups[index] );
             for( const trait_and_var &tr : traits ) {
                 traitnames[tr.name()]++;
             }
@@ -122,7 +122,7 @@ void trait_group::debug_spawn()
 Trait_list Trait_creation_data::create() const
 {
     RecursionList rec;
-    trait_group::Trait_list result = create( rec );
+    auto result = create( rec );
     return result;
 }
 

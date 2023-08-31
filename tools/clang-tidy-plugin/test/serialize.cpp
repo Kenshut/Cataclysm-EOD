@@ -1,6 +1,12 @@
-// RUN: %check_clang_tidy -allow-stdinc %s cata-serialize %t -- --load=%cata_plugin -- -isystem %cata_include -isystem %cata_include/third-party
+// RUN: %check_clang_tidy %s cata-serialize %t -- -plugins=%cata_plugin --
 
-#include "json.h"
+struct JsonIn {
+    bool read( int & );
+};
+
+struct JsonOut {
+    void member( const char *, int );
+};
 
 class A0
 {
@@ -14,8 +20,8 @@ class A0
             jsout.member( "a", a );
         }
 
-        void deserialize( JsonObject &jso ) {
-            jso.read( "b", b );
+        void deserialize( JsonIn &jsin ) {
+            jsin.read( b );
         }
 };
 
@@ -30,11 +36,11 @@ class A1
             // serialization function
         }
 
-        void deserialize( JsonObject &jso ) {
+        void deserialize( JsonIn &jsin ) {
             // Can suppress warnings for a particular function by putting the
             // following string in a comment:
             // CATA_DO_NOT_CHECK_SERIALIZE
-            jso.read( "b", b );
+            jsin.read( b );
         }
 };
 

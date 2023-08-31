@@ -1,0 +1,11 @@
+[
+  {
+    "type": "MOD_INFO",
+    "id": "rc",
+    "name": "Roadside Cataclysm",
+    "description": "Core content for Roadside Cataclysm",
+    "category": "content",
+    "core": true,
+    "path": "../../json"
+  }
+]

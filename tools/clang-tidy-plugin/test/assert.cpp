@@ -1,9 +1,16 @@
-// RUN: %check_clang_tidy -allow-stdinc %s cata-assert %t -- --load=%cata_plugin -- -isystem %cata_include
+// RUN: %check_clang_tidy %s cata-assert %t -- -plugins=%cata_plugin --
 
 #include <assert.h>
 #include <stdlib.h>
 
-#include <cata_assert.h>
+namespace std
+{
+
+void abort();
+
+}
+
+#define cata_assert(expression) assert(expression)
 
 void f0()
 {

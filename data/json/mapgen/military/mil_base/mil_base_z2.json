@@ -2,10 +2,10 @@
   {
     "type": "mapgen",
     "method": "json",
-    "om_terrain": [ "mil_base_3i2" ],
+    "om_terrain": [ [ "mil_base_3i2" ] ],
     "weight": 250,
     "object": {
-      "fill_ter": "t_metal_floor_no_roof",
+      "fill_ter": "t_open_air",
       "rows": [
         "                        ",
         "                        ",
@@ -20,20 +20,19 @@
         "                        ",
         "                        ",
         "                        ",
-        "   :R,,,,R              ",
-        "    ,    ,              ",
-        "    ,    ,              ",
-        "   Xaaaa ,              ",
-        "   Xa≷,a ,:             ",
-        "   XRaaa,R              ",
+        "    Z''x'Z              ",
+        "    '    '              ",
+        "    '    x              ",
+        "    '    '              ",
+        "    '<>  '              ",
+        "    Z''''Z              ",
         "                        ",
         "                        ",
         "                        ",
         "                        ",
         "                        "
       ],
-      "palettes": [ "roof_palette" ],
-      "terrain": { "R": "t_radio_tower", "a": "t_railing", ",": "t_metal_floor_no_roof", "≷": "t_ladder_up_down" }
+      "palettes": [ "mil_base_roof_palette" ]
     }
   }
 ]

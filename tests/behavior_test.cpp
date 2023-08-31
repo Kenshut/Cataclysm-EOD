@@ -46,7 +46,7 @@ static behavior::node_t make_test_node( const std::string &goal, const behavior:
     if( !goal.empty() ) {
         node.set_goal( goal );
     }
-    node.add_predicate( [status]( const behavior::oracle_t *, const std::string_view ) {
+    node.add_predicate( [status]( const behavior::oracle_t *, const std::string & ) {
         return *status;
     } );
     return node;
@@ -155,7 +155,6 @@ TEST_CASE( "behavior_tree", "[behavior]" )
 TEST_CASE( "check_npc_behavior_tree", "[npc][behavior]" )
 {
     clear_map();
-    calendar::turn = calendar::start_of_cataclysm;
     behavior::tree npc_needs;
     npc_needs.add( &behavior_node_t_npc_needs.obj() );
     npc &test_npc = spawn_npc( { 50, 50 }, "test_talker" );

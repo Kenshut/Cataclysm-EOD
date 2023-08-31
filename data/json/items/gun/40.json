@@ -5,13 +5,14 @@
     "looks_like": "glock_17",
     "type": "GUN",
     "name": { "str": "Beretta 90-two .40 S&W" },
-    "description": "A more modern version of Beretta's popular 92 series of handguns, the 90-two performs largely the same.  The main difference is a sleeker, almost futuristic-looking design owed in large part to the polymer underbarrel rail cover.  This one is chambered in .40 S&W.",
+    "description": "A more modern version of Beretta's popular 92 series of handguns, the 90-two performs largely the same.  The main difference is a sleeker, almost futuristic-looking design owed in large parts to the polymer underbarrel rail cover.  This one is chambered in .40 S&W.",
     "weight": "905 g",
     "volume": "554 ml",
     "longest_side": "250 mm",
     "price": 65000,
     "price_postapoc": 2000,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "steel", "plastic" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -20,8 +21,7 @@
     "dispersion": 480,
     "durability": 7,
     "min_cycle_recoil": 504,
-    "pocket_data": [ { "magazine_well": "250 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "90two40mag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "magazine_well": "250 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "90two40mag" ] } ]
   },
   {
     "id": "glock_22",
@@ -37,6 +37,7 @@
     "price": 69000,
     "price_postapoc": 1750,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "plastic", "steel" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -47,9 +48,9 @@
     "durability": 6,
     "blackpowder_tolerance": 48,
     "min_cycle_recoil": 425,
-    "flags": [ "ALLOWS_BODY_BLOCK" ],
     "weapon_category": [ "AUTOMATIC_PISTOLS" ],
     "valid_mod_locations": [
+      [ "accessories", 2 ],
       [ "barrel", 1 ],
       [ "bore", 1 ],
       [ "brass catcher", 1 ],
@@ -62,8 +63,7 @@
       [ "underbarrel", 1 ]
     ],
     "faults": [ "fault_gun_blackpowder", "fault_gun_dirt", "fault_gun_chamber_spent" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "glock40mag", "glock40bigmag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "glock40mag", "glock40bigmag" ] } ]
   },
   {
     "id": "px4_40",
@@ -78,6 +78,7 @@
     "price": 65000,
     "price_postapoc": 2500,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "plastic", "steel" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -86,8 +87,7 @@
     "dispersion": 480,
     "durability": 7,
     "min_cycle_recoil": 504,
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "px4_40mag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "px4_40mag" ] } ]
   },
   {
     "id": "rifle_40",
@@ -98,11 +98,12 @@
     "description": "A home-made rifle.  It is simply a pipe attached to a stock, with a hammer to strike the single round it holds.",
     "ascii_picture": "ps_pipe_gun",
     "weight": "2114 g",
-    "volume": "1610 ml",
+    "volume": "2 L",
     "longest_side": "100 cm",
     "price": 10000,
     "price_postapoc": 500,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "steel", "wood" ],
     "color": "brown",
     "ammo": [ "40" ],
@@ -114,8 +115,9 @@
     "loudness": 25,
     "clip_size": 1,
     "reload": 200,
-    "barrel_volume": "360 ml",
+    "barrel_volume": "750 ml",
     "valid_mod_locations": [
+      [ "accessories", 2 ],
       [ "muzzle", 1 ],
       [ "sling", 1 ],
       [ "stock mount", 1 ],
@@ -125,9 +127,8 @@
       [ "underbarrel mount", 1 ]
     ],
     "faults": [ "fault_gun_blackpowder", "fault_gun_dirt" ],
-    "flags": [ "RELOAD_EJECT", "EASY_CLEAN" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "40": 1 } } ],
-    "melee_damage": { "bash": 10 }
+    "flags": [ "RELOAD_EJECT" ],
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "40": 1 } } ]
   },
   {
     "id": "sig_40",
@@ -143,6 +144,7 @@
     "price": 75000,
     "price_postapoc": 1500,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "steel", "plastic" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -152,6 +154,7 @@
     "durability": 7,
     "min_cycle_recoil": 504,
     "valid_mod_locations": [
+      [ "accessories", 2 ],
       [ "barrel", 1 ],
       [ "bore", 1 ],
       [ "brass catcher", 1 ],
@@ -164,10 +167,8 @@
       [ "underbarrel", 1 ]
     ],
     "faults": [ "fault_gun_blackpowder", "fault_gun_dirt", "fault_gun_chamber_spent" ],
-    "flags": [ "ALLOWS_BODY_BLOCK" ],
     "weapon_category": [ "AUTOMATIC_PISTOLS" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "sig40mag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "magazine_well": "250 ml", "item_restriction": [ "sig40mag" ] } ]
   },
   {
     "id": "smg_40",
@@ -175,7 +176,7 @@
     "looks_like": "hk_mp5",
     "type": "GUN",
     "name": { "str": "Luty SMG: .40 S&W", "str_pl": "Luty SMGs: .40 S&W" },
-    "description": "A Luty pattern makeshift smoothbore SMG crudely constructed out of various steel parts using advanced powered hand tools; likely one of the most complex guns that is feasible to make outside of a machine shop, but still very unreliable.  This one is chambered for .40 S&W cartridges and accepts custom-made makeshift magazines.",
+    "description": "A Luty pattern makeshift smoothbore SMG crudely constructed out of various steel parts using some of the more advanced powered hand tools; likely one of the most complex guns that are feasible to make outside of a machine shop, but still very unreliable.  This one is chambered for .40 S&W cartridges and accepts custom-made makeshift magazines.",
     "//": "Crafting recipe must make use of angle grinder, bench grinder, set square and vise, which don't yet exist in game. No factory mags until UMP40, mp5/40, or other straight .40 mags are implemented.",
     "weight": "3520 g",
     "volume": "1110 ml",
@@ -183,6 +184,7 @@
     "price": 20000,
     "price_postapoc": 1500,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "steel" ],
     "color": "dark_gray",
     "ammo": [ "40" ],
@@ -195,6 +197,7 @@
     "loudness": 25,
     "barrel_volume": "250 ml",
     "valid_mod_locations": [
+      [ "accessories", 3 ],
       [ "barrel", 1 ],
       [ "brass catcher", 1 ],
       [ "grip", 1 ],
@@ -206,8 +209,7 @@
       [ "stock", 1 ],
       [ "underbarrel", 1 ]
     ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "smg_40_mag" ] } ],
-    "melee_damage": { "bash": 10 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "smg_40_mag" ] } ]
   },
   {
     "id": "surv_six_shooter",
@@ -222,6 +224,7 @@
     "price": 15000,
     "price_postapoc": 750,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "steel" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -235,6 +238,7 @@
     "clip_size": 6,
     "reload": 200,
     "valid_mod_locations": [
+      [ "accessories", 2 ],
       [ "barrel", 1 ],
       [ "bore", 1 ],
       [ "grip", 1 ],
@@ -245,8 +249,7 @@
     ],
     "faults": [ "fault_gun_blackpowder", "fault_gun_dirt" ],
     "flags": [ "RELOAD_ONE", "NEVER_JAMS", "RELOAD_EJECT" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "40": 6 } } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "40": 6 } } ]
   },
   {
     "id": "hi_power_40",
@@ -254,23 +257,22 @@
     "looks_like": "glock_17",
     "type": "GUN",
     "name": { "str": "Browning Hi-Power .40 S&W" },
-    "description": "The Browning Hi-Power is a semi-automatic handgun developed shortly before the Second World War.  Widely issued since then, it remains in use by India, Canada, and Australia.  This is a commercial variant produced by Browning Arms in .40 S&W.",
+    "description": "The Browning Hi-Power is a semi-automatic handgun developed shortly before the second world war.  Widely issued since then, it remains in use by India, Canada and Australia.  This is a commercial variant produced by Browning Arms in .40 S&W.",
     "weight": "907 g",
     "volume": "274 ml",
     "longest_side": "228 mm",
     "price": 54000,
     "price_postapoc": 2000,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "plastic", "steel" ],
     "color": "dark_gray",
     "ammo": [ "40" ],
     "dispersion": 480,
     "durability": 8,
     "min_cycle_recoil": 504,
-    "flags": [ "ALLOWS_BODY_BLOCK" ],
     "weapon_category": [ "AUTOMATIC_PISTOLS" ],
-    "pocket_data": [ { "magazine_well": "185 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "bhp40mag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "magazine_well": "185 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "bhp40mag" ] } ]
   },
   {
     "id": "walther_ppq_40",
@@ -284,13 +286,13 @@
     "longest_side": "215 mm",
     "price": 72500,
     "price_postapoc": 2000,
+    "bashing": 8,
     "material": [ "plastic", "steel" ],
     "color": "dark_gray",
     "ammo": [ "40" ],
     "dispersion": 480,
     "durability": 9,
     "min_cycle_recoil": 504,
-    "flags": [ "ALLOWS_BODY_BLOCK" ],
     "weapon_category": [ "AUTOMATIC_PISTOLS" ],
     "pocket_data": [
       {
@@ -298,8 +300,7 @@
         "pocket_type": "MAGAZINE_WELL",
         "item_restriction": [ "ppq40mag_10rd", "ppq40mag_12rd", "ppq40mag_14rd" ]
       }
-    ],
-    "melee_damage": { "bash": 8 }
+    ]
   },
   {
     "id": "hptjcp",
@@ -314,15 +315,14 @@
     "price": 7500,
     "price_postapoc": 2000,
     "to_hit": -2,
+    "bashing": 8,
     "material": [ "plastic", "steel", "zinc" ],
     "color": "dark_gray",
     "ammo": [ "40" ],
     "dispersion": 480,
     "durability": 7,
     "min_cycle_recoil": 504,
-    "flags": [ "ALLOWS_BODY_BLOCK" ],
     "weapon_category": [ "AUTOMATIC_PISTOLS" ],
-    "pocket_data": [ { "magazine_well": "312 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "hptjcpmag" ] } ],
-    "melee_damage": { "bash": 8 }
+    "pocket_data": [ { "magazine_well": "312 ml", "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "hptjcpmag" ] } ]
   }
 ]

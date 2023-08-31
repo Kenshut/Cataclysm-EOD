@@ -17,6 +17,7 @@
     "weight": "4200 g",
     "volume": "3 L",
     "longest_side": "100 cm",
+    "bashing": 12,
     "to_hit": -1,
     "durability": 8,
     "blackpowder_tolerance": 56,
@@ -26,6 +27,7 @@
     "built_in_mods": [ "combination_gun_shotgun" ],
     "faults": [ "fault_gun_blackpowder", "fault_gun_dirt" ],
     "valid_mod_locations": [
+      [ "accessories", 4 ],
       [ "barrel", 1 ],
       [ "bore", 1 ],
       [ "conversion", 1 ],
@@ -38,7 +40,6 @@
       [ "underbarrel", 1 ],
       [ "rail mount", 1 ]
     ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "3006": 1 } } ],
-    "melee_damage": { "bash": 12 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE", "rigid": true, "ammo_restriction": { "3006": 1 } } ]
   }
 ]

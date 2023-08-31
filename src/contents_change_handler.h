@@ -7,8 +7,6 @@
 
 #include "item_location.h"
 
-class JsonValue;
-
 /**
  * Records a batch of unsealed containers and handles spilling at once. This
  * is preferred over handling containers right after unsealing because the latter
@@ -43,7 +41,7 @@ class contents_change_handler
         /**
          * Deserialization for activities
          */
-        void deserialize( const JsonValue &jsin );
+        void deserialize( JsonIn &jsin );
     private:
         std::vector<item_location> unsealed;
 };

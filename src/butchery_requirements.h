@@ -28,12 +28,12 @@ class butchery_requirements
         string_id<butchery_requirements> id;
         std::vector<std::pair<string_id<butchery_requirements>, mod_id>> src;
 
-        // tries to find the requirement with the highest speed bonus. if it fails it returns std::nullopt
+        // tries to find the requirement with the highest speed bonus. if it fails it returns cata::nullopt
         std::pair<float, requirement_id> get_fastest_requirements(
             const read_only_visitable &crafting_inv, creature_size size, butcher_type butcher ) const;
 
         static void load_butchery_req( const JsonObject &jo, const std::string &src );
-        void load( const JsonObject &jo, std::string_view );
+        void load( const JsonObject &jo, const std::string & );
         static const std::vector<butchery_requirements> &get_all();
         static void check_consistency();
         static void reset();

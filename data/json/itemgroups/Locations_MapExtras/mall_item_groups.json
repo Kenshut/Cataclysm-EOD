@@ -73,17 +73,14 @@
       { "group": "ammo_any_batteries_full", "prob": 50 },
       { "item": "radio", "prob": 30, "charges": 100 },
       { "item": "mp3", "prob": 30, "charges": 100 },
-      { "item": "pride_flag", "prob": 1 },
-      { "item": "national_flag", "prob": 1 }
+      { "item": "pride_flag", "prob": 1 }
     ]
   },
   {
     "id": "vitamin_shop",
     "type": "item_group",
     "items": [
-      [ "vitc_supplement", 50 ],
-      [ "iron_supplement", 50 ],
-      { "group": "adhesive_bandages_box_full", "prob": 25 },
+      { "item": "adhesive_bandages", "prob": 25, "count": 20 },
       { "group": "full_1st_aid", "prob": 15 },
       { "group": "full_ifak", "prob": 15 },
       [ "vitamins", 75 ],
@@ -93,6 +90,7 @@
       [ "pills_sleep", 45 ],
       [ "melatonin_tablet", 30 ],
       [ "disinfectant", 15 ],
+      [ "vaccine_shot", 10 ],
       [ "protein_powder", 40 ],
       [ "caff_gum", 30 ],
       [ "nic_gum", 25 ],
@@ -105,7 +103,6 @@
     "ammo": 75,
     "magazine": 100,
     "items": [
-      { "item": "katana_plastic", "prob": 10 },
       [ "bat_nerf", 100 ],
       { "item": "portable_game", "prob": 60, "charges": 100 },
       [ "bat", 60 ],
@@ -131,7 +128,6 @@
       [ "baseball", 40 ],
       [ "football", 40 ],
       [ "basketball", 50 ],
-      [ "teddy_bear", 25 ],
       { "item": "talking_doll", "prob": 50, "charges": 100 },
       { "item": "marble", "prob": 60, "charges": [ 1, 20 ] },
       { "item": "creepy_doll", "prob": 1, "charges": 100 },
@@ -142,7 +138,6 @@
       { "group": "toy_makerspace_kit", "prob": 10 },
       { "group": "toy_robot_kit", "prob": 10 },
       { "group": "toy_engine_kit", "prob": 10 },
-      { "item": "air_launcher", "prob": 5 },
       { "item": "wizard_cane_cheap", "prob": 5, "charges": [ 1, 100 ] },
       { "item": "wizard_cane", "prob": 1, "charges": [ 50, 100 ] },
       [ "sinister_cane", 5 ],
@@ -215,7 +210,7 @@
       [ "knife_trench", 7 ],
       [ "switchblade", 20 ],
       [ "knife_hunting", 20 ],
-      { "group": "knife_rambo_full", "prob": 5 }
+      [ "knife_rambo", 5 ]
     ]
   },
   {
@@ -269,7 +264,6 @@
       [ "string_6", 50 ],
       [ "leather", 10 ],
       [ "fur", 7 ],
-      [ "sheet_leather", 20 ],
       [ "tanned_hide", 20 ],
       [ "tanned_pelt", 20 ]
     ]
@@ -333,7 +327,7 @@
       { "item": "cell_phone", "prob": 60, "charges": 150 },
       { "item": "smart_phone", "prob": 60, "charges": 120 },
       [ "wristwatch", 60 ],
-      [ "memory_card", 10 ],
+      [ "mobile_memory_card_used", 10 ],
       [ "fitness_band", 5 ]
     ]
   },

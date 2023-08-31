@@ -9,7 +9,6 @@
     "skill_used": "survival",
     "difficulty": 2,
     "time": "30 s",
-    "charges": 4,
     "autolearn": true,
     "flags": [ "ALLOW_ROTTEN" ]
   },
@@ -25,15 +24,7 @@
     "result": "seed_pumpkin",
     "type": "recipe",
     "copy-from": "seed_extraction_cutting",
-    "components": [ [ [ "pumpkin", 1 ] ] ],
-    "charges": 12
-  },
-  {
-    "result": "seed_watermelon",
-    "type": "recipe",
-    "copy-from": "seed_extraction_cutting",
-    "components": [ [ [ "watermelon", 1 ] ] ],
-    "charges": 12
+    "components": [ [ [ "pumpkin", 1 ] ] ]
   },
   {
     "result": "seed_cucumber",
@@ -45,8 +36,7 @@
     "result": "seed_oats",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "oats", 1 ] ] ],
-    "charges": 8
+    "components": [ [ [ "oats", 1 ] ] ]
   },
   {
     "result": "seed_cattail",
@@ -58,8 +48,7 @@
     "result": "seed_corn",
     "type": "recipe",
     "copy-from": "seed_extraction_cutting",
-    "components": [ [ [ "corn", 1 ] ] ],
-    "charges": 12
+    "components": [ [ [ "corn", 1 ] ] ]
   },
   {
     "result": "seed_zucchini",
@@ -71,8 +60,7 @@
     "result": "seed_barley",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "barley", 1 ] ] ],
-    "charges": 8
+    "components": [ [ [ "barley", 1 ] ] ]
   },
   {
     "result": "seed_tomato",
@@ -150,8 +138,7 @@
     "result": "seed_grapes",
     "type": "recipe",
     "copy-from": "seed_extraction_cutting",
-    "components": [ [ [ "grapes", 1 ] ] ],
-    "charges": 12
+    "components": [ [ [ "grapes", 1 ] ] ]
   },
   {
     "result": "seed_rose",
@@ -169,8 +156,7 @@
     "result": "seed_wheat",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "wheat", 1 ] ] ],
-    "charges": 8
+    "components": [ [ [ "wheat", 1 ] ] ]
   },
   {
     "result": "seed_bee_balm",
@@ -182,8 +168,7 @@
     "result": "seed_buckwheat",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "buckwheat", 1 ] ] ],
-    "charges": 8
+    "components": [ [ [ "buckwheat", 1 ] ] ]
   },
   {
     "result": "seed_dogbane",
@@ -195,8 +180,7 @@
     "result": "seed_garlic",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "garlic", 1 ] ] ],
-    "charges": 8
+    "components": [ [ [ "garlic", 1 ] ] ]
   },
   {
     "result": "seed_mugwort",
@@ -235,12 +219,6 @@
     "type": "recipe",
     "copy-from": "seed_extraction_base",
     "components": [ [ [ "japanese_knotweed_stem", 1 ] ] ]
-  },
-  {
-    "result": "seed_wild_rice",
-    "type": "recipe",
-    "copy-from": "seed_extraction_base",
-    "components": [ [ [ "wild_rice", 1 ] ] ]
   },
   {
     "result": "seed_jerusalem_artichoke",
@@ -318,22 +296,19 @@
     "result": "seed_sunflower",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "sunflower", 1 ] ] ],
-    "charges": 16
+    "components": [ [ [ "sunflower", 1 ] ] ]
   },
   {
     "result": "seed_beans",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "raw_beans", 1 ] ] ],
-    "charges": 12
+    "components": [ [ [ "raw_beans", 1 ] ] ]
   },
   {
     "result": "seed_lentils",
     "type": "recipe",
     "copy-from": "seed_extraction_base",
-    "components": [ [ [ "raw_lentils", 1 ] ] ],
-    "charges": 12
+    "components": [ [ [ "raw_lentils", 1 ] ] ]
   },
   {
     "result": "seed_chamomile",
@@ -346,18 +321,5 @@
     "type": "recipe",
     "copy-from": "seed_extraction_base",
     "components": [ [ [ "sugar_beet", 1 ] ] ]
-  },
-  {
-    "result": "seed_bottle_gourd",
-    "type": "recipe",
-    "copy-from": "seed_extraction_base",
-    "components": [ [ [ "raw_bottle_gourd", 1 ] ] ]
-  },
-  {
-    "result": "seed_eggplant",
-    "type": "recipe",
-    "copy-from": "seed_extraction_base",
-    "components": [ [ [ "eggplant", 1 ] ] ],
-    "charges": 8
   }
 ]

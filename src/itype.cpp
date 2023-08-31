@@ -3,8 +3,6 @@
 #include <cstdlib>
 #include <utility>
 
-#include "ammo.h"
-#include "cata_utility.h"
 #include "character.h"
 #include "debug.h"
 #include "item.h"
@@ -40,8 +38,6 @@ std::string enum_to_string<condition_type>( condition_type data )
             return "FLAG";
         case condition_type::COMPONENT_ID:
             return "COMPONENT_ID";
-        case condition_type::COMPONENT_ID_SUBSTRING:
-            return "COMPONENT_ID_SUBSTRING";
         case condition_type::VAR:
             return "VAR";
         case condition_type::SNIPPET_ID:
@@ -91,32 +87,11 @@ std::string itype::get_item_type_string() const
 std::string itype::nname( unsigned int quantity ) const
 {
     // Always use singular form for liquids.
-    if( phase == phase_id::LIQUID || phase == phase_id::GAS ) {
+    // (Maybe gases too?  There are no gases at the moment)
+    if( phase == phase_id::LIQUID ) {
         quantity = 1;
     }
     return name.translated( quantity );
-}
-
-int itype::damage_level( int damage ) const
-{
-    if( damage == 0 ) {
-        return 0;
-    }
-    if( count_by_charges() ) {
-        return 5;
-    }
-    return std::clamp( 1 + 4 * damage / damage_max(), 0, 5 );
-}
-
-bool itype::has_any_quality( const std::string_view quality ) const
-{
-    return std::any_of( qualities.begin(),
-    qualities.end(), [&quality]( const std::pair<quality_id, int> &e ) {
-        return lcmatch( e.first->name, quality );
-    } ) || std::any_of( charged_qualities.begin(),
-    charged_qualities.end(), [&quality]( const std::pair<quality_id, int> &e ) {
-        return lcmatch( e.first->name, quality );
-    } );
 }
 
 int itype::charges_default() const
@@ -129,16 +104,6 @@ int itype::charges_default() const
         return ammo->def_charges;
     }
     return count_by_charges() ? 1 : 0;
-}
-
-int itype::charges_to_use() const
-{
-    if( tool ) {
-        return tool->charges_per_use;
-    } else if( comestible ) {
-        return 1;
-    }
-    return 0;
 }
 
 int itype::charges_per_volume( const units::volume &vol ) const
@@ -194,7 +159,7 @@ int itype::tick( Character &p, item &it, const tripoint &pos ) const
     return charges_to_use;
 }
 
-std::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos ) const
+cata::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos ) const
 {
     if( !has_use() ) {
         return 0;
@@ -206,8 +171,8 @@ std::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos ) 
     }
 }
 
-std::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos,
-                                  const std::string &iuse_name ) const
+cata::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos,
+                                   const std::string &iuse_name ) const
 {
     const use_function *use = get_use( iuse_name );
     if( use == nullptr ) {
@@ -229,10 +194,7 @@ std::optional<int> itype::invoke( Character &p, item &it, const tripoint &pos,
 
 std::string gun_type_type::name() const
 {
-    const itype_id gun_type_as_id( name_ );
-    return gun_type_as_id.is_valid()
-           ? gun_type_as_id->nname( 1 )
-           : pgettext( "gun_type_type", name_.c_str() );
+    return pgettext( "gun_type_type", name_.c_str() );
 }
 
 bool itype::can_have_charges() const
@@ -415,12 +377,11 @@ std::tuple<encumbrance_modifier_type, int> armor_portion_data::convert_descripto
 
 std::map<itype_id, std::set<itype_id>> islot_magazine::compatible_guns;
 
-const itype_id &itype::tool_slot_first_ammo() const
+std::set<itype_id> known_bad_density::known_bad;
+
+void known_bad_density::load( const JsonObject &jo )
 {
-    if( tool ) {
-        for( const ammotype &at : tool->ammo_id ) {
-            return at->default_ammotype();
-        }
-    }
-    return itype_id::NULL_ID();
+    std::set<itype_id> new_known_bad;
+    jo.read( "list", new_known_bad );
+    known_bad.insert( new_known_bad.begin(), new_known_bad.end() );
 }

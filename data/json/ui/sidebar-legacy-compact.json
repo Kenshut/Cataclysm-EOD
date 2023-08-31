@@ -112,8 +112,7 @@
     "type": "widget",
     "style": "layout",
     "arrange": "columns",
-    "padding": 0,
-    "widgets": [ "mood_desc_no_label", "safe_mode_classic_desc_right" ]
+    "widgets": [ "safe_mode_classic_desc", "mood_desc_no_label" ]
   },
   {
     "id": "lcom_limbs_right_layout",

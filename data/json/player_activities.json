@@ -91,26 +91,6 @@
     "multi_activity": true
   },
   {
-    "id": "ACT_VEHICLE_FOLD",
-    "type": "activity_type",
-    "activity_level": "LIGHT_EXERCISE",
-    "verb": "folding a vehicle",
-    "based_on": "speed",
-    "suspendable": false,
-    "no_resume": true,
-    "multi_activity": false
-  },
-  {
-    "id": "ACT_VEHICLE_UNFOLD",
-    "type": "activity_type",
-    "activity_level": "LIGHT_EXERCISE",
-    "verb": "unfolding a vehicle",
-    "based_on": "speed",
-    "suspendable": false,
-    "no_resume": true,
-    "multi_activity": false
-  },
-  {
     "id": "ACT_VEHICLE_REPAIR",
     "type": "activity_type",
     "activity_level": "MODERATE_EXERCISE",
@@ -610,7 +590,6 @@
     "verb": "aiming",
     "suspendable": false,
     "based_on": "neither",
-    "ignored_distractions": [ "hunger", "thirst", "hostile_spotted_near", "hostile_spotted_far" ],
     "no_resume": true
   },
   {
@@ -920,7 +899,6 @@
     "suspendable": false,
     "rooted": true,
     "based_on": "neither",
-    "ignored_distractions": [ "hunger", "thirst" ],
     "no_resume": true
   },
   {
@@ -941,7 +919,6 @@
     "suspendable": false,
     "rooted": true,
     "based_on": "neither",
-    "ignored_distractions": [ "hunger", "thirst" ],
     "no_resume": true
   },
   {
@@ -982,7 +959,6 @@
     "verb": "drinking",
     "suspendable": false,
     "based_on": "neither",
-    "ignored_distractions": [ "hunger", "thirst" ],
     "no_resume": true
   },
   {
@@ -992,7 +968,15 @@
     "verb": "using drugs",
     "suspendable": false,
     "based_on": "neither",
-    "ignored_distractions": [ "hunger", "thirst" ],
+    "no_resume": true
+  },
+  {
+    "id": "ACT_CONSUME_FUEL_MENU",
+    "type": "activity_type",
+    "activity_level": "NO_EXERCISE",
+    "verb": "consuming fuel",
+    "suspendable": false,
+    "based_on": "neither",
     "no_resume": true
   },
   {
@@ -1013,16 +997,6 @@
     "based_on": "speed"
   },
   {
-    "id": "ACT_DATA_HANDLING",
-    "type": "activity_type",
-    "activity_level": "NO_EXERCISE",
-    "verb": "downloading data",
-    "suspendable": false,
-    "auto_needs": true,
-    "no_resume": true,
-    "based_on": "time"
-  },
-  {
     "id": "ACT_MIGRATION_CANCEL",
     "type": "activity_type",
     "activity_level": "NO_EXERCISE",
@@ -1036,7 +1010,6 @@
     "type": "activity_type",
     "activity_level": "NO_EXERCISE",
     "verb": "consuming",
-    "ignored_distractions": [ "hunger", "thirst" ],
     "based_on": "time"
   },
   {
@@ -1105,13 +1078,6 @@
     "no_resume": true,
     "refuel_fires": false,
     "auto_needs": false
-  },
-  {
-    "id": "ACT_REEL_CABLE",
-    "type": "activity_type",
-    "activity_level": "NO_EXERCISE",
-    "verb": "reeling cable",
-    "based_on": "speed"
   },
   {
     "id": "ACT_GENERIC_EOC",

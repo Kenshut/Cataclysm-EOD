@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
-#include <optional>
 #include <set>
 #include <string>
 
@@ -14,6 +13,7 @@
 #include "cursesdef.h"
 #include "debug.h"
 #include "itype.h"
+#include "optional.h"
 #include "options.h"
 #include "output.h"
 #include "string_formatter.h"
@@ -34,99 +34,122 @@ std::string vehicle::disp_name() const
     return string_format( _( "the %s" ), name );
 }
 
-vpart_display::vpart_display()
-    : id( vpart_id::NULL_ID() )
-    , variant( vpart_id::NULL_ID()->variants.begin()->second ) {}
-
-vpart_display::vpart_display( const vehicle_part &vp )
-    : id( vp.info().id )
-    , variant( vp.info().variants.at( vp.variant ) ) {}
-
-std::string vpart_display::get_tileset_id() const
+char vehicle::part_sym( const int p, const bool exact, const bool include_fake ) const
 {
-    std::string res;
-    const size_t variant_size = variant.id.size();
-    res.reserve( 4 + id.str().size() + variant_size );
-    res.append( "vp_" );
-    res.append( id.str() );
-    if( variant_size > 0 ) {
-        res.append( 1, vehicles::variant_separator );
-        res.append( variant.id );
+    if( p < 0 || p >= static_cast<int>( parts.size() ) || parts[p].removed ) {
+        return ' ';
     }
-    return res;
+
+    int displayed_part = exact ? p : part_displayed_at( parts[p].mount, include_fake );
+    if( displayed_part == -1 ) {
+        displayed_part = p;
+    }
+
+    const vehicle_part &vp = parts.at( displayed_part );
+    const vpart_info &vp_info = part_info( displayed_part );
+
+    if( part_flag( displayed_part, VPFLAG_OPENABLE ) && vp.open ) {
+        // open door
+        return '\'';
+    } else {
+        if( vp.is_broken() ) {
+            return vp_info.sym_broken;
+        } else if( vp.variant.empty() ) {
+            return vp_info.sym;
+        } else {
+            const auto vp_symbol = vp_info.symbols.find( vp.variant );
+            if( vp_symbol == vp_info.symbols.end() ) {
+                return vp_info.sym;
+            } else {
+                return vp_symbol->second;
+            }
+        }
+    }
 }
 
-vpart_display vehicle::get_display_of_tile( const point &dp, bool rotate, bool include_fake,
-        bool below_roof, bool roof ) const
+// similar to part_sym(int p) but for use when drawing SDL tiles. Called only by cata_tiles
+// during draw_vpart vector returns at least 1 element, max of 2 elements. If 2 elements the
+// second denotes if it is open or damaged
+std::string vehicle::part_id_string( const int p, char &part_mod ) const
 {
-    const int part_idx = part_displayed_at( dp, include_fake, below_roof, roof );
-    if( part_idx == -1 ) {
-        debugmsg( "no display part at mount (%d, %d)", dp.x, dp.y );
-        return {};
+    part_mod = 0;
+    if( p < 0 || p >= static_cast<int>( parts.size() ) || parts[p].removed ) {
+        return "";
     }
 
-    const vehicle_part &vp = part( part_idx );
-    const vpart_info &vpi = vp.info();
-
-    auto variant_it = vpi.variants.find( vp.variant );
-    if( variant_it == vpi.variants.end() ) {
-        // shouldn't happen but just in case...
-        variant_it = vpi.variants.begin();
-        const std::string fallback_variant = variant_it->first;
-        debugmsg( "part '%s' uses non-existent variant '%s' setting to '%s'",
-                  vpi.id.str(), vp.variant, fallback_variant );
-        vehicle_part &vp_cast = const_cast<vehicle_part &>( vp );
-        vp_cast.variant = fallback_variant;
-    }
-    const vpart_variant &vv = variant_it->second;
-
-    vpart_display ret( vp );
-    ret.is_broken = vp.is_broken();
-    ret.is_open = vp.open && vpi.has_flag( VPFLAG_OPENABLE );
-    ret.color = ret.is_broken ? vpi.color_broken : vpi.color;
-
-    if( ret.is_open ) { // open door (or similar OPENABLE part)
-        ret.symbol = '\'';
-        ret.symbol_curses = '\'';
-    } else {
-        const units::angle direction = rotate ? 270_degrees - face.dir() : 0_degrees;
-        ret.symbol = vv.get_symbol( direction, ret.is_broken );
-        ret.symbol_curses = vpart_variant::get_symbol_curses( ret.symbol );
+    int displayed_part = part_displayed_at( parts[p].mount, true );
+    if( displayed_part < 0 || displayed_part >= static_cast<int>( parts.size() ) ||
+        parts[ displayed_part ].removed ) {
+        return "";
     }
 
-    // curtain color override
-    const int curtains = part_with_feature( dp, VPFLAG_CURTAIN, true );
-    if( curtains >= 0 ) {
-        const vehicle_part &vp_curtain = parts[curtains];
-        if( !vp_curtain.open && part_with_feature( dp, VPFLAG_WINDOW, true ) >= 0 ) {
-            ret.color = vp_curtain.info().color;
-        }
+    const vehicle_part &vp = parts.at( displayed_part );
+
+    if( part_flag( displayed_part, VPFLAG_OPENABLE ) && vp.open ) {
+        // open
+        part_mod = 1;
+    } else if( vp.is_broken() ) {
+        // broken
+        part_mod = 2;
     }
 
-    // armor color override
+    return vp.id.str() + ( vp.variant.empty() ?  "" : "_" + vp.variant );
+}
+
+nc_color vehicle::part_color( const int p, const bool exact, const bool include_fake ) const
+{
+    if( p < 0 || p >= static_cast<int>( parts.size() ) ) {
+        return c_black;
+    }
+
+    nc_color col;
+
+    int parm = -1;
+
+    //If armoring is present and the option is set, it colors the visible part
     if( get_option<bool>( "VEHICLE_ARMOR_COLOR" ) ) {
-        const int parm = part_with_feature( dp, VPFLAG_ARMOR, true );
-        if( parm != -1 ) {
-            const vehicle_part &vp_armor = parts[parm];
-            ret.color = vp_armor.info().color;
+        parm = part_with_feature( p, VPFLAG_ARMOR, false );
+    }
+
+    if( parm >= 0 ) {
+        col = part_info( parm ).color;
+    } else {
+        const int displayed_part = exact ? p : part_displayed_at( parts[p].mount, include_fake );
+
+        if( displayed_part < 0 || displayed_part >= static_cast<int>( parts.size() ) ) {
+            return c_black;
+        }
+        if( parts[displayed_part].blood > 200 ) {
+            col = c_red;
+        } else if( parts[displayed_part].blood > 0 ) {
+            col = c_light_red;
+        } else if( parts[displayed_part].is_broken() ) {
+            col = part_info( displayed_part ).color_broken;
+        } else {
+            col = part_info( displayed_part ).color;
+        }
+
+    }
+
+    if( exact ) {
+        return col;
+    }
+
+    // curtains turn windshields gray
+    int curtains = part_with_feature( p, VPFLAG_CURTAIN, false );
+    if( curtains >= 0 ) {
+        if( part_with_feature( p, VPFLAG_WINDOW, true ) >= 0 && !parts[curtains].open ) {
+            col = part_info( curtains ).color;
         }
     }
 
-    // blood color override
-    if( vp.blood > 200 ) {
-        ret.color = c_red;
-    } else if( vp.blood > 0 ) {
-        ret.color = c_light_red;
+    //Invert colors for cargo parts with stuff in them
+    int cargo_part = part_with_feature( p, VPFLAG_CARGO, true );
+    if( cargo_part > 0 && !get_items( cargo_part ).empty() ) {
+        return invert_color( col );
+    } else {
+        return col;
     }
-
-    // if cargo has items color is inverted
-    const int cargo_part = part_with_feature( dp, VPFLAG_CARGO, true );
-    if( cargo_part >= 0 && !get_items( cargo_part ).empty() ) {
-        ret.has_cargo = true;
-        ret.color = invert_color( ret.color );
-    }
-
-    return ret;
 }
 
 /**
@@ -150,7 +173,7 @@ int vehicle::print_part_list( const catacurses::window &win, int y1, const int m
     int y = y1;
     for( size_t i = 0; i < pl.size(); i++ ) {
         const vehicle_part &vp = parts[ pl [ i ] ];
-        if( !vp.is_real_or_active_fake() ) {
+        if( vp.is_fake && !vp.is_active_fake ) {
             continue;
         }
         if( y >= max_y ) {
@@ -158,6 +181,7 @@ int vehicle::print_part_list( const catacurses::window &win, int y1, const int m
             ++y;
             break;
         }
+
 
         std::string partname = vp.name();
 
@@ -218,7 +242,7 @@ int vehicle::print_part_list( const catacurses::window &win, int y1, const int m
     }
 
     // print the label for this location
-    const std::optional<std::string> label = vpart_position( const_cast<vehicle &>( *this ),
+    const cata::optional<std::string> label = vpart_position( const_cast<vehicle &>( *this ),
             p ).get_label();
     if( label && y <= max_y ) {
         mvwprintz( win, point( 1, y++ ), c_light_red, _( "Label: %s" ), label->c_str() );
@@ -276,11 +300,11 @@ void vehicle::print_vparts_descs( const catacurses::window &win, int max_y, int 
         const nc_color desc_color = vp.is_broken() ? c_dark_gray : c_light_gray;
         // -4 = -2 for left & right padding + -2 for "> "
         int new_lines = 2 + vp.info().format_description( possible_msg, desc_color, width - 4 );
-        if( vp.has_flag( vp_flag::carrying_flag ) ) {
+        if( vp.has_flag( vehicle_part::carrying_flag ) ) {
             possible_msg += _( "  Carrying a vehicle on a rack.\n" );
             new_lines += 1;
         }
-        if( vp.has_flag( vp_flag::carried_flag ) ) {
+        if( vp.has_flag( vehicle_part::carried_flag ) ) {
             possible_msg += string_format( _( "  Part of a %s carried on a rack.\n" ),
                                            vp.carried_name() );
             new_lines += 1;
@@ -313,7 +337,7 @@ std::vector<itype_id> vehicle::get_printable_fuel_types() const
     std::set<itype_id> opts;
     for( const vpart_reference &vpr : get_all_parts() ) {
         const vehicle_part &pt = vpr.part();
-        if( !pt.has_flag( vp_flag::carried_flag ) && pt.is_fuel_store() &&
+        if( !pt.has_flag( vehicle_part::carried_flag ) && pt.is_fuel_store() &&
             !pt.ammo_current().is_null() ) {
             opts.emplace( pt.ammo_current() );
         }
@@ -346,11 +370,12 @@ void vehicle::print_fuel_indicators( const catacurses::window &win, const point 
         return;
     }
     if( !fullsize ) {
-        for( const int part_idx : engines ) {
-            const vehicle_part &vp = parts[part_idx];
+        for( size_t e = 0; e < engines.size(); e++ ) {
             // if only one display, print the first engine that's on and consumes power
-            if( is_engine_on( vp ) && !is_perpetual_type( vp ) && !is_engine_type( vp, fuel_type_muscle ) ) {
-                print_fuel_indicator( win, p, vp.fuel_current(), verbose, desc );
+            if( is_engine_on( e ) &&
+                !( is_perpetual_type( e ) || is_engine_type( e, fuel_type_muscle ) ) ) {
+                print_fuel_indicator( win, p, parts[ engines [ e ] ].fuel_current(), verbose,
+                                      desc );
                 return;
             }
         }
@@ -388,16 +413,16 @@ void vehicle::print_fuel_indicators( const catacurses::window &win, const point 
 void vehicle::print_fuel_indicator( const catacurses::window &win, const point &p,
                                     const itype_id &fuel_type, bool verbose, bool desc )
 {
-    std::map<itype_id, units::energy> fuel_usages;
+    std::map<itype_id, float> fuel_usages;
     print_fuel_indicator( win, p, fuel_type, fuel_usages, verbose, desc );
 }
 
 void vehicle::print_fuel_indicator( const catacurses::window &win, const point &p,
                                     const itype_id &fuel_type,
-                                    std::map<itype_id, units::energy> fuel_usages,
+                                    std::map<itype_id, float> fuel_usages,
                                     bool verbose, bool desc )
 {
-    static constexpr std::array<char, 5> fsyms = { 'E', '\\', '|', '/', 'F' };
+    const char fsyms[5] = { 'E', '\\', '|', '/', 'F' };
     nc_color col_indf1 = c_light_gray;
     int cap = fuel_capacity( fuel_type );
     int f_left = fuel_left( fuel_type );
@@ -408,7 +433,7 @@ void vehicle::print_fuel_indicator( const catacurses::window &win, const point &
     int indf = ( amnt / 20 ) % 5;
     mvwprintz( win, p + point( indf, 0 ), f_color, "%c", fsyms[indf] );
     if( verbose ) {
-        if( debug_mode || cap == 0 ) {
+        if( debug_mode ) {
             mvwprintz( win, p + point( 6, 0 ), f_color, "%d/%d", f_left, cap );
         } else {
             mvwprintz( win, p + point( 6, 0 ), f_color, "%d", f_left * 100 / cap );
@@ -427,10 +452,10 @@ void vehicle::print_fuel_indicator( const catacurses::window &win, const point &
             units = _( "mL" );
         }
         if( fuel_type == itype_battery ) {
-            rate += power_to_energy_bat( net_battery_charge_rate( /* include_reactors = */ true ), 1_hours );
+            rate += power_to_energy_bat( net_battery_charge_rate_w(), 1_hours );
             units = _( "kJ" );
         }
-        if( rate != 0 && cap != 0 ) {
+        if( rate != 0 ) {
             int tank_use = 0;
             nc_color tank_color = c_light_green;
             std::string tank_goal = _( "full" );
@@ -468,6 +493,9 @@ void vehicle::print_speed_gauge( const catacurses::window &win, const point &p, 
 {
     if( spacing < 0 ) {
         spacing = 0;
+    }
+    if( !cruise_on ) {
+        return;
     }
 
     // Color is based on how much vehicle is straining beyond its safe velocity

@@ -1,6 +1,6 @@
 #include "TextStyleCheck.h"
 
-#include <clang-tidy/ClangTidy.h>
+#include <ClangTidy.h>
 #include <clang/AST/ASTContext.h>
 #include <clang/AST/Expr.h>
 #include <clang/AST/ExprCXX.h>
@@ -23,7 +23,11 @@ class TargetInfo;
 
 using namespace clang::ast_matchers;
 
-namespace clang::tidy::cata
+namespace clang
+{
+namespace tidy
+{
+namespace cata
 {
 
 TextStyleCheck::TextStyleCheck( StringRef Name, ClangTidyContext *Context )
@@ -93,12 +97,12 @@ void TextStyleCheck::check( const MatchFinder::MatchResult &Result )
     }
 
     // ignore wide/u16/u32 strings
-    if( ( text.isWide() || text.isUTF16() || text.isUTF32() ) || text.getCharByteWidth() != 1 ) {
+    if( ( !text.isAscii() && !text.isUTF8() ) || text.getCharByteWidth() != 1 ) {
         return;
     }
 
     // disable fix-its for utf8 strings to avoid removing the u8 prefix
-    bool fixit = !text.isUTF8();
+    bool fixit = text.isAscii();
     for( size_t i = 0; fixit && i < text.getNumConcatenated(); ++i ) {
         const SourceLocation &loc = text.getStrTokenLoc( i );
         if( !loc.isMacroID() && SrcMgr.getCharacterData( loc )[0] == 'R' ) {
@@ -154,4 +158,6 @@ void TextStyleCheck::check( const MatchFinder::MatchResult &Result )
             text_style_check_callback );
 }
 
-} // namespace clang::tidy::cata
+} // namespace cata
+} // namespace tidy
+} // namespace clang

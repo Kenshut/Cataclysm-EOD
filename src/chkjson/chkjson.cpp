@@ -21,7 +21,7 @@
 #include "json.h"
 
 // copypasta: file_finder.cpp
-static std::vector<std::string> get_files_from_path_( const std::string &extension,
+static std::vector<std::string> get_files_from_path( const std::string &extension,
         std::string root_path,
         bool recursive_search, bool match_extension )
 {
@@ -86,14 +86,14 @@ static std::vector<std::string> get_files_from_path_( const std::string &extensi
 }
 
 // copypasta: init.cpp
-static void load_object( TextJsonObject &jo )
+static void load_object( JsonObject &jo )
 {
     std::string type = jo.get_string( "type" );
     if( !jo.has_string( "type" ) ) {
         jo.throw_error( "JSON object has no type" );
     }
 }
-static void load_all_from_json( TextJsonIn &jsin )
+static void load_all_from_json( JsonIn &jsin )
 {
     char ch;
     jsin.eat_whitespace();
@@ -101,7 +101,7 @@ static void load_all_from_json( TextJsonIn &jsin )
     ch = jsin.peek();
     if( ch == '{' ) {
         // find type and dispatch single object
-        TextJsonObject jo = jsin.get_object();
+        JsonObject jo = jsin.get_object();
         load_object( jo );
         jo.finish();
         // if there's anything else in the file, it's an error.
@@ -124,7 +124,7 @@ static void load_all_from_json( TextJsonIn &jsin )
                 err << ch << "', not '{'";
                 jsin.error( err.str() );
             }
-            TextJsonObject jo = jsin.get_object();
+            JsonObject jo = jsin.get_object();
             load_object( jo );
             jo.finish();
         }
@@ -140,7 +140,7 @@ static void load_json_dir( const std::string &dirname )
 {
     // get a list of all files in the directory
     std::vector<std::string> dir =
-        get_files_from_path_( ".json", dirname, true, true );
+        get_files_from_path( ".json", dirname, true, true );
     // iterate over each file
     std::vector<std::string>::iterator it;
     for( it = dir.begin(); it != dir.end(); it++ ) {
@@ -156,7 +156,7 @@ static void load_json_dir( const std::string &dirname )
         infile.close();
         // parse it
         try {
-            TextJsonIn jsin( iss );
+            JsonIn jsin( iss );
             load_all_from_json( jsin );
         } catch( const JsonError &err ) {
             throw std::runtime_error( *it + ": " + err.what() );
@@ -166,15 +166,11 @@ static void load_json_dir( const std::string &dirname )
 
 int main( int, char ** )
 {
-    char *result = setlocale( LC_ALL, "" );
-    if( !result ) {
-        std::cerr << "Failed to set locale\n";
-        return 1;
-    }
+    setlocale( LC_ALL, "" );
     try {
         load_json_dir( "data/json" );
     } catch( const std::exception &err ) {
-        std::cerr << "Error: " << err.what() << "\n";
+        printf( "Error: %s\n", err.what() );
         return 1;
     }
     return 0;

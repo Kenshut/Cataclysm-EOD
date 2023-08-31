@@ -9,71 +9,87 @@
 #include "memory_fast.h"
 #include "point.h" // IWYU pragma: keep
 
+class JsonOut;
+class JsonIn;
 class JsonObject;
 class JsonOut;
-class JsonValue;
 
-struct ter_t;
-using ter_str_id = string_id<ter_t>;
+struct memorized_terrain_tile {
+    std::string tile;
+    int subtile;
+    int rotation;
 
-class memorized_tile
-{
-    public:
-        char32_t symbol = 0;
+    inline bool operator==( const memorized_terrain_tile &rhs ) const {
+        return ( rotation == rhs.rotation ) && ( subtile == rhs.subtile ) && ( tile == rhs.tile );
+    }
 
-        const std::string &get_ter_id() const;
-        const std::string &get_dec_id() const;
-        void set_ter_id( std::string_view id );
-        void set_dec_id( std::string_view id );
-
-        int get_ter_rotation() const;
-        void set_ter_rotation( int rotation );
-        int get_dec_rotation() const;
-        void set_dec_rotation( int rotation );
-
-        int get_ter_subtile() const;
-        void set_ter_subtile( int subtile );
-        int get_dec_subtile() const;
-        void set_dec_subtile( int subtile );
-
-        bool operator==( const memorized_tile &rhs ) const;
-        bool operator!=( const memorized_tile &rhs ) const {
-            return !( *this == rhs );
-        }
-    private:
-        friend struct mm_submap; // serialization needs access to private members
-        ter_str_id ter_id;       // terrain tile id
-        std::string dec_id;      // decoration tile id (furniture, vparts ...)
-        int8_t ter_rotation = 0;
-        int8_t dec_rotation = 0;
-        int8_t ter_subtile = 0;
-        int8_t dec_subtile = 0;
+    inline bool operator!=( const memorized_terrain_tile &rhs ) const {
+        return !( *this == rhs );
+    }
 };
 
 /** Represent a submap-sized chunk of tile memory. */
 struct mm_submap {
     public:
-        static const memorized_tile default_tile;
+        static const memorized_terrain_tile default_tile;
+        static const int default_symbol;
 
-        mm_submap() = default;
+        mm_submap();
         explicit mm_submap( bool make_valid );
 
-        // @returns true if mm_submap is empty; empty submaps are skipped during saving.
-        bool is_empty() const;
-        // @returns true if mm_submap is valid, i.e. not returned from an uninitialized region.
-        bool is_valid() const;
+        /** Whether this mm_submap is empty. Empty submaps are skipped during saving. */
+        bool is_empty() const {
+            return tiles.empty() && symbols.empty();
+        }
 
-        const memorized_tile &get_tile( const point &p ) const;
-        void set_tile( const point &p, const memorized_tile &value );
+        // Whether this mm_submap is invalid, i.e. returned from an uninitialized region.
+        bool is_valid() const {
+            return valid;
+        }
+
+        inline const memorized_terrain_tile &tile( const point &p ) const {
+            if( tiles.empty() ) {
+                return default_tile;
+            } else {
+                return tiles[p.y * SEEX + p.x];
+            }
+        }
+
+        inline void set_tile( const point &p, const memorized_terrain_tile &value ) {
+            if( tiles.empty() ) {
+                // call 'reserve' first to force allocation of exact size
+                tiles.reserve( SEEX * SEEY );
+                tiles.resize( SEEX * SEEY, default_tile );
+            }
+            tiles[p.y * SEEX + p.x] = value;
+        }
+
+        inline int symbol( const point &p ) const {
+            if( symbols.empty() ) {
+                return default_symbol;
+            } else {
+                return symbols[p.y * SEEX + p.x];
+            }
+        }
+
+        inline void set_symbol( const point &p, int value ) {
+            if( symbols.empty() ) {
+                // call 'reserve' first to force allocation of exact size
+                symbols.reserve( SEEX * SEEY );
+                symbols.resize( SEEX * SEEY, default_symbol );
+            }
+            symbols[p.y * SEEX + p.x] = value;
+        }
 
         void serialize( JsonOut &jsout ) const;
-        void deserialize( int version, const JsonArray &ja );
+        void deserialize( JsonIn &jsin );
 
     private:
         // NOLINTNEXTLINE(cata-serialize)
-        std::vector<memorized_tile> tiles; // holds either 0 or SEEX*SEEY elements
+        std::vector<memorized_terrain_tile> tiles; // holds either 0 or SEEX*SEEY elements
         // NOLINTNEXTLINE(cata-serialize)
-        bool valid = true;
+        std::vector<int> symbols; // holds either 0 or SEEX*SEEY elements
+        bool valid = true; // NOLINT(cata-serialize)
 };
 
 /**
@@ -89,11 +105,15 @@ struct mm_region {
     bool is_empty() const;
 
     void serialize( JsonOut &jsout ) const;
-    void deserialize( const JsonValue &ja );
+    void deserialize( JsonIn &jsin );
 };
 
 /**
  * Manages map tiles memorized by the avatar.
+ * Note that there are 2 separate memories in here:
+ *   1. memorized graphic tiles (for TILES with a tileset)
+ *   2. memorized symbols (for CURSES or TILES in ascii mode)
+ * TODO: combine tiles and curses. Also, split map memory into layers (terrain/furn/vpart/...)?
  */
 class map_memory
 {
@@ -115,6 +135,9 @@ class map_memory
         /** Load memorized submaps around given global map square pos. */
         void load( const tripoint &pos );
 
+        /** Load legacy memory file. TODO: remove after 0.F (or whatever BN will have instead). */
+        void load_legacy( JsonIn &jsin );
+
         /** Save memorized submaps to disk, drop ones far from given global map square pos. */
         bool save( const tripoint &pos );
 
@@ -128,40 +151,39 @@ class map_memory
         bool prepare_region( const tripoint &p1, const tripoint &p2 );
 
         /**
+         * Memorizes given tile, overwriting old value.
+         * @param pos tile position, in global ms coords.
+         */
+        void memorize_tile( const tripoint &pos, const std::string &ter,
+                            int subtile, int rotation );
+        /**
          * Returns memorized tile.
          * @param pos tile position, in global ms coords.
          */
-        const memorized_tile &get_tile( const tripoint &pos ) const;
+        const memorized_terrain_tile &get_tile( const tripoint &pos ) const;
 
         /**
-         * Memorizes terrain at \p pos, overwriting old terrain values.
-         * @param pos tile position, in global ms coords.
-         */
-        void set_tile_terrain( const tripoint &pos, std::string_view id, int subtile, int rotation );
-
-        /**
-         * Memorizes decoraiton at \p pos, overwriting old decoration values.
-         * @param pos tile position, in global ms coords.
-         */
-        void set_tile_decoration( const tripoint &pos, std::string_view id, int subtile, int rotation );
-
-        /**
-         * Memorizes symbol at \p pos, overwriting old symbol.
+         * Memorizes given symbol, overwriting old value.
          * @param pos tile position, in global ms coords.
         */
-        void set_tile_symbol( const tripoint &pos, char32_t symbol );
+        void memorize_symbol( const tripoint &pos, int symbol );
 
         /**
-         * Clears memorized decorations and symbol.
+         * Returns memorized symbol.
          * @param pos tile position, in global ms coords.
-         * @param prefix if non-empty only clears if decoration starts with this prefix
          */
-        void clear_tile_decoration( const tripoint &pos, std::string_view prefix = "" );
+        int get_symbol( const tripoint &pos ) const;
+
+        /**
+         * Clears memorized tile and symbol.
+         * @param pos tile position, in global ms coords.
+         */
+        void clear_memorized_tile( const tripoint &pos );
 
     private:
         std::map<tripoint, shared_ptr_fast<mm_submap>> submaps;
 
-        mutable std::map<int, std::vector<shared_ptr_fast<mm_submap>>> cached;
+        std::vector<shared_ptr_fast<mm_submap>> cached;
         tripoint cache_pos;
         point cache_size;
 

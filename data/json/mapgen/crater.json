@@ -9,6 +9,7 @@
     "volume": "10 L",
     "price": 0,
     "to_hit": -5,
+    "bashing": 20,
     "material": [ "steel" ],
     "symbol": "(",
     "color": "light_red",
@@ -22,8 +23,7 @@
       "no_deactivate_msg": "You've already activated the bomb - clear the area immediately!",
       "explosion": { "power": 25000, "max_noise": 0 }
     },
-    "flags": [ "BOMB", "TRADER_AVOID" ],
-    "melee_damage": { "bash": 20 }
+    "flags": [ "BOMB", "TRADER_AVOID" ]
   },
   {
     "om_terrain": "crater_core",

@@ -2,6 +2,7 @@
  */
 
 // IWYU pragma: no_include <sys/signal.h>
+#include <clocale>
 #include <algorithm>
 #include <array>
 #include <clocale>
@@ -22,19 +23,13 @@
 #else
 #include <csignal>
 #endif
-
-#include <flatbuffers/util.h>
-
 #include "cached_options.h"
-#include "cata_path.h"
 #include "color.h"
 #include "compatibility.h"
 #include "crash.h"
 #include "cursesdef.h"
 #include "debug.h"
 #include "do_turn.h"
-#include "event.h"
-#include "event_bus.h"
 #include "filesystem.h"
 #include "game.h"
 #include "game_constants.h"
@@ -127,10 +122,6 @@ int start_logger( const char *app_name )
 namespace
 {
 
-#if defined(_WIN32)
-// Used only if AttachConsole() works
-FILE *CONOUT;
-#endif
 void exit_handler( int s )
 {
     const int old_timeout = inp_mngr.get_timeout();
@@ -163,10 +154,10 @@ struct arg_handler {
     //! consumed by the call or -1 to indicate that a required argument was missing.
     using handler_method = std::function<int ( int, const char ** )>;
 
-    std::string_view flag;  //!< The commandline parameter to handle (e.g., "--seed").
-    std::string_view param_documentation;  //!< Human readable description of this arguments parameter.
-    std::string_view documentation;  //!< Human readable documentation for this argument.
-    std::string_view help_group; //!< Section of the help message in which to include this argument.
+    const char *flag;  //!< The commandline parameter to handle (e.g., "--seed").
+    const char *param_documentation;  //!< Human readable description of this arguments parameter.
+    const char *documentation;  //!< Human readable documentation for this argument.
+    const char *help_group; //!< Section of the help message in which to include this argument.
     int num_args; //!< How many further arguments are expected for this parameter (usually 0 or 1).
     handler_method handler;  //!< The callback to be invoked when this argument is encountered.
 };
@@ -178,28 +169,40 @@ void printHelpMessage( const FirstPassArgs &first_pass_arguments,
     // Group all arguments by help_group.
     std::multimap<std::string, const arg_handler *> help_map;
     for( const arg_handler &handler : first_pass_arguments ) {
-        help_map.emplace( handler.help_group, &handler );
+        std::string help_group;
+        if( handler.help_group ) {
+            help_group = handler.help_group;
+        }
+        help_map.emplace( help_group, &handler );
     }
     for( const arg_handler &handler : second_pass_arguments ) {
-        help_map.emplace( handler.help_group, &handler );
+        std::string help_group;
+        if( handler.help_group ) {
+            help_group = handler.help_group;
+        }
+        help_map.emplace( help_group, &handler );
     }
 
-    std::cout << "Command line parameters:\n";
+    printf( "Command line parameters:\n" );
     std::string current_help_group;
     for( std::pair<const std::string, const arg_handler *> &help_entry : help_map ) {
         if( help_entry.first != current_help_group ) {
             current_help_group = help_entry.first;
-            std::cout << "\n" << current_help_group << "\n";
+            printf( "\n%s\n", current_help_group.c_str() );
         }
 
         const arg_handler *handler = help_entry.second;
-        std::cout << handler->flag << " " << handler->param_documentation;
-        if( !handler->documentation.empty() ) {
-            std::cout << "\n    " << handler->documentation << "\n";
+        printf( "%s", handler->flag );
+        if( handler->param_documentation ) {
+            printf( " %s", handler->param_documentation );
+        }
+        printf( "\n" );
+        if( handler->documentation ) {
+            printf( "    %s\n", handler->documentation );
         }
     }
-    std::cout << std::endl;
 }
+
 
 /**
  * Displays current application version and compile options values
@@ -228,16 +231,18 @@ void printVersionMessage()
             PATH_INFO::user_dir().c_str() );
 }
 
-void process_args( const char **argv, int argc, const std::vector<arg_handler> &arg_handlers )
+template<typename ArgHandlerContainer>
+void process_args( const char **argv, int argc, const ArgHandlerContainer &arg_handlers )
 {
     while( argc ) {
         bool arg_handled = false;
         for( const arg_handler &handler : arg_handlers ) {
-            if( handler.flag == argv[0] ) {
+            if( !strcmp( argv[0], handler.flag ) ) {
                 argc--;
                 argv++;
                 if( argc < handler.num_args ) {
-                    std::cout << "Missing expected argument to command line parameter " << handler.flag << std::endl;
+                    printf( "Missing expected argument to command line parameter %s\n",
+                            handler.flag );
                     std::exit( 1 );
                 }
                 int args_consumed = handler.handler( argc, argv );
@@ -263,6 +268,8 @@ struct cli_opts {
     int seed = time( nullptr );
     bool verifyexit = false;
     bool check_mods = false;
+    std::string dump;
+    dump_mode dmode = dump_mode::TSV;
     std::vector<std::string> opts;
     std::string world; /** if set try to load first save in this world on startup */
     bool disable_ascii_art = false;
@@ -272,11 +279,11 @@ cli_opts parse_commandline( int argc, const char **argv )
 {
     cli_opts result;
 
-    constexpr std::string_view section_default;
-    constexpr std::string_view section_map_sharing = "Map sharing";
-    constexpr std::string_view section_user_directory = "User directories";
-    constexpr std::string_view section_accessibility = "Accessibility";
-    const std::vector<arg_handler> first_pass_arguments = {{
+    const char *section_default = nullptr;
+    const char *section_map_sharing = "Map sharing";
+    const char *section_user_directory = "User directories";
+    const char *section_accessibility = "Accessibility";
+    const std::array<arg_handler, 13> first_pass_arguments = {{
             {
                 "--seed", "<string of letters and or numbers>",
                 "Sets the random number generator's seed value",
@@ -289,7 +296,7 @@ cli_opts parse_commandline( int argc, const char **argv )
                 }
             },
             {
-                "--jsonverify", {},
+                "--jsonverify", nullptr,
                 "Checks the CDDA json files",
                 section_default,
                 0,
@@ -309,6 +316,33 @@ cli_opts parse_commandline( int argc, const char **argv )
                     for( int i = 0; i < n; ++i )
                     {
                         result.opts.emplace_back( params[ i ] );
+                    }
+                    return 0;
+                }
+            },
+            {
+                "--dump-stats", "<what> [mode = TSV] [opts…]",
+                "Dumps item stats",
+                section_default,
+                1,
+                [&result]( int n, const char **params ) -> int {
+                    test_mode = true;
+                    result.dump = params[ 0 ];
+                    for( int i = 2; i < n; ++i )
+                    {
+                        result.opts.emplace_back( params[ i ] );
+                    }
+                    if( n >= 2 )
+                    {
+                        if( !strcmp( params[ 1 ], "TSV" ) ) {
+                            result.dmode = dump_mode::TSV;
+                            return 0;
+                        } else if( !strcmp( params[ 1 ], "HTML" ) ) {
+                            result.dmode = dump_mode::HTML;
+                            return 0;
+                        } else {
+                            return -1;
+                        }
                     }
                     return 0;
                 }
@@ -336,7 +370,7 @@ cli_opts parse_commandline( int argc, const char **argv )
                 }
             },
             {
-                "--shared", {},
+                "--shared", nullptr,
                 "Activates the map-sharing mode",
                 section_map_sharing,
                 0,
@@ -379,7 +413,7 @@ cli_opts parse_commandline( int argc, const char **argv )
                 }
             },
             {
-                "--competitive", {},
+                "--competitive", nullptr,
                 "Instructs map-sharing code to disable access to the in-game cheat functions",
                 section_map_sharing,
                 0,
@@ -401,7 +435,7 @@ cli_opts parse_commandline( int argc, const char **argv )
                 }
             },
             {
-                "--disable-ascii-art", {},
+                "--disable-ascii-art", nullptr,
                 "Disable aesthetic ascii art in menus and descriptions.",
                 section_accessibility,
                 0,
@@ -415,9 +449,9 @@ cli_opts parse_commandline( int argc, const char **argv )
 
     // The following arguments are dependent on one or more of the previous flags and are run
     // in a second pass.
-    const std::vector<arg_handler> second_pass_arguments = {{
+    const std::array<arg_handler, 9> second_pass_arguments = {{
             {
-                "--worldmenu", {},
+                "--worldmenu", nullptr,
                 "Enables the world menu in the map-sharing code",
                 section_map_sharing,
                 0,
@@ -429,7 +463,7 @@ cli_opts parse_commandline( int argc, const char **argv )
             {
                 "--datadir", "<directory name>",
                 "Sub directory from which game data is loaded",
-                {},
+                nullptr,
                 1,
                 []( int, const char **params ) -> int {
                     PATH_INFO::set_datadir( params[0] );
@@ -489,7 +523,7 @@ cli_opts parse_commandline( int argc, const char **argv )
             {
                 "--autopickupfile", "<filename>",
                 "Name of the autopickup options file within the configdir",
-                {},
+                nullptr,
                 1,
                 []( int, const char **params ) -> int {
                     PATH_INFO::set_autopickup( params[0] );
@@ -499,7 +533,7 @@ cli_opts parse_commandline( int argc, const char **argv )
             {
                 "--motdfile", "<filename>",
                 "Name of the message of the day file within the motd directory",
-                {},
+                nullptr,
                 1,
                 []( int, const char **params ) -> int {
                     PATH_INFO::set_motd( params[0] );
@@ -532,15 +566,7 @@ cli_opts parse_commandline( int argc, const char **argv )
 bool assure_essential_dirs_exist()
 {
     using namespace PATH_INFO;
-    std::vector<std::string> essential_paths{
-        config_dir(),
-        savedir(),
-        templatedir(),
-        user_font(),
-        user_sound().get_unrelative_path().u8string(),
-        user_gfx().get_unrelative_path().u8string()
-    };
-    for( const std::string &path : essential_paths ) {
+    for( const std::string &path : std::vector<std::string> { { config_dir(), savedir(), templatedir(), user_font(), user_sound(), user_gfx() } } ) {
         if( !assure_dir_exist( path ) ) {
             popup( _( "Unable to make directory \"%s\".  Check permissions." ), path );
             return false;
@@ -566,28 +592,7 @@ int main( int argc, const char *argv[] )
     ordered_static_globals();
     init_crash_handlers();
     reset_floating_point_mode();
-#if defined(FLATBUFFERS_LOCALE_INDEPENDENT) && (FLATBUFFERS_LOCALE_INDEPENDENT > 0)
-    flatbuffers::ClassicLocale::Get();
-#endif
 
-    on_out_of_scope json_member_reporting_guard{ [] {
-            // Disable reporting unvisited members if stack unwinding leaves main early.
-            Json::globally_report_unvisited_members( false );
-        } };
-
-#if defined(_WIN32) and defined(TILES)
-    const HANDLE std_output { GetStdHandle( STD_OUTPUT_HANDLE ) }, std_error { GetStdHandle( STD_ERROR_HANDLE ) };
-    if( std_output != INVALID_HANDLE_VALUE and std_error != INVALID_HANDLE_VALUE ) {
-        if( AttachConsole( ATTACH_PARENT_PROCESS ) ) {
-            if( std_output == nullptr ) {
-                freopen_s( &CONOUT, "CONOUT$", "w", stdout );
-            }
-            if( std_error == nullptr ) {
-                freopen_s( &CONOUT, "CONOUT$", "w", stderr );
-            }
-        }
-    }
-#endif
 #if defined(__ANDROID__)
     // Start the standard output logging redirector
     start_logger( "cdda" );
@@ -595,6 +600,9 @@ int main( int argc, const char *argv[] )
     // On Android first launch, we copy all data files from the APK into the app's writeable folder so std::io stuff works.
     // Use the external storage so it's publicly modifiable data (so users can mess with installed data, save games etc.)
     std::string external_storage_path( SDL_AndroidGetExternalStoragePath() );
+    if( external_storage_path.back() != '/' ) {
+        external_storage_path += '/';
+    }
 
     PATH_INFO::init_base_path( external_storage_path );
 #else
@@ -612,7 +620,7 @@ int main( int argc, const char *argv[] )
 #   if defined(USE_HOME_DIR) || defined(USE_XDG_DIR)
     PATH_INFO::init_user_dir( "" );
 #   else
-    PATH_INFO::init_user_dir( "." );
+    PATH_INFO::init_user_dir( "./" );
 #   endif
 #endif
     PATH_INFO::set_standard_filenames();
@@ -697,25 +705,25 @@ int main( int argc, const char *argv[] )
             DebugLog( D_ERROR, DC_ALL ) << "Error while initializing the interface: " << err.what() << "\n";
             return 1;
         }
-    } else if( cli.check_mods ) {
-        get_options().init();
-        get_options().load();
     }
 
-    set_language_from_options();
+    set_language();
 
     rng_set_engine_seed( cli.seed );
 
     game_ui::init_ui();
 
     g = std::make_unique<game>();
-
     // First load and initialize everything that does not
     // depend on the mods.
     try {
         g->load_static_data();
         if( cli.verifyexit ) {
             exit_handler( 0 );
+        }
+        if( !cli.dump.empty() ) {
+            init_colors();
+            exit( g->dump_stats( cli.dump, cli.dmode, cli.opts ) ? 0 : 1 );
         }
         if( cli.check_mods ) {
             init_colors();
@@ -736,13 +744,9 @@ int main( int argc, const char *argv[] )
 
     // Now we do the actual game.
 
-#if defined(DEBUG_CURSES_CURSOR)
-    catacurses::curs_set( 2 );
-#else
     // I have no clue what this comment is on about
     // Any value works well enough for debugging at least
     catacurses::curs_set( 0 ); // Invisible cursor here, because MAPBUFFER.load() is crash-prone
-#endif
 
 #if !defined(_WIN32)
     struct sigaction sigIntHandler;
@@ -755,7 +759,7 @@ int main( int argc, const char *argv[] )
 #if defined(LOCALIZE)
     if( get_option<std::string>( "USE_LANG" ).empty() && !SystemLocale::Language().has_value() ) {
         select_language();
-        set_language_from_options();
+        set_language();
     }
 #endif
     replay_buffered_debugmsg_prompts();
@@ -765,18 +769,23 @@ int main( int argc, const char *argv[] )
         return 0;
     }
 
-    main_menu::queued_world_to_load = std::move( cli.world );
-
     get_help().load();
 
     while( true ) {
-        main_menu menu;
-        if( !menu.opening_screen() ) {
-            break;
+        if( !cli.world.empty() ) {
+            if( !g->load( cli.world ) ) {
+                break;
+            }
+            cli.world.clear(); // ensure quit returns to opening screen
+
+        } else {
+            main_menu menu;
+            if( !menu.opening_screen() ) {
+                break;
+            }
         }
 
         shared_ptr_fast<ui_adaptor> ui = g->create_or_get_main_ui_adaptor();
-        get_event_bus().send<event_type::game_begin>( getVersionString() );
         while( !do_turn() );
     }
 

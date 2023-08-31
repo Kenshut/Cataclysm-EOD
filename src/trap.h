@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "color.h"
-#include "flat_set.h"
 #include "magic.h"
 #include "translations.h"
 #include "type_id.h"
@@ -139,11 +138,11 @@ struct trap {
         trap_function act;
         translation name_;
 
-        std::optional<translation> memorial_male;
-        std::optional<translation> memorial_female;
+        cata::optional<translation> memorial_male;
+        cata::optional<translation> memorial_female;
 
-        std::optional<translation> trigger_message_u;
-        std::optional<translation> trigger_message_npc;
+        cata::optional<translation> trigger_message_u;
+        cata::optional<translation> trigger_message_npc;
 
         cata::flat_set<flag_id> _flags;
 
@@ -308,7 +307,7 @@ struct trap {
         /**
          * Loads this specific trap.
          */
-        void load( const JsonObject &jo, std::string_view src );
+        void load( const JsonObject &jo, const std::string &src );
 
         std::string debug_describe() const;
 

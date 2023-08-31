@@ -59,7 +59,7 @@
       { "item": "waist_apron_long", "prob": 5 },
       { "item": "waist_apron_short", "prob": 5 },
       { "item": "apron_cotton", "variant": "camo_apron_cotton", "prob": 10 },
-      { "item": "apron_cotton", "variant": "maid_apron", "prob": 15 },
+      { "item": "apron_cotton", "variant": "maid_apron", "prob": 20 },
       { "item": "apron_cotton", "variant": "gothic_apron", "prob": 15 },
       { "item": "waist_apron_short", "variant": "camo_apron_cotton", "prob": 5 },
       { "item": "waist_apron_short", "variant": "maid_apron", "prob": 10 },
@@ -93,7 +93,6 @@
       { "item": "cloak_leather", "prob": 20 },
       { "item": "cloak_wool", "prob": 10 },
       { "item": "pride_flag", "prob": 2 },
-      { "item": "national_flag", "prob": 1 },
       { "item": "state_flag", "prob": 1 }
     ]
   },
@@ -272,7 +271,7 @@
     "entries": [
       { "item": "santa_pants", "prob": 20 },
       { "item": "santa_shorts", "prob": 10 },
-      { "item": "pants", "variant": "pants_flag", "prob": 15 },
+      { "item": "flag_pants", "prob": 15 },
       { "item": "trousers_ninja", "prob": 10 },
       { "item": "pants_army", "prob": 10 },
       { "item": "striped_pants", "prob": 15 },
@@ -299,7 +298,7 @@
     "//": "shirts for costumes, cosplay and costume parties",
     "subtype": "distribution",
     "entries": [
-      { "item": "tank_top", "variant": "tank_top_cheerleader", "prob": 25 },
+      { "item": "cheerleader_top", "prob": 25 },
       { "item": "cheerleader_top_short", "prob": 35 },
       { "item": "rashguard", "variant": "lifeguard_rashguard_shirt", "prob": 10 },
       { "item": "rashguard", "variant": "skull_rashguard_shirt", "prob": 10 },
@@ -329,7 +328,6 @@
       { "item": "felinesuit", "prob": 10 },
       { "item": "bondage_suit", "prob": 15 },
       { "item": "dinosuit", "prob": 10 },
-      { "item": "sharksuit", "prob": 10 },
       { "item": "beekeeping_suit", "prob": 5 },
       { "item": "zentai", "prob": 5 }
     ]
@@ -371,7 +369,7 @@
     "entries": [
       { "item": "flag_jumpsuit", "prob": 25 },
       { "item": "flag_shirt", "prob": 25 },
-      { "item": "pants", "variant": "pants_flag", "prob": 25 },
+      { "item": "flag_pants", "prob": 25 },
       { "item": "american_flag", "prob": 25 },
       { "group": "costume_independence_undergarments_women", "prob": 25 },
       { "item": "rashguard", "variant": "flag_rashguard_shirt", "prob": 15 },
@@ -408,7 +406,7 @@
     "id": "costume_cheerleader_set",
     "//": "clothing set for a normal cheerleader outfit",
     "subtype": "collection",
-    "entries": [ { "item": "tank_top", "variant": "tank_top_cheerleader", "prob": 100 }, { "item": "cheerleader_skirt", "prob": 100 } ]
+    "entries": [ { "item": "cheerleader_top", "prob": 100 }, { "item": "cheerleader_skirt", "prob": 100 } ]
   },
   {
     "type": "item_group",
@@ -421,18 +419,20 @@
     "id": "costume_weapons",
     "type": "item_group",
     "items": [
-      [ "cutlass_inferior", 1 ],
-      [ "broadsword_inferior", 1 ],
-      [ "nodachi_inferior", 1 ],
-      [ "zweihander_inferior", 1 ],
-      [ "longsword_inferior", 1 ],
-      [ "katana_inferior", 1 ],
+      [ "cutlass", 1 ],
+      [ "broadsword", 1 ],
+      [ "nodachi", 1 ],
+      [ "zweihander", 1 ],
+      [ "longsword", 1 ],
+      [ "katana", 1 ],
       [ "kris", 1 ],
-      [ "rapier_fake", 1 ],
-      [ "cavalry_sabre_fake", 1 ],
+      [ "rapier", 1 ],
+      [ "cavalry_sabre", 1 ],
       [ "glaive", 1 ],
+      [ "naginata", 1 ],
       [ "naginata_fake", 5 ],
       [ "naginata_inferior", 3 ],
+      [ "estoc", 2 ],
       [ "estoc_inferior", 4 ],
       [ "estoc_fake", 6 ],
       [ "qiang", 3 ],
@@ -444,9 +444,12 @@
       [ "zweihander_inferior", 8 ],
       [ "cutlass_fake", 4 ],
       [ "cutlass_inferior", 8 ],
+      [ "jian", 2 ],
       [ "jian_fake", 4 ],
       [ "jian_inferior", 8 ],
+      [ "scimitar", 4 ],
       [ "scimitar_fake", 8 ],
+      [ "arming_sword", 4 ],
       [ "arming_sword_fake", 8 ],
       [ "broadsword_fake", 4 ],
       [ "broadsword_inferior", 8 ],

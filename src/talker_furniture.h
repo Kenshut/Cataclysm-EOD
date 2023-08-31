@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "coordinates.h"
+#include "npc.h"
 #include "talker.h"
 #include "type_id.h"
 
@@ -17,7 +18,7 @@ struct tripoint;
 /*
  * Talker wrapper class for furniture
  */
-class talker_furniture: public talker_cloner<talker_furniture>
+class talker_furniture: public talker
 {
     public:
         explicit talker_furniture( computer *new_me ): me_comp( new_me ) {

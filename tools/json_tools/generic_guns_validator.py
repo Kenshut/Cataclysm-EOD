@@ -11,7 +11,6 @@ GG_DIR = os.path.normpath(os.path.join(
 # We might want to also warn about grenades and rockets, but leaving them
 # whitelisted for now.
 AMMO_TYPE_WHITELIST = {
-    'butane',
     '40x46mm',  # Grenade
     'atgm',  # Rocket
     'barb',
@@ -27,13 +26,10 @@ AMMO_TYPE_WHITELIST = {
     'm235',  # Rocket
     'metal_rail',
     'nail',
-    'nitrox',
     'nuts_bolts',
-    'oxygen',
     'paintball',
     'pebble',
     'plasma',
-    'propane',
     'rock',
     'signal_flare',
     'methanol_fuelcell',
@@ -54,27 +50,22 @@ ID_WHITELIST = {
     'l_bak_223',
     'pneumatic_shotgun',
     'rifle_223',
+    'rifle_3006',
+    'rifle_308',
+    'surv_carbine_223',
+    'feral_militia_gun',
+    'feral_jackboot_gun',
+    'feral_m9',
     # Magazines
     '223_speedloader5',
     'coin_wrapper',
     'bio_shotgun_gun',
-    'gasfilter_med',
-    'gasfilter_sm',
-    "rebreather_cartridge",
-    "rebreather_cartridge_air",
-    "rebreather_cartridge_o2",
-    "rebreather_cartridge_regen"
 }
 
 
 def items_of_type(data, type):
     result = []
     for i in data:
-        if 'type' not in i:
-            dump = util.CDDAJSONWriter(i).dumps()
-            print("json entry has no 'type' field: " + dump)
-
-            sys.exit(1)
         if i['type'] == type:
             result.append(i)
     return result

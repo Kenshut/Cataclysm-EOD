@@ -52,6 +52,7 @@
     "price": 58000,
     "price_postapoc": 4000,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "kevlar_layered", "leather" ],
     "symbol": "[",
     "looks_like": "hood_rain",
@@ -61,8 +62,7 @@
     "environmental_protection": 3,
     "techniques": [ "WBLOCK_1" ],
     "flags": [ "VARSIZE", "WATERPROOF", "STURDY", "OUTER" ],
-    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ],
-    "melee_damage": { "bash": 10 }
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ]
   },
   {
     "id": "hood_wsurvivor",
@@ -75,6 +75,7 @@
     "price": 58000,
     "price_postapoc": 3500,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "kevlar_layered", "fur" ],
     "symbol": "[",
     "looks_like": "hood_survivor",
@@ -83,8 +84,7 @@
     "material_thickness": 5,
     "environmental_protection": 5,
     "flags": [ "VARSIZE", "WATERPROOF", "STURDY", "OUTER" ],
-    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ],
-    "melee_damage": { "bash": 10 }
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ]
   },
   {
     "id": "xl_hood_wsurvivor",
@@ -136,6 +136,7 @@
     "price": 58000,
     "price_postapoc": 3000,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "kevlar_layered", "cotton" ],
     "symbol": "[",
     "looks_like": "hood_survivor",
@@ -144,8 +145,7 @@
     "material_thickness": 4,
     "environmental_protection": 3,
     "flags": [ "VARSIZE", "WATERPROOF", "STURDY", "OUTER" ],
-    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ],
-    "melee_damage": { "bash": 10 }
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ]
   },
   {
     "id": "xl_hood_lsurvivor",
@@ -211,6 +211,7 @@
     "price": 58000,
     "price_postapoc": 1500,
     "to_hit": -1,
+    "bashing": 10,
     "material": [ "kevlar", "plastic", "neoprene" ],
     "symbol": "[",
     "looks_like": "wetsuit_hood",
@@ -219,8 +220,7 @@
     "material_thickness": 3,
     "environmental_protection": 10,
     "flags": [ "VARSIZE", "WATER_FRIENDLY", "STURDY", "OUTER", "SOFT" ],
-    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ],
-    "melee_damage": { "bash": 10 }
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ]
   },
   {
     "id": "helmet_scavenger",

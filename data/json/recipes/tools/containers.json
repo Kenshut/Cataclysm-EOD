@@ -49,13 +49,12 @@
     "activity_level": "MODERATE_EXERCISE",
     "result": "metal_tank",
     "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
+    "subcategory": "CSC_OTHER_MATERIALS",
     "skill_used": "fabrication",
     "difficulty": 1,
-    "time": "50 m",
+    "time": "20 m",
     "autolearn": true,
-    "using": [ [ "welding_standard", 150 ] ],
-    "//": "150cm weld",
+    "using": [ [ "welding_standard", 5 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_welding_basic" }, { "proficiency": "prof_welding" } ],
     "qualities": [ { "id": "HAMMER", "level": 2 } ],
     "components": [ [ [ "sheet_metal", 1 ] ] ]
@@ -65,20 +64,19 @@
     "activity_level": "MODERATE_EXERCISE",
     "result": "metal_tank_little",
     "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
+    "subcategory": "CSC_OTHER_MATERIALS",
     "skill_used": "fabrication",
     "difficulty": 1,
     "time": "20 m",
     "autolearn": true,
-    "//": "30cm weld",
-    "using": [ [ "welding_standard", 30 ] ],
+    "using": [ [ "welding_standard", 2 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
     "qualities": [ { "id": "HAMMER", "level": 2 } ],
-    "components": [ [ [ "sheet_metal_small", 4 ] ] ]
+    "components": [ [ [ "sheet_metal_small", 3 ] ] ]
   },
   {
     "type": "recipe",
@@ -111,22 +109,35 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "jerrycan_big",
-    "id_suffix": "welder",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "fabrication",
     "difficulty": 2,
     "time": "30 m",
     "autolearn": true,
-    "using": [ [ "welding_standard", 60 ] ],
-    "//": "60cm weld",
+    "using": [ [ "cordage", 1 ] ],
+    "qualities": [ { "id": "SAW_M", "level": 1 }, { "id": "SCREW", "level": 1 } ],
+    "components": [ [ [ "metal_tank", 1 ] ], [ [ "scrap", 1 ] ] ]
+  },
+  {
+    "type": "recipe",
+    "activity_level": "MODERATE_EXERCISE",
+    "result": "jerrycan_big",
+    "id_suffix": "welder",
+    "category": "CC_OTHER",
+    "subcategory": "CSC_OTHER_CONTAINERS",
+    "skill_used": "fabrication",
+    "difficulty": 2,
+    "time": "20 m",
+    "autolearn": true,
+    "using": [ [ "welding_standard", 5 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
     "qualities": [ { "id": "HAMMER", "level": 2 } ],
-    "components": [ [ [ "sheet_metal", 1 ] ] ]
+    "components": [ [ [ "sheet_metal_small", 8 ], [ "scrap", 40 ] ] ]
   },
   {
     "type": "recipe",
@@ -150,7 +161,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bowl_plastic",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -164,7 +175,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bottle_plastic",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -180,7 +191,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bottle_bathroom",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -196,7 +207,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bottle_plastic_small",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -212,7 +223,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bottle_twoliter",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -244,7 +255,6 @@
     "type": "recipe",
     "activity_level": "MODERATE_EXERCISE",
     "result": "can_medium",
-    "result_mult": 3,
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "fabrication",
@@ -283,7 +293,7 @@
     "difficulty": 8,
     "time": "7 h",
     "autolearn": true,
-    "using": [ [ "blacksmithing_standard", 64 ], [ "steel_standard", 20 ] ],
+    "using": [ [ "blacksmithing_standard", 64 ], [ "steel_standard", 16 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_blacksmithing" } ],
     "qualities": [ { "id": "CHISEL", "level": 3 } ]
   },
@@ -298,7 +308,7 @@
     "difficulty": 8,
     "time": "4 h 20 m",
     "autolearn": true,
-    "using": [ [ "blacksmithing_standard", 31 ], [ "steel_standard", 8 ] ],
+    "using": [ [ "blacksmithing_standard", 40 ], [ "steel_standard", 10 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_blacksmithing" } ],
     "qualities": [ { "id": "CHISEL", "level": 3 } ]
   },
@@ -311,16 +321,15 @@
     "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "fabrication",
     "difficulty": 8,
-    "time": "80 m",
+    "time": "42 m",
     "autolearn": true,
-    "//": "270cm weld",
-    "using": [ [ "welding_standard", 270 ] ],
+    "using": [ [ "welding_standard", 15 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
-    "components": [ [ [ "sheet_metal", 4 ], [ "sheet_metal_small", 80 ] ] ]
+    "components": [ [ [ "sheet_metal", 3 ], [ "sheet_metal_small", 72 ] ] ]
   },
   {
     "type": "recipe",
@@ -331,16 +340,15 @@
     "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "fabrication",
     "difficulty": 8,
-    "time": "60 s",
+    "time": "26 m 15 s",
     "autolearn": true,
-    "using": [ [ "welding_standard", 180 ] ],
-    "//": "180cm weld",
+    "using": [ [ "welding_standard", 10 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
-    "components": [ [ [ "sheet_metal", 2 ], [ "sheet_metal_small", 32 ] ] ]
+    "components": [ [ [ "sheet_metal", 2 ], [ "sheet_metal_small", 48 ] ] ]
   },
   {
     "type": "recipe",
@@ -475,7 +483,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bag_canvas_small",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -483,33 +491,21 @@
     "difficulty": 1,
     "time": "10 m",
     "autolearn": true,
-    "using": [ [ "tailoring_canvas_patchwork", 1 ], [ "cordage_short", 1 ] ],
-    "byproducts": [ [ "canvas_patch", 3 ], [ "scrap_canvas", 6 ] ]
+    "using": [ [ "filament", 50 ], [ "cordage_short", 1 ] ],
+    "components": [ [ [ "cotton_patchwork", 2 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "bag_canvas",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "tailor",
-    "difficulty": 2,
+    "difficulty": 3,
     "time": "50 m",
     "autolearn": true,
-    "using": [ [ "tailoring_canvas_patchwork", 4 ], [ "cordage", 1 ] ],
-    "byproducts": [ [ "scrap_canvas", 8 ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "NO_EXERCISE",
-    "result": "bag_garbage_reinforced",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "survival",
-    "time": "30 s",
-    "reversible": true,
-    "autolearn": true,
-    "components": [ [ [ "bag_garbage", 10 ] ] ]
+    "using": [ [ "filament", 300 ], [ "cordage", 1 ] ],
+    "components": [ [ [ "cotton_patchwork", 12 ] ] ]
   },
   {
     "result": "storage_line",
@@ -528,7 +524,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "MODERATE_EXERCISE",
+    "activity_level": "fake",
     "result": "toolbox_empty",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_CONTAINERS",
@@ -538,8 +534,7 @@
     "time": "15 m",
     "reversible": true,
     "autolearn": true,
-    "//": "50cm weld",
-    "using": [ [ "welding_standard", 50 ] ],
+    "using": [ [ "welding_standard", 1 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_welding_basic" }, { "proficiency": "prof_welding" } ],
     "qualities": [ { "id": "SAW_M", "level": 1 } ],
     "components": [ [ [ "sheet_metal_small", 16 ] ] ]
@@ -569,11 +564,10 @@
     "time": "30 m",
     "reversible": true,
     "autolearn": true,
-    "//": "30cm weld",
-    "using": [ [ "welding_standard", 30 ] ],
+    "using": [ [ "welding_standard", 3 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
     "qualities": [ { "id": "HAMMER", "level": 2 }, { "id": "SAW_M", "level": 1 } ],
@@ -613,7 +607,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "clay_pot",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TOOLS",
@@ -623,16 +617,15 @@
     "time": "45 m",
     "autolearn": true,
     "proficiencies": [ { "proficiency": "prof_pottery", "required": false, "time_multiplier": 1.5 } ],
-    "using": [ [ "glazing", 1 ], [ "earthenware_firing", 90 ] ],
+    "using": [ [ "earthenware_firing", 90 ] ],
     "components": [ [ [ "water", 1 ], [ "water_clean", 1 ] ], [ [ "clay_lump", 5 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "clay_pot_flower",
-    "//": "No stoneware option and no glazing because clay pots won't hold liquid anyway.",
     "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
+    "subcategory": "CSC_OTHER_OTHER",
     "skill_used": "fabrication",
     "skills_required": [ "survival", 1 ],
     "difficulty": 2,
@@ -644,7 +637,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "clay_teapot",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_TOOLS",
@@ -659,19 +652,18 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "clay_urn",
     "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
+    "subcategory": "CSC_OTHER_TOOLS",
     "skill_used": "fabrication",
     "skills_required": [ "survival", 1 ],
     "difficulty": 2,
     "time": "90 m",
     "autolearn": true,
     "proficiencies": [ { "proficiency": "prof_pottery" }, { "proficiency": "prof_pottery_glazing" } ],
-    "//": "Most funerary urns probably don't come with a leather lid, but that's a compromise between having a container without a tight-fitting lid that can be stuffed into a backpack if filled with liquid, and making urns unable to hold liquids at all.",
-    "using": [ [ "glazing", 1 ], [ "earthenware_firing", 120 ], [ "cordage_short", 1 ] ],
-    "components": [ [ [ "water", 1 ], [ "water_clean", 1 ] ], [ [ "clay_lump", 8 ] ], [ [ "leather", 2 ], [ "fur", 2 ] ] ]
+    "using": [ [ "earthenware_firing", 120 ] ],
+    "components": [ [ [ "water", 1 ], [ "water_clean", 1 ] ], [ [ "clay_lump", 8 ] ] ]
   },
   {
     "type": "recipe",
@@ -715,11 +707,10 @@
     "difficulty": 4,
     "time": "1 h",
     "autolearn": true,
-    "//": "100cm weld",
-    "using": [ [ "welding_standard", 100 ] ],
+    "using": [ [ "welding_standard", 30 ] ],
     "proficiencies": [
       { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
+      { "proficiency": "prof_welding_basic", "fail_multiplier": 1.5 },
       { "proficiency": "prof_welding" }
     ],
     "qualities": [ { "id": "HAMMER", "level": 3 }, { "id": "SAW_M", "level": 1 } ],
@@ -730,14 +721,14 @@
     "result": "pot_canning_clay",
     "activity_level": "LIGHT_EXERCISE",
     "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_TOOLS",
+    "subcategory": "CSC_OTHER_CONTAINERS",
     "skill_used": "fabrication",
     "skills_required": [ "survival", 1 ],
     "difficulty": 2,
     "time": "1 h",
     "autolearn": true,
-    "using": [ [ "glazing", 2 ], [ "earthenware_firing", 140 ] ],
-    "proficiencies": [ { "proficiency": "prof_pottery" }, { "proficiency": "prof_pottery_glazing" } ],
+    "using": [ [ "earthenware_firing", 140 ] ],
+    "proficiencies": [ { "proficiency": "prof_pottery" } ],
     "components": [ [ [ "water", 2 ], [ "water_clean", 2 ] ], [ [ "clay_lump", 15 ] ] ]
   },
   {
@@ -752,8 +743,8 @@
     "time": "20 m",
     "autolearn": true,
     "proficiencies": [ { "proficiency": "prof_pottery" }, { "proficiency": "prof_pottery_glazing" } ],
-    "using": [ [ "glazing", 1 ], [ "earthenware_firing", 40 ] ],
-    "components": [ [ [ "water", 1 ], [ "water_clean", 1 ] ], [ [ "clay_lump", 4 ] ] ]
+    "using": [ [ "cordage_short", 1 ], [ "glazing", 1 ], [ "earthenware_firing", 40 ] ],
+    "components": [ [ [ "water", 1 ], [ "water_clean", 1 ] ], [ [ "clay_lump", 4 ] ], [ [ "leather", 2 ], [ "fur", 2 ] ] ]
   },
   {
     "result": "bowl_wood",
@@ -933,7 +924,6 @@
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "box_small",
-    "id_suffix": "crafted",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
@@ -944,21 +934,8 @@
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
-    "result": "box_small",
-    "id_suffix": "assembly",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
-    "skill_used": "fabrication",
-    "time": "10 s",
-    "autolearn": true,
-    "components": [ [ [ "box_small_folded", 1 ] ], [ [ "duct_tape", 5 ] ] ]
-  },
-  {
-    "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "box_medium",
-    "id_suffix": "crafted",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
@@ -970,21 +947,8 @@
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
-    "result": "box_medium",
-    "id_suffix": "assembly",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
-    "skill_used": "fabrication",
-    "time": "15 s",
-    "autolearn": true,
-    "components": [ [ [ "box_medium_folded", 1 ] ], [ [ "duct_tape", 10 ] ] ]
-  },
-  {
-    "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "box_large",
-    "id_suffix": "crafted",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
@@ -993,18 +957,6 @@
     "autolearn": true,
     "qualities": [ { "id": "CUT", "level": 2 } ],
     "components": [ [ [ "cardboard", 200 ] ], [ [ "duct_tape", 100 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "NO_EXERCISE",
-    "result": "box_large",
-    "id_suffix": "assembly",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
-    "skill_used": "fabrication",
-    "time": "20 s",
-    "autolearn": true,
-    "components": [ [ [ "box_large_folded", 1 ] ], [ [ "duct_tape", 20 ] ] ]
   },
   {
     "type": "recipe",
@@ -1017,13 +969,12 @@
     "time": "15 m",
     "autolearn": true,
     "qualities": [ { "id": "CUT", "level": 2 } ],
-    "components": [ [ [ "box_large", 2 ], [ "box_large_folded", 2 ] ], [ [ "duct_tape", 100 ] ] ]
+    "components": [ [ [ "box_large", 2 ] ], [ [ "duct_tape", 100 ] ] ]
   },
   {
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
     "result": "box_oversize",
-    "id_suffix": "crafted",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
@@ -1032,18 +983,6 @@
     "autolearn": true,
     "qualities": [ { "id": "CUT", "level": 2 } ],
     "components": [ [ [ "cardboard", 200 ] ], [ [ "duct_tape", 100 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "NO_EXERCISE",
-    "result": "box_oversize",
-    "id_suffix": "assembly",
-    "category": "CC_*",
-    "subcategory": "CSC_*_NESTED",
-    "skill_used": "fabrication",
-    "time": "20 s",
-    "autolearn": true,
-    "components": [ [ [ "box_oversize_folded", 1 ] ], [ [ "duct_tape", 20 ] ] ]
   },
   {
     "type": "recipe",
@@ -1127,11 +1066,10 @@
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
     "difficulty": 1,
-    "time": "30 m",
+    "time": "10 m",
     "autolearn": true,
     "reversible": true,
-    "//": "100cm weld",
-    "using": [ [ "welding_standard", 100 ] ],
+    "using": [ [ "welding_standard", 1 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_welding_basic" }, { "proficiency": "prof_welding" } ],
     "qualities": [ { "id": "SAW_M", "level": 1 } ],
     "components": [ [ [ "sheet_metal", 1 ] ] ]
@@ -1144,11 +1082,10 @@
     "subcategory": "CSC_*_NESTED",
     "skill_used": "fabrication",
     "difficulty": 2,
-    "time": "150 m",
+    "time": "15 m",
     "autolearn": true,
     "reversible": true,
-    "//": "500cm weld",
-    "using": [ [ "welding_standard", 500 ] ],
+    "using": [ [ "welding_standard", 2 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" }, { "proficiency": "prof_welding_basic" }, { "proficiency": "prof_welding" } ],
     "qualities": [ { "id": "SAW_M", "level": 1 } ],
     "components": [ [ [ "sheet_metal", 8 ] ] ]
@@ -1185,47 +1122,6 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "heavy_punching_bag_sack",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "tailor",
-    "skills_required": [ "survival", 1 ],
-    "difficulty": 2,
-    "time": "240 m",
-    "autolearn": true,
-    "qualities": [ { "id": "SEW", "level": 1 }, { "id": "LEATHER_AWL", "level": 1 }, { "id": "CUT", "level": 2 } ],
-    "proficiencies": [ { "proficiency": "prof_leatherworking_basic", "time_multiplier": 2 } ],
-    "components": [ [ [ "tanned_hide", 9 ] ], [ [ "filament", 80, "LIST" ] ] ]
-  },
-  {
-    "result": "dry_bag_large",
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "category": "CC_ARMOR",
-    "subcategory": "CSC_ARMOR_STORAGE",
-    "skill_used": "tailor",
-    "skills_required": [ "fabrication", 2 ],
-    "difficulty": 6,
-    "time": "6 h 40 m",
-    "autolearn": true,
-    "reversible": { "time": "35 m" },
-    "book_learn": [ [ "plastics_book", 4 ] ],
-    "using": [
-      [ "sewing_standard", 100 ],
-      [ "tailoring_lycra_patchwork", 10 ],
-      [ "clasps", 1 ],
-      [ "waterproofing_plastic_sheets", 40 ]
-    ],
-    "proficiencies": [
-      { "proficiency": "prof_closures" },
-      { "proficiency": "prof_closures_waterproofing" },
-      { "proficiency": "prof_plasticworking" }
-    ],
-    "components": [ [ [ "duct_tape", 400 ] ] ]
-  },
-  {
-    "type": "recipe",
     "activity_level": "BRISK_EXERCISE",
     "result": "55gal_drum_aluminum",
     "category": "CC_OTHER",
@@ -1252,102 +1148,6 @@
     "using": [ [ "blacksmithing_standard", 40 ] ],
     "proficiencies": [ { "proficiency": "prof_metalworking" } ],
     "qualities": [ { "id": "CHISEL", "level": 3 } ],
-    "components": [ [ [ "scrap_aluminum", 52 ], [ "material_aluminium_ingot", 4 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "aquarium_medium_drying",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 5,
-    "time": "5 h",
-    "autolearn": true,
-    "qualities": [ { "id": "CUT_GLASS", "level": 1 } ],
-    "components": [ [ [ "glass_sheet", 5 ] ], [ [ "silicone", 9 ] ], [ [ "duct_tape", 120 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "aquarium_small_drying",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 5,
-    "time": "4 h 15 m",
-    "autolearn": true,
-    "qualities": [ { "id": "CUT_GLASS", "level": 1 } ],
-    "components": [ [ [ "glass_sheet", 3 ] ], [ [ "silicone", 7 ] ], [ [ "duct_tape", 94 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "aquarium_large_drying",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 5,
-    "time": "8 h",
-    "autolearn": true,
-    "qualities": [ { "id": "CUT_GLASS", "level": 1 } ],
-    "components": [ [ [ "glass_sheet", 8 ] ], [ [ "silicone", 12 ] ], [ [ "duct_tape", 158 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
-    "result": "bottle_gourd",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 2,
-    "time": "20 m",
-    "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_carving" } ],
-    "qualities": [ { "id": "CUT", "level": 2 } ],
-    "components": [ [ [ "dry_bottle_gourd", 1 ] ], [ [ "cordage_short", 2, "LIST" ], [ "filament", 100, "LIST" ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "MODERATE_EXERCISE",
-    "result": "stock_pot",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 4,
-    "time": "1 h",
-    "autolearn": true,
-    "using": [ [ "welding_standard", 30 ] ],
-    "proficiencies": [
-      { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
-      { "proficiency": "prof_welding" }
-    ],
-    "qualities": [ { "id": "HAMMER", "level": 3 }, { "id": "SAW_M", "level": 1 } ],
-    "components": [ [ [ "sheet_metal", 1 ] ] ]
-  },
-  {
-    "type": "recipe",
-    "activity_level": "MODERATE_EXERCISE",
-    "result": "makeshift_pressure_cooker",
-    "category": "CC_OTHER",
-    "subcategory": "CSC_OTHER_CONTAINERS",
-    "skill_used": "fabrication",
-    "difficulty": 4,
-    "time": "1 h",
-    "autolearn": true,
-    "proficiencies": [
-      { "proficiency": "prof_metalworking" },
-      { "proficiency": "prof_welding_basic", "skill_penalty": 0.5 },
-      { "proficiency": "prof_welding" }
-    ],
-    "qualities": [ { "id": "DRILL", "level": 2 }, { "id": "FILE", "level": 1 } ],
-    "components": [
-      [ [ "stock_pot", 1 ] ],
-      [ [ "chunk_rubber", 2 ] ],
-      [ [ "cu_pipe", 1 ] ],
-      [ [ "thermometer", 1 ] ],
-      [ [ "clamp", 3 ], [ "pliers_locking", 3 ] ]
-    ]
+    "components": [ [ [ "scrap_aluminum", 120 ], [ "material_aluminium_ingot", 10 ] ] ]
   }
 ]

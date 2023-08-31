@@ -71,7 +71,7 @@ void sub_body_part_type::load_bp( const JsonObject &jo, const std::string &src )
     sub_body_part_factory.load( jo, src );
 }
 
-void sub_body_part_type::load( const JsonObject &jo, const std::string_view )
+void sub_body_part_type::load( const JsonObject &jo, const std::string & )
 {
     mandatory( jo, was_loaded, "id", id );
     mandatory( jo, was_loaded, "name", name );
@@ -81,8 +81,6 @@ void sub_body_part_type::load( const JsonObject &jo, const std::string_view )
     optional( jo, was_loaded, "side", part_side );
     optional( jo, was_loaded, "name_multiple", name_multiple );
     optional( jo, was_loaded, "opposite", opposite );
-    // defaults to self
-    optional( jo, was_loaded, "locations_under", locations_under, { id } );
 }
 
 void sub_body_part_type::reset()

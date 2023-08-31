@@ -27,7 +27,6 @@ diary_page::diary_page() = default;
 std::vector<std::string> diary::get_pages_list()
 {
     std::vector<std::string> result;
-    result.reserve( pages.size() );
     for( std::unique_ptr<diary_page> &n : pages ) {
         result.push_back( get_diary_time_str( n->turn, n->time_acc ) );
     }
@@ -55,6 +54,7 @@ int diary::get_opened_page_num() const
     return opened_page;
 }
 
+
 diary_page *diary::get_page_ptr( int offset )
 {
     if( !pages.empty() && opened_page + offset >= 0 ) {
@@ -71,6 +71,8 @@ void diary::add_to_change_list( const std::string &entry, const std::string &des
     }
     change_list.push_back( entry );
 }
+
+
 
 void diary::spell_changes()
 {
@@ -120,6 +122,8 @@ void diary::spell_changes()
 
     }
 }
+
+
 
 void diary::mission_changes()
 {
@@ -297,6 +301,7 @@ void diary::kill_changes()
                                         color ) + " " + colorize( nname, c_light_gray ), m.get_description() );
                 }
 
+
             }
             if( !flag ) {
                 add_to_change_list( " " );
@@ -326,6 +331,7 @@ void diary::kill_changes()
         }
     }
 }
+
 
 void diary::skill_changes()
 {
@@ -560,6 +566,7 @@ std::map<int, std::string> diary::get_desc_map()
     }
 }
 
+
 std::string diary::get_page_text()
 {
 
@@ -658,7 +665,7 @@ void diary::delete_page()
 
 void diary::export_to_txt( bool lastexport )
 {
-    std::ofstream myfile;
+    cata::ofstream myfile;
     std::string path = lastexport ? PATH_INFO::memorialdir() : PATH_INFO::world_base_save_path();
     path += "/" + owner + "s_diary.txt";
     myfile.open( fs::u8path( path ) );
@@ -730,18 +737,26 @@ void diary::serialize( JsonOut &jsout )
     jsout.end_array();
 }
 
+
+
 void diary::load()
 {
     std::string name = base64_encode( get_avatar().get_save_id() + "_diary" );
-    cata_path path = PATH_INFO::world_base_save_path_path() / ( name + ".json" );
+    std::string path = PATH_INFO::world_base_save_path() + "/" + name + ".json";
     if( file_exist( path ) ) {
-        read_from_file_json( path, [&]( const JsonValue & jv ) {
-            deserialize( jv );
+        read_from_file( path, [&]( std::istream & fin ) {
+            deserialize( fin );
         } );
     }
 }
 
-void diary::deserialize( const JsonValue &jsin )
+void diary::deserialize( std::istream &fin )
+{
+    JsonIn jsin( fin );
+    deserialize( jsin );
+}
+
+void diary::deserialize( JsonIn &jsin )
 {
     try {
         JsonObject data = jsin.get_object();

@@ -1,6 +1,7 @@
 [
   {
     "id": "beekeeping_hood",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "beekeeping hood" },
     "description": "A beekeeping hood.  Keeps the bees out, but lets fresh air in.",
@@ -27,7 +28,7 @@
     "category": "armor",
     "name": { "str": "chainmail coif" },
     "description": "A customized chainmail hood.  Can be worn comfortably under helmets.",
-    "weight": "1315 g",
+    "weight": "2006 g",
     "volume": "500 ml",
     "price": 5012,
     "price_postapoc": 2500,
@@ -44,7 +45,7 @@
       {
         "material": [ { "type": "budget_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -55,7 +56,7 @@
     "category": "armor",
     "name": { "str": "mild steel chainmail coif" },
     "description": "A customized mild steel chainmail hood.  Can be worn comfortably under helmets.",
-    "weight": "1315 g",
+    "weight": "2006 g",
     "volume": "500 ml",
     "price": 5012,
     "price_postapoc": 2500,
@@ -71,7 +72,7 @@
       {
         "material": [ { "type": "lc_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -106,7 +107,7 @@
       {
         "material": [ { "type": "mc_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -141,7 +142,7 @@
       {
         "material": [ { "type": "hc_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -176,7 +177,7 @@
       {
         "material": [ { "type": "ch_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -211,7 +212,7 @@
       {
         "material": [ { "type": "qt_steel_chain", "covered_by_mat": 100, "thickness": 1.2 } ],
         "covers": [ "head" ],
-        "coverage": 100,
+        "coverage": 95,
         "encumbrance_modifiers": [ "RESTRICTS_NECK", "WELL_SUPPORTED" ]
       }
     ]
@@ -236,6 +237,82 @@
     "extend": { "flags": [ "UNDERSIZE" ] }
   },
   {
+    "id": "gambeson_hood",
+    "type": "ARMOR",
+    "category": "armor",
+    "name": { "str": "gambeson hood" },
+    "description": "A customized hood made from quilted fabrics.  Can be worn under helmets.",
+    "weight": "510 g",
+    "volume": "300 ml",
+    "price": 412,
+    "price_postapoc": 500,
+    "to_hit": -1,
+    "material": [ "cotton" ],
+    "symbol": "[",
+    "looks_like": "balclava",
+    "color": "light_red",
+    "warmth": 25,
+    "material_thickness": 5,
+    "flags": [ "VARSIZE", "STURDY" ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 90, "covers": [ "head" ] } ]
+  },
+  {
+    "id": "xl_gambeson_hood",
+    "type": "ARMOR",
+    "copy-from": "gambeson_hood",
+    "name": { "str": "XL gambeson hood" },
+    "description": "A customized hood made from quilted fabrics.  Can be worn under helmets.  Comes in XL size.",
+    "proportional": { "weight": 1.25, "volume": 1.3, "price": 1.25 },
+    "extend": { "flags": [ "OVERSIZE" ] }
+  },
+  {
+    "id": "xs_gambeson_hood",
+    "type": "ARMOR",
+    "copy-from": "gambeson_hood",
+    "name": { "str": "XS gambeson hood" },
+    "description": "A customized hood made from quilted fabrics.  Can be worn under helmets.  Comes in XS size.",
+    "proportional": { "weight": 0.75, "volume": 0.75, "price": 0.5 },
+    "extend": { "flags": [ "UNDERSIZE" ] }
+  },
+  {
+    "id": "k_gambeson_hood",
+    "type": "ARMOR",
+    "category": "armor",
+    "name": { "str": "Kevlar gambeson hood" },
+    "description": "A customized gambeson hood made from Kevlar.  Can be worn under helmets.",
+    "weight": "340 g",
+    "volume": "300 ml",
+    "price": 412,
+    "price_postapoc": 500,
+    "to_hit": -1,
+    "material": [ { "type": "kevlar_layered", "portion": 6 }, { "type": "kevlar", "portion": 4 } ],
+    "symbol": "[",
+    "looks_like": "balclava",
+    "color": "light_red",
+    "warmth": 25,
+    "material_thickness": 3.2,
+    "flags": [ "VARSIZE", "STURDY" ],
+    "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 90, "covers": [ "head" ] } ]
+  },
+  {
+    "id": "xl_k_gambeson_hood",
+    "type": "ARMOR",
+    "copy-from": "k_gambeson_hood",
+    "name": { "str": "XL Kevlar gambeson hood" },
+    "description": "A customized gambeson hood made from Kevlar.  Can be worn under helmets.  Comes in XL size.",
+    "proportional": { "weight": 1.25, "volume": 1.3, "price": 1.25 },
+    "extend": { "flags": [ "OVERSIZE" ] }
+  },
+  {
+    "id": "xs_k_gambeson_hood",
+    "type": "ARMOR",
+    "copy-from": "k_gambeson_hood",
+    "name": { "str": "XS Kevlar gambeson hood" },
+    "description": "A customized hood made from quilted fabrics and Kevlar.  Can be worn under helmets.  Comes in XS size.",
+    "proportional": { "weight": 0.75, "volume": 0.75, "price": 0.5 },
+    "extend": { "flags": [ "UNDERSIZE" ] }
+  },
+  {
     "id": "hood_rain",
     "type": "ARMOR",
     "name": { "str": "rain hood" },
@@ -248,8 +325,8 @@
     "symbol": "[",
     "looks_like": "hat_cotton",
     "color": "yellow",
-    "warmth": 10,
-    "material_thickness": 0.2,
+    "warmth": 8,
+    "material_thickness": 0.3,
     "environmental_protection": 2,
     "flags": [ "WATERPROOF", "OUTER", "SOFT" ],
     "armor": [ { "encumbrance_modifiers": [ "NONE" ], "coverage": 100, "covers": [ "head" ] } ]
@@ -295,6 +372,7 @@
   },
   {
     "id": "hood_ninja",
+    "repairs_like": "balclava",
     "type": "ARMOR",
     "name": { "str": "ninja hood" },
     "description": "A black hood commonly used by ninja.",

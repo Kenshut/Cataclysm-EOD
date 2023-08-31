@@ -4,8 +4,8 @@
 #include <clang/ASTMatchers/ASTMatchFinder.h>
 #include <llvm/ADT/StringRef.h>
 
-#include <clang-tidy/ClangTidy.h>
-#include <clang-tidy/ClangTidyCheck.h>
+#include "ClangTidy.h"
+#include "ClangTidyCheck.h"
 
 namespace clang
 {

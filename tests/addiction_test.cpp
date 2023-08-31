@@ -1,7 +1,6 @@
 #include "addiction.h"
 #include "cata_catch.h"
 #include "character.h"
-#include "itype.h"
 #include "player_helpers.h"
 
 static const addiction_id addiction_alcohol( "alcohol" );
@@ -107,7 +106,7 @@ static int suffer_addiction( const addiction_id &aid, const int intens, Characte
     return ret;
 }
 
-TEST_CASE( "hardcoded_and_json_addictions", "[addiction]" )
+TEST_CASE( "hardcoded and json addictions", "[addiction]" )
 {
     REQUIRE( !addiction_test_caffeine->get_effect().is_null() );
     REQUIRE( addiction_test_caffeine->get_builtin().empty() );
@@ -156,7 +155,7 @@ TEST_CASE( "hardcoded_and_json_addictions", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_caffeine_addiction_effects", "[addiction]" )
+TEST_CASE( "check caffeine addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -201,7 +200,7 @@ TEST_CASE( "check_caffeine_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_nicotine_addiction_effects", "[addiction]" )
+TEST_CASE( "check nicotine addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -231,7 +230,7 @@ TEST_CASE( "check_nicotine_addiction_effects", "[addiction]" )
         int res = suffer_addiction( addiction_nicotine, 20, u, max_iters, totals );
         CHECK( res == Approx( 70 ).margin( 40 ) );
         CHECK( totals.health_mod == 0 );
-        CHECK( totals.fatigue == Approx( 70 ).margin( 35 ) );
+        CHECK( totals.fatigue == Approx( 70 ).margin( 30 ) );
         CHECK( totals.morale <= 0 );
         CHECK( totals.stim <= 0 );
         CHECK( totals.pkiller == 0 );
@@ -246,7 +245,7 @@ TEST_CASE( "check_nicotine_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_alcohol_addiction_effects", "[addiction]" )
+TEST_CASE( "check alcohol addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -291,7 +290,7 @@ TEST_CASE( "check_alcohol_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_diazepam_addiction_effects", "[addiction]" )
+TEST_CASE( "check diazepam addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -336,7 +335,7 @@ TEST_CASE( "check_diazepam_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_opiate_addiction_effects", "[addiction]" )
+TEST_CASE( "check opiate addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -381,7 +380,7 @@ TEST_CASE( "check_opiate_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_amphetamine_addiction_effects", "[addiction]" )
+TEST_CASE( "check amphetamine addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -426,7 +425,7 @@ TEST_CASE( "check_amphetamine_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_cocaine_addiction_effects", "[addiction]" )
+TEST_CASE( "check cocaine addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -471,7 +470,7 @@ TEST_CASE( "check_cocaine_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_crack_addiction_effects", "[addiction]" )
+TEST_CASE( "check crack addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -516,7 +515,7 @@ TEST_CASE( "check_crack_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_mutagen_addiction_effects", "[addiction]" )
+TEST_CASE( "check mutagen addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -601,7 +600,7 @@ TEST_CASE( "check_mutagen_addiction_effects", "[addiction]" )
     }
 }
 
-TEST_CASE( "check_marloss_addiction_effects", "[addiction]" )
+TEST_CASE( "check marloss addiction effects", "[addiction]" )
 {
     Character &u = get_player_character();
     clear_character( u );
@@ -716,24 +715,4 @@ TEST_CASE( "check_marloss_addiction_effects", "[addiction]" )
         CHECK( totals.shakes == 0 );
         CHECK( totals.hallu == 0 );
     }
-}
-
-TEST_CASE( "check_that_items_can_inflict_multiple_addictions", "[addiction]" )
-{
-    item addict_itm( "test_whiskey_caffenated" );
-    REQUIRE( addict_itm.is_comestible() );
-    REQUIRE( addict_itm.get_comestible()->addictions.size() == 2 );
-    CHECK( addict_itm.get_comestible()->addictions.at( addiction_alcohol ) == 101 );
-    CHECK( addict_itm.get_comestible()->addictions.at( addiction_caffeine ) == 102 );
-
-    Character &victim = get_player_character();
-    clear_character( victim );
-    REQUIRE( !victim.has_addiction( addiction_alcohol ) );
-    REQUIRE( !victim.has_addiction( addiction_caffeine ) );
-    for( int i = 0; i < MIN_ADDICTION_LEVEL; i++ ) {
-        item addict_itm = item( "test_whiskey_caffenated" );
-        REQUIRE( victim.consume( addict_itm, true ) != trinary::NONE );
-    }
-    CHECK( victim.has_addiction( addiction_alcohol ) );
-    CHECK( victim.has_addiction( addiction_caffeine ) );
 }

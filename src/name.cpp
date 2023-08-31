@@ -65,9 +65,13 @@ static nameFlags gender_flag( const std::string &gender )
 // Nick
 // City
 // World
-static void load( const JsonArray &names_json )
+static void load( JsonIn &jsin )
 {
-    for( JsonObject jo : names_json ) {
+    jsin.start_array();
+
+    while( !jsin.end_array() ) {
+        JsonObject jo = jsin.get_object();
+
         // get flags of name.
         const nameFlags type =
             usage_flag( jo.get_string( "usage" ) )
@@ -84,11 +88,9 @@ static void load( const JsonArray &names_json )
     }
 }
 
-void load_from_file( const cata_path &filename )
+void load_from_file( const std::string &filename )
 {
-    read_from_file_json( filename, []( const JsonArray & jsin ) {
-        load( jsin );
-    } );
+    read_from_file_json( filename, load );
 }
 
 // get name groups for which searchFlag is a subset.
@@ -111,7 +113,7 @@ static names_vec get_matching_groups( nameFlags searchFlags )
 // Get a random name with the specified flag
 std::string get( nameFlags searchFlags )
 {
-    Name::names_vec matching_groups = get_matching_groups( searchFlags );
+    auto matching_groups = get_matching_groups( searchFlags );
     if( !matching_groups.empty() ) {
         // get number of choices
         size_t nChoices = 0;
@@ -151,7 +153,7 @@ std::string generate( bool is_male )
         return string_format( full_name_format,
                               get( baseSearchFlags | nameFlags::IsGivenName ).c_str(),
                               get( baseSearchFlags | nameFlags::IsFamilyName ).c_str(),
-                              get( nameFlags::IsNickName ).c_str()
+                              get( baseSearchFlags | nameFlags::IsNickName ).c_str()
                             );
     }
 }

@@ -4,290 +4,90 @@
     "name": { "str": "generic grooming" },
     "type": "GENERIC",
     "description": "generic item template",
-    "symbol": ",",
-    "color": "white",
+    "symbol": "+",
+    "color": "blue",
     "price": 200,
     "price_postapoc": 0,
     "weight": "100 g",
     "volume": "50 ml",
     "material": [ "plastic" ],
-    "to_hit": -1,
-    "melee_damage": { "bash": 1 }
+    "bashing": 1,
+    "to_hit": -1
   },
   {
     "id": "soap_holder",
     "name": { "str": "soap dish", "str_pl": "soap dishes" },
     "type": "GENERIC",
-    "description": "A shallow plastic dish for holding a bar of soap.  It has ridges to help drain water away from the dish.  Not the most exciting of items.",
+    "description": "A shallow dish for holding a bar of soap.  It has ridges to help drain water away from the dish.  Not the most exciting of items.",
     "symbol": "-",
     "copy-from": "base_toiletries"
   },
   {
     "id": "razor_shaving",
-    "name": { "str": "safety razor" },
+    "name": { "str": "shaving razor" },
     "type": "GENERIC",
-    "description": "A safety razor blade on a comfortable plastic handle.  Much easier to shave with than a loose razor.",
-    "symbol": ",",
+    "description": "A razor blade on a comfortable handle.  Much easier to shave with than a loose razor.",
+    "symbol": "t",
     "copy-from": "base_toiletries",
     "price": 800,
     "price_postapoc": 500,
     "//": "the end of the world doesn't mean everyone is okay with having ZZ Top beards.  disposable razors are a hot commodity.  The razor also loses the Cutting 1 quality.  Don't ask how we confirmed this.",
     "weight": "110 g",
     "material": [ "plastic", "steel" ],
-    "melee_damage": { "bash": 1 }
+    "cutting": 2
   },
   {
     "id": "toothbrush_plain",
     "name": { "str": "toothbrush", "str_pl": "toothbrushes" },
     "type": "GENERIC",
     "description": "A plastic brush with soft bristles for cleaning your teeth.",
-    "symbol": ",",
+    "symbol": "/",
     "copy-from": "base_toiletries",
-    "variant_type": "generic",
-    "variants": [
+    "snippet_category": [
       {
         "id": "tbrush1",
-        "name": { "str": "disposable toothbrush", "str_pl": "disposable toothbrushes" },
-        "description": "This one has a cheap, blocky handle and is likely meant to be disposable.",
-        "weight": 20,
-        "append": true
+        "text": "A plastic brush with soft bristles for cleaning your teeth.  It has a cheap, blocky handle and is likely meant to be disposable."
       },
       {
         "id": "tbrush2",
-        "name": { "str": "expensive toothbrush", "str_pl": "expensive toothbrushes" },
-        "description": "This one is a combination toothbrush and gum massager with an ergonomic silicone grip.  Luxurious!",
-        "weight": 20,
-        "append": true
+        "text": "A combination toothbrush and gum massager.  It has an ergonomic silicone grip.  Luxurious!"
       },
       {
         "id": "tbrush3",
-        "name": { "str": "white and blue toothbrush", "str_pl": "white and blue toothbrushes" },
-        "description": "This one has blue and white pattern on the handle.",
-        "weight": 20,
-        "append": true
+        "text": "A plastic brush with soft bristles for cleaning your teeth.  The blue and white pattern on the handle implies cleanliness."
       },
       {
         "id": "tbrush4",
-        "name": { "str": "pony child toothbrush", "str_pl": "pony child toothbrushes" },
-        "description": "This one is designed for children, and has a wide-eyed cartoon pony on the handle.",
-        "weight": 20,
-        "append": true
+        "text": "A short toothbrush designed for children.  It has a wide-eyed cartoon pony on the handle."
       },
       {
         "id": "tbrush5",
-        "name": { "str": "racecar child toothbrush", "str_pl": "racecar child toothbrushes" },
-        "description": "This one is designed for children, and has a grinning red racecar on the handle.",
-        "weight": 20,
-        "append": true
+        "text": "A short toothbrush designed for children.  It has a grinning red racecar on the handle."
       }
     ]
   },
   {
-    "id": "tampon",
-    "name": { "str": "tampon" },
+    "id": "toothbrush_dirty",
+    "name": { "str": "dirty toothbrush", "str_pl": "dirty toothbrushes" },
     "type": "GENERIC",
-    "description": "A small cotton tampon with a plastic applicator.  Useless for some, an invaluable commodity for others.  Unfortunately, not as useful as a bandage as you'd think.",
-    "symbol": ",",
-    "color": "white",
-    "looks_like": "cotton_ball",
-    "container": "bag_plastic",
-    "price": 25,
-    "price_postapoc": 200,
-    "//": "Makes a decent trade commodity but can be acquired in bulk.",
-    "weight": "10 g",
-    "volume": "50 ml",
-    "material": [ "plastic", "cotton" ],
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "tampon1",
-        "name": { "str": "tampon" },
-        "description": "This one is white and otherwise rather unremarkable.",
-        "weight": 80,
-        "append": true
-      },
-      {
-        "id": "tampon2",
-        "name": { "str": "light flow tampon" },
-        "description": "This one is 'light', rated for light flows.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tampon3",
-        "name": { "str": "heavy flow tampon" },
-        "description": "This one is 'super', rated for heavy flows.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tampon4",
-        "name": { "str": "scented tampon" },
-        "description": "This one is lavender-scented.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tampon5",
-        "name": { "str": "anti-microbal tampon" },
-        "description": "This one has text printed on the applicator, claiming to be anti-microbal.  Ultra-fine print indicates that this tampon has no noticeable health benefits compared to others.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tampon6",
-        "name": { "str": "expensive tampon" },
-        "description": "This one is expensive-looking, with a fancy, smooth plastic applicator.  The ultra-soft cotton has the appearance of a fluffy cloud.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tampon7",
-        "name": { "str": "cheap tampon" },
-        "description": "This one is cheap-looking; the cotton looks rough, the plastic applicator has a few sharp edges, and the string is somehow already knotted.",
-        "weight": 20,
-        "append": true
-      }
-    ]
-  },
-  {
-    "id": "menstrual_pad",
-    "name": { "str": "menstrual pad" },
-    "type": "GENERIC",
-    "description": "An absorbent cotton menstrual pad with a plastic backsheet.  Unfortunately, not as useful as a bandage as you'd think.  The adhesive is on the side opposite of the absorbent part.",
-    "symbol": ",",
-    "color": "white",
-    "looks_like": "bandages",
-    "container": "bag_plastic",
-    "price": 25,
-    "price_postapoc": 200,
-    "//": "Makes a decent trade commodity but can be acquired in bulk.",
-    "weight": "10 g",
-    "volume": "50 ml",
-    "material": [ "plastic", "cotton" ],
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "menstrual_pad1",
-        "name": { "str": "menstrual pad" },
-        "description": "This one is white and otherwise rather unremarkable.",
-        "weight": 99,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad2",
-        "name": { "str": "small menstrual pad" },
-        "description": "This one is a small panty-liner only meant for the lightest flows.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad3",
-        "name": { "str": "large menstrual pad" },
-        "description": "This one is large, meant for use overnight.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad4",
-        "name": { "str": "striped menstrual pad" },
-        "description": "This one has racing stripes on it.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad5",
-        "name": { "str": "scented menstrual pad" },
-        "description": "This one smells strongly of essential oils.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad6",
-        "name": { "str": "transgender menstrual pad" },
-        "description": "This one is colored in a transgender flag pattern and has 'Men can bleed too!' text printed on the backsheet.",
-        "weight": 1,
-        "append": true
-      },
-      {
-        "id": "menstrual_pad7",
-        "name": { "str": "cheap menstrual pad" },
-        "description": "This one is cheap-looking; the cotton somehow looks like sandpaper and is almost see-through thin.",
-        "weight": 20,
-        "append": true
-      }
-    ]
-  },
-  {
-    "id": "menstrual_cup",
-    "name": { "str": "menstrual cup" },
-    "type": "GENERIC",
-    "description": "A tiny, washable, flexible plastic cup about the size of a medicine cup for catching menstrual flow.  Can also be used as a tiny liquid container if you're truly desperate.",
-    "symbol": ")",
-    "color": "pink",
-    "looks_like": "bottle_plastic_small",
-    "container": "bag_plastic",
-    "price": 1000,
-    "price_postapoc": 500,
-    "//": "Makes a decent trade commodity.",
-    "weight": "10 g",
-    "volume": "50 ml",
-    "material": [ "plastic" ],
-    "pocket_data": [
-      {
-        "pocket_type": "CONTAINER",
-        "watertight": true,
-        "rigid": true,
-        "open_container": true,
-        "max_contains_volume": "40 ml",
-        "max_contains_weight": "50 g"
-      }
-    ]
+    "description": "Someone has been using this plastic toothbrush to clean grease or muck.  It is now irrevocably dirty.",
+    "symbol": "/",
+    "flags": [ "FILTHY" ],
+    "copy-from": "base_toiletries"
   },
   {
     "id": "hairbrush",
     "name": { "str": "hairbrush", "str_pl": "hairbrushes" },
     "type": "GENERIC",
-    "description": "A handle brush with bristles, used in hair care.",
+    "description": "An instrument of hair torture.",
     "symbol": "/",
     "copy-from": "base_toiletries",
-    "weight": "91 g",
-    "volume": "400 ml",
-    "longest_side": "24 cm",
-    "price": "6 USD",
-    "to_hit": { "grip": "solid", "length": "short", "surface": "any", "balance": "neutral" },
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "hbrush1",
-        "name": { "str": "hairbrush", "str_pl": "hairbrushes" },
-        "description": "This one has round safety tips on the bristles.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "hbrush2",
-        "name": { "str": "old-fashioned hairbrush", "str_pl": "old-fashioned hairbrushes" },
-        "description": "This one looks old-fashioned, with a faux-wood handle.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "hbrush3",
-        "name": { "str": "chrome hairbrush", "str_pl": "chrome hairbrushes" },
-        "description": "This one has a shiny chrome design.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "hbrush4",
-        "name": { "str": "whale child hairbrush", "str_pl": "whale child hairbrushes" },
-        "description": "This one is designed for children, and has a cartoon whale on the handle.",
-        "weight": 20,
-        "append": true
-      }
-    ],
-    "//": "Based on https://www.amazon.com/Revlon-Detangle-Smooth-Black-Cushion/dp/B01LPO5JVE/ref=sr_1_6?crid=1TWQO2LQX4P03&keywords=hair%2Bbrush&qid=1683483834&sprefix=hair%2Bbrush%2Caps%2C287&sr=8-6&th=1"
+    "snippet_category": [
+      { "id": "hbrush1", "text": "An instrument of hair torture.  There are round safety tips on the bristles." },
+      { "id": "hbrush2", "text": "An old-fashioned hair-straightening device with a faux-wood handle." },
+      { "id": "hbrush3", "text": "A soft, cushioned hairbrush.  The shiny chrome design appears modern." },
+      { "id": "hbrush4", "text": "A tacky kid's hairbrush.  The cartoon whale on the handle seems friendly enough." }
+    ]
   },
   {
     "id": "curler_hair",
@@ -302,9 +102,9 @@
   },
   {
     "id": "string_floss",
-    "name": { "str": "dental floss roll" },
+    "name": { "str": "dental floss", "str_pl": "rolls of dental floss" },
     "type": "GENERIC",
-    "description": "Some finely waxed thread wound up inside a plastic container.  Perfect for picking bits of smoked meat out of your teeth.  Disassemble to use the thread for something else.",
+    "description": "Twenty-five yards of finely waxed thread wound up inside a plastic container.  Perfect for picking bits of smoked meat out of your teeth.  Disassemble to use the thread for something else.",
     "weight": "28 g",
     "copy-from": "base_toiletries",
     "symbol": "~",
@@ -314,83 +114,56 @@
     "id": "comb_pocket",
     "name": { "str": "comb" },
     "type": "GENERIC",
-    "description": "A plastic grooming tool with teeth for straightening hair.",
-    "weight": "9 g",
-    "volume": "30 ml",
-    "longest_side": "18 cm",
+    "description": "A grooming tool with teeth for straightening your hair.",
     "symbol": "/",
     "copy-from": "base_toiletries",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "pcomb1",
-        "name": { "str": "comb" },
-        "description": "This one has a few teeth broken off the end, but is otherwise pristine.",
-        "weight": 20,
-        "append": true
-      },
+    "snippet_category": [
+      { "id": "pcomb1", "text": "Somehow, a few teeth have already broken off the end of this otherwise pristine comb." },
       {
         "id": "pcomb2",
-        "name": { "str": "black comb" },
-        "description": "This one is narrow, black and austere.",
-        "weight": 20,
-        "append": true
+        "text": "A grooming tool with teeth for straightening your hair.  This one is narrow, black and austere."
       },
-      {
-        "id": "pcomb3",
-        "name": { "str": "tortoiseshell comb" },
-        "description": "This one has a tortoiseshell pattern, which makes it seem antique.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "pcomb4",
-        "name": { "str": "folding comb" },
-        "description": "This one folds on a hinge.",
-        "weight": 20,
-        "append": true
-      }
+      { "id": "pcomb3", "text": "A comb made of soft plastic.  Its tortoiseshell pattern makes it seem antique." },
+      { "id": "pcomb4", "text": "A comb which folds on a hinge, in case you want to look like a greaser." }
     ]
   },
   {
     "id": "plunger_toilet",
     "name": { "str": "toilet plunger" },
     "type": "GENERIC",
-    "description": "A rubber-tipped tool for unclogging pipes, or a club for an immature survivor.  Its handle is made out of wood.",
-    "symbol": "/",
-    "color": "brown",
+    "description": "A rubber-tipped tool for unclogging pipes, or a club for an immature survivor.",
+    "symbol": "p",
+    "color": "red",
     "price": 800,
     "price_postapoc": 10,
     "weight": "590 g",
     "volume": "2100 ml",
-    "longest_side": "25 cm",
     "//": "the volume is pretty bulky, but this is an old fashioned model.",
     "material": [ "wood", "rubber" ],
-    "to_hit": -1,
-    "melee_damage": { "bash": 5 }
+    "bashing": 5,
+    "to_hit": -1
   },
   {
     "id": "plunger_futuristic",
     "name": { "str": "professional plunger" },
     "type": "GENERIC",
     "description": "This hollow plastic toilet plunger's bell compresses like an accordion.  It is efficient at its intended purpose, and complete rubbish as a weapon.",
-    "symbol": "/",
-    "color": "light_gray",
+    "symbol": "p",
+    "color": "black",
     "price": 1590,
     "price_postapoc": 10,
     "weight": "680 g",
     "volume": "2400 ml",
-    "longest_side": "25 cm",
     "material": [ "plastic" ],
-    "to_hit": -1,
-    "melee_damage": { "bash": 2 }
+    "bashing": 2,
+    "to_hit": -1
   },
   {
     "id": "toilet_paper",
-    "name": { "str": "toilet paper roll" },
+    "name": { "str": "toilet paper", "str_pl": "rolls of toilet paper" },
     "type": "GENERIC",
-    "description": "A roll of tissue paper, a luxurious remnant of civilization.",
-    "symbol": ",",
+    "description": "A luxurious remnant of civilization.",
+    "symbol": "~",
     "color": "white",
     "container": "bag_plastic",
     "price": 89,
@@ -399,42 +172,20 @@
     "weight": "227 g",
     "material": [ "paper" ],
     "to_hit": -2,
-    "variant_type": "generic",
-    "variants": [
+    "snippet_category": [
       {
         "id": "tpaper1",
-        "name": { "str": "thin toilet paper roll" },
-        "description": "This one is very thin; imagine the thinnest, most disposable paper you could possibly make, and now imagine something thinner than that.",
-        "weight": 20,
-        "append": true
+        "text": "Imagine the thinnest, most disposable paper you could possibly make.  Now imagine something thinner than that."
       },
       {
         "id": "tpaper2",
-        "name": { "str": "quilted toilet paper roll" },
-        "description": "This one is two-ply and quilted, for extra comfort.",
-        "weight": 20,
-        "append": true
+        "text": "This roll of toilet paper is two-ply and quilted, for vandalizing houses more comfortably than ever."
       },
-      {
-        "id": "tpaper3",
-        "name": { "str": "dissolving toilet paper roll" },
-        "description": "This one is designed to dissolve completely in water.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "tpaper4",
-        "name": { "str": "politician toilet paper roll" },
-        "description": "This one has images of a well-known politician printed on each individual sheet.",
-        "weight": 5,
-        "append": true
-      },
+      { "id": "tpaper3", "text": "This brand of toilet paper is designed to dissolve completely in water!" },
+      { "id": "tpaper4", "text": "Images of your least favorite politician are printed on each individual sheet." },
       {
         "id": "tpaper5",
-        "name": { "str": "rough toilet paper roll" },
-        "description": "This one has splinters of unprocessed wood visible in it, making it seem less luxurious.",
-        "weight": 20,
-        "append": true
+        "text": "A luxurious remnant of civilization.  The splinters of unprocessed wood visible in this one make it seem less luxurious, though."
       }
     ]
   },
@@ -443,16 +194,15 @@
     "name": { "str": "hair dryer" },
     "type": "GENERIC",
     "description": "This tool dries your hair by pushing air through a coil of hot wires.  Without a functioning power grid, it is a motorized paper weight.",
-    "symbol": ";",
-    "color": "light_gray",
+    "symbol": "(",
+    "color": "black",
     "price": 2100,
     "price_postapoc": 0,
     "volume": "500 ml",
     "weight": "680 g",
-    "longest_side": "25 cm",
     "material": [ "plastic", "steel" ],
-    "to_hit": -1,
-    "melee_damage": { "bash": 3 }
+    "bashing": 3,
+    "to_hit": -1
   },
   {
     "id": "curling_iron",
@@ -460,85 +210,55 @@
     "type": "GENERIC",
     "description": "A wand made of heat-resistant ceramics.  When plugged into an outlet, it is hot enough to shape your hair into curls.  Too bad the power's out.",
     "symbol": "/",
-    "color": "light_gray",
+    "color": "magenta",
     "price": 2500,
     "price_postapoc": 0,
     "volume": "250 ml",
     "weight": "590 g",
-    "longest_side": "15 cm",
     "material": [ "ceramic", "steel" ],
-    "to_hit": 1,
-    "melee_damage": { "bash": 3 }
+    "bashing": 3,
+    "to_hit": 1
   },
   {
     "id": "brush_toilet",
     "name": { "str": "toilet brush", "str_pl": "toilet brushes" },
     "type": "GENERIC",
-    "description": "A tool for cleaning toilet bowls, consisting of a hard bristled end and a long plastic handle.",
-    "symbol": "/",
-    "color": "light_gray",
+    "description": "Zombies cannot be intimidated or humiliated, so this stiff brush is only useful for scouring toilet bowls.",
+    "symbol": "p",
+    "color": "white",
     "price": 1700,
     "price_postapoc": 0,
     "volume": "500 ml",
     "weight": "160 g",
-    "longest_side": "25 cm",
-    "material": [ "plastic" ],
-    "to_hit": 1,
-    "melee_damage": { "bash": 3 }
+    "material": [ "steel", "plastic" ],
+    "bashing": 3,
+    "to_hit": 1
   },
   {
     "id": "comb_lice",
     "name": { "str": "lice comb" },
     "type": "GENERIC",
-    "description": "A stainless-steel comb with spiral grooved teeth designed to remove pesky parasites from hair.",
-    "symbol": ",",
+    "description": "A stainless-steel comb with spiral grooved teeth designed to remove pesky parasites from hair.  Even just thinking about it makes you itch.",
+    "symbol": "c",
     "material": [ "steel" ],
-    "weight": "9 g",
-    "volume": "20 ml",
-    "longest_side": "10 cm",
     "copy-from": "base_toiletries"
   },
   {
     "id": "bath_toy",
     "name": { "str": "bath toy" },
     "type": "GENERIC",
-    "description": "A rubber toy that floats in water, designed for use in the bath.",
-    "symbol": ",",
-    "color": "light_gray",
+    "description": "A plastic floating bath toy.",
+    "symbol": "w",
+    "color": "yellow",
     "material": [ "rubber" ],
     "copy-from": "base_toiletries",
     "weight": "55 mg",
     "volume": "53 ml",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "btoy1",
-        "name": { "str": "rubber dolphin" },
-        "description": "This one resembles a dolphin.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "btoy2",
-        "name": { "str": "yellow rubber duck" },
-        "description": "This one resembles a yellow duck.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "btoy3",
-        "name": { "str": "black rubber duck" },
-        "description": "This one resembles a black rubber duck with large white eyes.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "btoy4",
-        "name": { "str": "rubber dinosaur" },
-        "description": "This one resembles a small green dinosaur with a wide grin.",
-        "weight": 5,
-        "append": true
-      }
+    "snippet_category": [
+      { "id": "btoy1", "text": "A plastic floating bath toy." },
+      { "id": "btoy2", "text": "A yellow rubber duck.  Designed to dropped in the bath." },
+      { "id": "btoy3", "text": "A black rubber duck with large white eyes.  Designed to dropped in the bath." },
+      { "id": "btoy4", "text": "A small green dinosaur with a wide grin.  Designed for bath time." }
     ]
   },
   {
@@ -546,12 +266,11 @@
     "name": { "str": "electric toothbrush", "str_pl": "electric toothbrushes" },
     "type": "GENERIC",
     "description": "A plastic electric toothbrush.",
-    "symbol": ",",
+    "symbol": "/",
     "material": [ "plastic" ],
     "copy-from": "base_toiletries",
     "weight": "140 g",
     "volume": "107 ml",
-    "longest_side": "10 cm",
     "pocket_data": [
       {
         "pocket_type": "MAGAZINE_WELL",
@@ -566,10 +285,10 @@
     "type": "GENERIC",
     "category": "container",
     "name": { "str": "plastic soap bottle" },
-    "description": "A squeezable plastic bottle with a removable lid, normally used to hold various bathroom soaps.",
+    "description": "A squeezable bottle used to hold various bathroom soaps.",
     "looks_like": "bottle_plastic",
-    "weight": "18 g",
-    "volume": "512 ml",
+    "weight": "130 g",
+    "volume": "502 ml",
     "pocket_data": [
       {
         "pocket_type": "CONTAINER",
@@ -590,67 +309,24 @@
     "ascii_picture": "plastic_bottle",
     "symbol": ")",
     "color": "light_cyan",
-    "variant_type": "generic",
-    "variants": [
-      {
-        "id": "bbottle_1",
-        "name": { "str": "plastic dyed hair shampoo bottle" },
-        "description": "This one's label notes that it's intended to contain special shampoo for dyed hair.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_2",
-        "name": { "str": "plastic cheap shampoo bottle" },
-        "description": "This one is cheap-looking and plain white, and the label notes that it's intended to contain shampoo.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_3",
-        "name": { "str": "plastic body wash bottle" },
-        "description": "This one's label notes that it's intended to contain body wash.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_4",
-        "name": { "str": "plastic hair conditioner bottle" },
-        "description": "This one's label notes that it's intended to contain hair conditioner.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_5",
-        "name": { "str": "plastic child body wash bottle" },
-        "description": "This one is colorful, being marketed for children, and the label notes that it's intended to contain hair and body wash.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_6",
-        "name": { "str": "plastic cheap hair conditioner bottle" },
-        "description": "This one is cheap-looking and plain white, and the label notes that it's intended to contain hair conditioner.",
-        "weight": 20,
-        "append": true
-      },
-      {
-        "id": "bbottle_7",
-        "name": { "str": "plastic cheap shower gel bottle" },
-        "description": "This one is cheap-looking and plain white, and the label notes that it's intended to contain shower gel.",
-        "weight": 20,
-        "append": true
-      }
+    "snippet_category": [
+      { "id": "bbottle_1", "text": "A bottle for special shampoo for dyed hair." },
+      { "id": "bbottle_2", "text": "A plain white bottle made to contain the cheapest shampoo." },
+      { "id": "bbottle_3", "text": "A bottle for body wash.  This one is called 'Afrika'." },
+      { "id": "bbottle_4", "text": "A bottle for hair conditioner." },
+      { "id": "bbottle_5", "text": "A colorful bottle of body and hair wash marketed for children." },
+      { "id": "bbottle_6", "text": "A plain white bottle made to contain the cheapest hair conditioner." },
+      { "id": "bbottle_7", "text": "A plain white bottle made to contain the cheapest shower gel." }
     ]
   },
   {
     "id": "dentures",
-    "name": { "str": "dentures set" },
+    "name": { "str": "set of dentures", "str_pl": "sets of dentures" },
     "type": "GENERIC",
-    "description": "A set of removable prosthetic teeth made from plastic-like material.  Pretty useless to anyone other than its original owner.",
-    "symbol": ",",
+    "description": "A standard set of prosthetic teeth.  Pretty useless to anyone aside from its owner.",
+    "symbol": "c",
     "material": [ "plastic" ],
-    "color": "light_gray",
+    "color": "pink",
     "weight": "124 mg",
     "volume": "5 ml",
     "copy-from": "base_toiletries"

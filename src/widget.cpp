@@ -67,8 +67,6 @@ std::string enum_to_string<widget_var>( widget_var data )
             return "focus";
         case widget_var::move:
             return "move";
-        case widget_var::move_remainder:
-            return "move_remainder";
         case widget_var::move_cost:
             return "move_cost";
         case widget_var::mood:
@@ -137,8 +135,6 @@ std::string enum_to_string<widget_var>( widget_var data )
             return "body_graph_encumb";
         case widget_var::body_graph_status:
             return "body_graph_status";
-        case widget_var::body_graph_wet:
-            return "body_graph_wet";
         case widget_var::bp_armor_outer_text:
             return "bp_armor_outer_text";
         case widget_var::carry_weight_text:
@@ -290,7 +286,7 @@ void widget_clause::load( const JsonObject &jo )
     color = color_from_string( clr );
 
     if( jo.has_member( "condition" ) ) {
-        read_condition( jo, "condition", condition, false );
+        read_condition<dialogue>( jo, "condition", condition, false );
         has_condition = true;
     }
 
@@ -380,7 +376,7 @@ nc_color widget_clause::get_color_for_id( const std::string &clause_id, const wi
     return wp == nullptr ? c_white : wp->color;
 }
 
-void widget::load( const JsonObject &jo, const std::string_view )
+void widget::load( const JsonObject &jo, const std::string & )
 {
     optional( jo, was_loaded, "width", _width, 0 );
     optional( jo, was_loaded, "height", _height_max, 1 );
@@ -419,7 +415,7 @@ void widget::load( const JsonObject &jo, const std::string_view )
 
     if( jo.has_string( "bodypart" ) ) {
         _bps.clear();
-        _bps.emplace( jo.get_string( "bodypart" ) );
+        _bps.emplace( bodypart_id( jo.get_string( "bodypart" ) ) );
     }
 
     if( jo.has_array( "bodyparts" ) ) {
@@ -429,7 +425,7 @@ void widget::load( const JsonObject &jo, const std::string_view )
                 jo.throw_error_at( "bodyparts", "Invalid string value in bodyparts array" );
                 continue;
             }
-            _bps.emplace( val.get_string() );
+            _bps.emplace( bodypart_id( val.get_string() ) );
         }
     }
 
@@ -630,12 +626,7 @@ void widget::set_default_var_range( const avatar &ava )
         case widget_var::move:
             _var_min = 0;
             _var_max = 1000; // TODO: Determine better max
-            // Move cost of last action
-            break;
-        case widget_var::move_remainder:
-            _var_min = 0;
-            _var_max = 9999; // TODO: Determine better max
-            // remaining moves for the current turn
+            // This is a counter of remaining moves, with no normal value
             break;
         case widget_var::move_cost:
             _var_min = 0;
@@ -705,11 +696,7 @@ void widget::set_default_var_range( const avatar &ava )
         case widget_var::bp_hp:
             // HP for body part
             _var_min = 0;
-            if( ava.has_part( only_bp() ) ) {
-                _var_max = ava.get_part_hp_max( only_bp() );
-            } else {
-                _var_max = 0;
-            }
+            _var_max = ava.get_part_hp_max( only_bp() );
             break;
         case widget_var::bp_encumb:
             _var_min = 0;
@@ -786,9 +773,6 @@ int widget::get_var_value( const avatar &ava ) const
             break;
         case widget_var::move:
             value = ava.movecounter;
-            break;
-        case widget_var::move_remainder:
-            value = ava.moves;
             break;
         case widget_var::move_cost:
             value = ava.run_cost( 100 );
@@ -917,7 +901,6 @@ static int custom_draw_func( const draw_args &args )
 
     werase( w );
     if( wgt->_style == "sidebar" ) {
-        // noop
     } else if( wgt->_style == "layout" ) {
         if( wgt->_arrange == "rows" ) {
             // Layout widgets in rows
@@ -1016,7 +999,6 @@ bool widget::uses_text_function() const
         case widget_var::body_graph_temp:
         case widget_var::body_graph_encumb:
         case widget_var::body_graph_status:
-        case widget_var::body_graph_wet:
         case widget_var::bp_armor_outer_text:
         case widget_var::carry_weight_text:
         case widget_var::compass_text:
@@ -1106,12 +1088,6 @@ std::string widget::color_text_function_string( const avatar &ava, unsigned int 
         case widget_var::body_graph_status:
             desc.first = display::colorized_bodygraph_text( ava, _body_graph,
                          bodygraph_var::status, _width == 0 ? max_width : _width, _height_max, _height );
-            update_height = true; // Dynamically adjusted height
-            apply_color = false; // Already colorized
-            break;
-        case widget_var::body_graph_wet:
-            desc.first = display::colorized_bodygraph_text( ava, _body_graph,
-                         bodygraph_var::wet, _width == 0 ? max_width : _width, _height_max, _height );
             update_height = true; // Dynamically adjusted height
             apply_color = false; // Already colorized
             break;
@@ -1502,10 +1478,8 @@ std::string widget::graph( int value ) const
 {
     // graph "depth is equal to the number of nonzero symbols
     int depth = utf8_width( _symbols ) - 1;
-    // Number of graph characters
-    const int w = _arrange == "rows" ? _height : _width;
     // Max integer value this graph can show
-    int max_graph_val = w * depth;
+    int max_graph_val = _width * depth;
     // Scale value range to current graph resolution (width x depth)
     if( _var_max > 0 && _var_max != max_graph_val ) {
         // Scale max source value to max graph value
@@ -1532,45 +1506,32 @@ std::string widget::graph( int value ) const
         // Full cells at the front
         ret += std::wstring( quot, syms.back() );
         // Any partly-full cells?
-        if( w > quot ) {
+        if( _width > quot ) {
             // Current partly-full cell
             ret += syms[rem];
             // Any more zero cells at the end
-            if( w > quot + 1 ) {
-                ret += std::wstring( w - quot - 1, syms[0] );
+            if( _width > quot + 1 ) {
+                ret += std::wstring( _width - quot - 1, syms[0] );
             }
         }
     } else if( _fill == "pool" ) {
-        quot = value / w; // baseline depth of the pool
-        rem = value % w;  // number of cells at next depth
+        quot = value / _width; // baseline depth of the pool
+        rem = value % _width;  // number of cells at next depth
         // Most-filled cells come first
         if( rem > 0 ) {
             ret += std::wstring( rem, syms[quot + 1] );
             // Less-filled cells may follow
-            if( w > rem ) {
-                ret += std::wstring( w - rem, syms[quot] );
+            if( _width > rem ) {
+                ret += std::wstring( _width - rem, syms[quot] );
             }
         } else {
             // All cells at the same level
-            ret += std::wstring( w, syms[quot] );
+            ret += std::wstring( _width, syms[quot] );
         }
     } else {
         debugmsg( "Unknown widget fill type %s", _fill );
         return "";
     }
-
-    // Re-arrange characters to a vertical bar graph
-    if( _arrange == "rows" ) {
-        std::wstring temp = ret;
-        ret = std::wstring();
-        for( int i = temp.size() - 1; i >= 0; i-- ) {
-            ret += temp[i];
-            if( i > 0 ) {
-                ret += '\n';
-            }
-        }
-    }
-
     return wstr_to_utf8( ret );
 }
 

@@ -16,6 +16,9 @@
     "color": "light_gray",
     "aggression": 100,
     "morale": 100,
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "vision_night": 3,
     "revert_to_itype": "bot_turret",
     "starting_ammo": { "9mm": 30 },
@@ -42,8 +45,7 @@
     "special_when_hit": [ "RETURN_FIRE", 100 ],
     "death_drops": {  },
     "death_function": { "corpse_type": "BROKEN" },
-    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "COLDPROOF", "IMMOBILE", "NO_BREATHE", "DROPS_AMMO", "STUN_IMMUNE" ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "COLDPROOF", "IMMOBILE", "NO_BREATHE", "DROPS_AMMO", "STUN_IMMUNE" ]
   },
   {
     "id": "mon_turret_searchlight",
@@ -63,17 +65,19 @@
     "aggression": 100,
     "morale": 100,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "luminance": 4,
     "revert_to_itype": "bot_turret_searchlight",
     "special_attacks": [ [ "SEARCHLIGHT", 1 ] ],
     "death_drops": { "groups": [ [ "robots", 1 ], [ "turret_searchlight", 1 ] ] },
     "death_function": {
-      "effect": { "id": "death_focused_beam", "hit_self": true },
+      "effect": { "id": "death_focused_beam" },
       "message": "As the final light is destroyed, it erupts in a blinding flare!",
       "corpse_type": "NO_CORPSE"
     },
-    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "COLDPROOF", "IMMOBILE", "NO_BREATHE", "PRIORITIZE_TARGETS", "STUN_IMMUNE" ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "COLDPROOF", "IMMOBILE", "NO_BREATHE", "PRIORITIZE_TARGETS", "STUN_IMMUNE" ]
   },
   {
     "id": "mon_turret_bmg",
@@ -92,6 +96,9 @@
     "color": "green",
     "aggression": 100,
     "morale": 100,
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "vision_day": 50,
     "vision_night": 3,
     "revert_to_itype": "bot_antimateriel",
@@ -108,7 +115,6 @@
         "ranges": [ [ 0, 40, "AUTO" ], [ 41, 110, "DEFAULT" ] ],
         "require_targeting_npc": true,
         "require_targeting_monster": true,
-        "target_moving_vehicles": true,
         "laser_lock": false,
         "targeting_cost": 200,
         "targeting_timeout_extend": -10,
@@ -131,8 +137,7 @@
       "CONSOLE_DESPAWN",
       "ID_CARD_DESPAWN",
       "STUN_IMMUNE"
-    ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    ]
   },
   {
     "id": "mon_turret_rifle",
@@ -151,6 +156,9 @@
     "color": "green",
     "aggression": 100,
     "morale": 100,
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "vision_day": 50,
     "vision_night": 3,
     "revert_to_itype": "bot_rifleturret",
@@ -167,7 +175,6 @@
         "ranges": [ [ 0, 36, "DEFAULT" ] ],
         "require_targeting_npc": true,
         "require_targeting_monster": true,
-        "target_moving_vehicles": true,
         "laser_lock": false,
         "targeting_cost": 200,
         "targeting_timeout_extend": -10,
@@ -190,8 +197,7 @@
       "ID_CARD_DESPAWN",
       "CONSOLE_DESPAWN",
       "STUN_IMMUNE"
-    ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    ]
   },
   {
     "id": "mon_crows_m240",
@@ -210,6 +216,9 @@
     "color": "green",
     "aggression": 100,
     "morale": 100,
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "vision_day": 50,
     "vision_night": 3,
     "revert_to_itype": "bot_crows_m240",
@@ -226,7 +235,6 @@
         "ranges": [ [ 0, 60, "DEFAULT" ] ],
         "require_targeting_npc": true,
         "require_targeting_monster": true,
-        "target_moving_vehicles": true,
         "laser_lock": false,
         "targeting_cost": 200,
         "targeting_timeout_extend": -10,
@@ -249,8 +257,7 @@
       "ID_CARD_DESPAWN",
       "CONSOLE_DESPAWN",
       "STUN_IMMUNE"
-    ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    ]
   },
   {
     "id": "mon_turret_riot",
@@ -271,6 +278,9 @@
     "aggression": 50,
     "morale": 100,
     "anger_triggers": [ "PLAYER_CLOSE", "HURT", "FRIEND_ATTACKED", "FRIEND_DIED" ],
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 13,
     "vision_day": 50,
     "vision_night": 3,
     "revert_to_itype": "bot_turret_riot",
@@ -308,8 +318,7 @@
       "DROPS_AMMO",
       "ID_CARD_DESPAWN",
       "STUN_IMMUNE"
-    ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 13 }
+    ]
   },
   {
     "id": "mon_turret_speaker",
@@ -329,14 +338,16 @@
     "aggression": 100,
     "morale": 100,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 14,
+    "armor_cut": 16,
+    "armor_bullet": 14,
     "vision_day": 50,
     "vision_night": 50,
     "revert_to_itype": "bot_turret_speaker",
     "special_attacks": [ [ "SPEAKER", 10 ] ],
     "death_function": { "corpse_type": "BROKEN" },
     "death_drops": { "groups": [ [ "turret_speaker", 1 ] ] },
-    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "IMMOBILE", "NO_BREATHE", "STUN_IMMUNE" ],
-    "armor": { "bash": 14, "cut": 16, "bullet": 14 }
+    "flags": [ "SEES", "NOHEAD", "ELECTRONIC", "IMMOBILE", "NO_BREATHE", "STUN_IMMUNE" ]
   },
   {
     "id": "mon_exodii_turret",
@@ -355,6 +366,8 @@
     "aggression": -10,
     "morale": 100,
     "aggro_character": false,
+    "armor_bash": 24,
+    "armor_cut": 26,
     "vision_day": 50,
     "vision_night": 20,
     "luminance": 1,
@@ -393,8 +406,7 @@
       "PRIORITIZE_TARGETS",
       "INTERIOR_AMMO",
       "STUN_IMMUNE"
-    ],
-    "armor": { "bash": 24, "cut": 26 }
+    ]
   },
   {
     "id": "mon_turret_artisans",
@@ -407,28 +419,9 @@
     "starting_ammo": { "556": 100 },
     "aggression": -10,
     "aggro_character": false,
-    "anger_triggers": [ "FRIEND_ATTACKED", "FRIEND_DIED", "HURT" ],
-    "armor": { "bash": 25, "cut": 25, "bullet": 25 },
-    "special_attacks": [
-      {
-        "type": "gun",
-        "cooldown": 1,
-        "move_cost": 150,
-        "gun_type": "m249",
-        "ammo_type": "556",
-        "fake_skills": [ [ "gun", 8 ], [ "rifle", 8 ] ],
-        "fake_dex": 12,
-        "ranges": [ [ 0, 36, "DEFAULT" ] ],
-        "require_targeting_npc": true,
-        "require_targeting_monster": true,
-        "target_moving_vehicles": false,
-        "laser_lock": false,
-        "targeting_cost": 200,
-        "targeting_timeout_extend": -10,
-        "targeting_sound": "\"Hostile detected.\"",
-        "targeting_volume": 50,
-        "no_ammo_sound": "a chk!"
-      }
-    ]
+    "armor_bash": 25,
+    "armor_cut": 25,
+    "armor_bullet": 25,
+    "anger_triggers": [ "FRIEND_ATTACKED", "FRIEND_DIED", "HURT" ]
   }
 ]

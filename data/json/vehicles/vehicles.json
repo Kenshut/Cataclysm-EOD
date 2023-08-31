@@ -1,9 +1,17 @@
 [
   {
+    "id": "custom",
+    "type": "vehicle",
+    "name": "custom",
+    "//": "Don't remove this vehicle definition!",
+    "blueprint": [ "H" ],
+    "parts": [ { "x": 0, "y": 0, "part": "frame_vertical_2" } ]
+  },
+  {
     "id": "none",
     "type": "vehicle",
-    "name": "empty prototype",
-    "//": "don't remove, used for initializing empty vehicle prototype",
+    "name": "custom_empty",
+    "//": "Don't remove this vehicle definition!",
     "blueprint": [ "H" ],
     "parts": [  ]
   }

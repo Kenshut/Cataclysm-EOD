@@ -9,18 +9,15 @@
     "difficulty": 1,
     "time": "30 s",
     "autolearn": true,
-    "result_mult": 3,
     "components": [
       [ [ "cotton_patchwork", 3 ], [ "medical_gauze", 1 ] ],
       [ [ "duct_tape", 20 ], [ "medical_tape", 5 ] ],
       [
         [ "disinfectant", 5 ],
-        [ "disinfectant_kmno4", 5 ],
-        [ "disinfectant_makeshift", 5 ],
         [ "thyme_oil", 1 ],
-        [ "chem_ethanol", 125 ],
-        [ "denat_alcohol", 125 ],
-        [ "methed_alcohol", 125 ]
+        [ "chem_ethanol", 250 ],
+        [ "denat_alcohol", 250 ],
+        [ "methed_alcohol", 250 ]
       ]
     ]
   },
@@ -30,16 +27,17 @@
     "activity_level": "NO_EXERCISE",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
-    "time": "1 s",
+    "skill_used": "tailor",
+    "time": "9 s",
     "autolearn": true,
+    "charges": 1,
     "flags": [ "BLIND_EASY" ],
-    "//": "Too simple to learn any tailoring or healthcare.",
-    "components": [ [ [ "sheet_cotton", 1 ], [ "sheet_cotton_patchwork", 1 ] ] ]
+    "components": [ [ [ "cotton_patchwork", 1 ] ] ]
   },
   {
     "result": "bandages_makeshift_bleached",
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "firstaid",
@@ -47,7 +45,6 @@
     "time": "5 m",
     "batch_time_factors": [ 95, 4 ],
     "autolearn": true,
-    "result_mult": 3,
     "components": [ [ [ "bandages_makeshift", 3 ] ], [ [ "bleach", 1 ] ], [ [ "water_clean", 3 ], [ "water", 3 ] ] ]
   },
   {
@@ -62,11 +59,8 @@
     "batch_time_factors": [ 95, 4 ],
     "autolearn": true,
     "qualities": [ { "id": "BOIL", "level": 1 } ],
-    "tools": [ [ [ "water_boiling_heat", 4, "LIST" ] ] ],
-    "//": "3 units of water + 114g of cotton, bandages will soak up some of the water but the rest should be potable",
-    "result_mult": 3,
-    "components": [ [ [ "bandages_makeshift", 3 ] ], [ [ "water_clean", 3 ], [ "water", 3 ] ] ],
-    "byproducts": [ [ "water_clean", 2 ] ]
+    "tools": [ [ [ "water_boiling_heat", 9, "LIST" ] ] ],
+    "components": [ [ [ "bandages_makeshift", 3 ] ], [ [ "water_clean", 3 ], [ "water", 3 ] ] ]
   },
   {
     "result": "adhesive_bandages",
@@ -76,14 +70,11 @@
     "subcategory": "CSC_*_NESTED",
     "skill_used": "firstaid",
     "difficulty": 1,
-    "time": "20 m",
-    "result_mult": 30,
+    "time": "1 m",
+    "batch_time_factors": [ 50, 2 ],
     "autolearn": true,
     "qualities": [ { "id": "CUT", "level": 2 } ],
-    "components": [
-      [ [ "medical_gauze", 1 ], [ "bandages_makeshift_boiled", 1 ], [ "bandages_makeshift_bleached", 1 ] ],
-      [ [ "duct_tape", 8 ], [ "medical_tape", 8 ] ]
-    ]
+    "components": [ [ [ "medical_gauze", 1 ] ], [ [ "duct_tape", 1 ], [ "medical_tape", 1 ] ] ]
   },
   {
     "result": "tourniquet_upper",
@@ -98,33 +89,33 @@
     "qualities": [ { "id": "CUT", "level": 2 } ],
     "components": [
       [
+        [ "leather_belt", 1 ],
+        [ "hose", 1 ],
         [ "rope_any_short", 1, "LIST" ],
         [ "cordage_short", 1, "LIST" ],
-        [ "cotton_patchwork", 1 ],
-        [ "leather", 1 ],
-        [ "fur", 1 ],
-        [ "faux_fur", 1 ],
-        [ "nylon", 1 ],
-        [ "lycra_patch", 1 ],
-        [ "canvas_patch", 1 ],
-        [ "denim_patch", 1 ],
-        [ "felt_patch", 1 ],
-        [ "sheet_kevlar", 1 ],
-        [ "nomex", 1 ],
-        [ "neoprene", 1 ]
+        [ "towel", 1 ],
+        [ "blanket", 1 ],
+        [ "down_blanket", 1 ],
+        [ "fur_blanket", 1 ],
+        [ "electric_blanket", 1 ],
+        [ "quilt", 1 ],
+        [ "quilt_patchwork", 1 ],
+        [ "sheet", 1 ],
+        [ "bandana", 1 ],
+        [ "cable", 1 ],
+        [ "tie_skinny", 1 ]
       ],
-      [ [ "splinter", 1 ], [ "stick", 1 ], [ "2x4", 1 ] ]
+      [ [ "stick", 1 ], [ "cu_pipe", 1 ] ]
     ]
   },
   {
     "result": "disinfectant_makeshift",
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
     "skill_used": "chemistry",
     "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "book_learn": [ [ "isherwood_herbal_remedies", 1 ] ],
     "time": "30 s",
     "components": [ [ [ "chem_ethanol", 250 ], [ "denat_alcohol", 250 ], [ "methed_alcohol", 250 ] ] ]
@@ -140,7 +131,6 @@
     "skills_required": [ "survival", 5 ],
     "time": "60 m",
     "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "book_learn": [ [ "isherwood_herbal_remedies", 3 ] ],
     "qualities": [ { "id": "HAMMER", "level": 1 }, { "id": "CUT", "level": 2 }, { "id": "BOIL", "level": 2 } ],
     "tools": [ [ [ "surface_heat", 10, "LIST" ] ] ],
@@ -157,7 +147,6 @@
     "skills_required": [ "survival", 4 ],
     "time": "60 m",
     "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "book_learn": [ [ "isherwood_herbal_remedies", 3 ] ],
     "qualities": [ { "id": "HAMMER", "level": 1 }, { "id": "CUT", "level": 2 }, { "id": "BOIL", "level": 2 } ],
     "tools": [ [ [ "surface_heat", 10, "LIST" ] ] ],
@@ -174,7 +163,6 @@
     "skills_required": [ "survival", 4 ],
     "time": "60 m",
     "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "book_learn": [ [ "isherwood_herbal_remedies", 3 ] ],
     "qualities": [ { "id": "HAMMER", "level": 1 }, { "id": "CUT", "level": 2 }, { "id": "BOIL", "level": 2 } ],
     "tools": [ [ [ "surface_heat", 10, "LIST" ] ] ],
@@ -203,7 +191,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "NO_EXERCISE",
+    "activity_level": "fake",
     "result": "disinrag",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -211,16 +199,13 @@
     "difficulty": 1,
     "time": "1 m",
     "autolearn": true,
-    "result_mult": 2,
+    "charges": 2,
     "flags": [ "BLIND_EASY" ],
-    "components": [
-      [ [ "cotton_patchwork", 2 ] ],
-      [ [ "disinfectant", 1 ], [ "disinfectant_kmno4", 1 ], [ "disinfectant_makeshift", 1 ], [ "thyme_oil", 1 ] ]
-    ]
+    "components": [ [ [ "cotton_patchwork", 2 ] ], [ [ "disinfectant", 1 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "disincotton_ball",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -228,12 +213,9 @@
     "difficulty": 1,
     "time": "1 m",
     "autolearn": true,
-    "result_mult": 4,
+    "charges": 4,
     "flags": [ "BLIND_EASY" ],
-    "components": [
-      [ [ "cotton_ball", 4 ] ],
-      [ [ "disinfectant", 1 ], [ "disinfectant_kmno4", 1 ], [ "disinfectant_makeshift", 1 ], [ "thyme_oil", 1 ] ]
-    ]
+    "components": [ [ [ "cotton_ball", 4 ] ], [ [ "disinfectant", 1 ] ] ]
   },
   {
     "type": "recipe",
@@ -246,7 +228,6 @@
     "difficulty": 4,
     "time": "1 m 12 s",
     "book_learn": [ [ "textbook_firstaid", 3 ], [ "adv_chemistry", 4 ], [ "emergency_book", 4 ] ],
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" }, { "proficiency": "prof_inorganic_chemistry" } ],
     "qualities": [ { "id": "CHEM", "level": 1 } ],
     "tools": [ [ [ "surface_heat", 18, "LIST" ] ] ],
     "components": [ [ [ "meal_chitin_piece", 6 ] ], [ [ "lye_powder", 100 ], [ "lye", 3 ] ] ]
@@ -262,7 +243,6 @@
     "difficulty": 4,
     "time": "1 m 12 s",
     "autolearn": true,
-    "proficiencies": [ { "proficiency": "prof_intro_chemistry" } ],
     "qualities": [ { "id": "CHEM", "level": 1 }, { "id": "FINE_GRIND", "level": 1 } ],
     "tools": [ [ [ "surface_heat", 18, "LIST" ] ] ],
     "components": [ [ [ "alder_bark", 6 ] ], [ [ "water_clean", 10 ] ] ]
@@ -301,6 +281,20 @@
   {
     "type": "recipe",
     "activity_level": "LIGHT_EXERCISE",
+    "result": "anesthetic_kit",
+    "category": "CC_OTHER",
+    "subcategory": "CSC_OTHER_MEDICAL",
+    "skill_used": "firstaid",
+    "difficulty": 3,
+    "time": "2 m 30 s",
+    "reversible": true,
+    "autolearn": true,
+    "qualities": [ { "id": "SEW", "level": 1 } ],
+    "components": [ [ [ "jar_3l_glass_sealed", 1 ] ], [ [ "hose", 1 ], [ "makeshift_hose", 1 ] ], [ [ "cotton_patchwork", 2 ] ] ]
+  },
+  {
+    "type": "recipe",
+    "activity_level": "fake",
     "result": "cotton_ball",
     "category": "CC_OTHER",
     "subcategory": "CSC_OTHER_MATERIALS",
@@ -308,13 +302,12 @@
     "skill_used": "tailor",
     "time": "54 m",
     "autolearn": true,
-    "byproduct_group": [ { "item": "seed_cotton_boll", "charges": 2 } ],
-    "result_mult": 10,
+    "byproducts": [ [ "seed_cotton_boll", 2 ] ],
     "components": [ [ [ "cotton_boll", 1 ] ] ]
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "arm_xlsplint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -331,7 +324,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "arm_splint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -348,7 +341,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "arm_xs_splint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -365,7 +358,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "leg_splint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -382,7 +375,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "leg_xlsplint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",
@@ -399,7 +392,7 @@
   },
   {
     "type": "recipe",
-    "activity_level": "LIGHT_EXERCISE",
+    "activity_level": "fake",
     "result": "leg_xs_splint",
     "category": "CC_*",
     "subcategory": "CSC_*_NESTED",

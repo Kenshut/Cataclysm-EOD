@@ -1,6 +1,23 @@
-// RUN: %check_clang_tidy -allow-stdinc %s cata-text-style %t -- --load=%cata_plugin -config="{CheckOptions: [{key: cata-text-style.EscapeUnicode, value: 1}]}" --
+// RUN: %check_clang_tidy %s cata-text-style %t -- -plugins=%cata_plugin -config="{CheckOptions: [{key: cata-text-style.EscapeUnicode, value: 1}]}" --
 
-#include <string>
+// check_clang_tidy uses -nostdinc++, so we add dummy declaration of std::string here
+namespace std
+{
+template<class CharT, class Traits = void, class Allocator = void>
+class basic_string
+{
+    private:
+        using This = basic_string<CharT, Traits, Allocator>;
+    public:
+        basic_string();
+        basic_string( const CharT * );
+        CharT *c_str();
+        const CharT *c_str() const;
+        This &operator+=( const This & );
+};
+using string = basic_string<char>;
+string operator+( const string &, const string & );
+} // namespace std
 
 class some_stream
 {

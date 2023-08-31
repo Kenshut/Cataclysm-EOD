@@ -26,8 +26,6 @@
 #include "vpart_position.h"
 #include "vpart_range.h"
 
-static const damage_type_id damage_bullet( "bullet" );
-
 enum class outcome_type {
     Kill, Casualty
 };
@@ -37,12 +35,13 @@ static float get_damage_vs_target( const std::string &target_id )
     projectile proj;
     proj.speed = 1000;
     // Arbitrary damage, we only care about scaling.
-    proj.impact = damage_instance( damage_bullet, 10 );
+    proj.impact = damage_instance( damage_type::BULLET, 10 );
     proj.proj_effects.insert( "NULL_SOURCE" );
     dealt_projectile_attack frag;
     frag.proj = proj;
 
     int damaging_hits = 0;
+    int non_damaging_hits = 0;
     int damage_taken = 0;
     tripoint monster_position( 30, 30, 0 );
     clear_map_and_put_player_underground();
@@ -57,6 +56,8 @@ static float get_damage_vs_target( const std::string &target_id )
         if( frag.dealt_dam.total_damage() > 0 ) {
             damaging_hits++;
             damage_taken += frag.dealt_dam.total_damage();
+        } else {
+            non_damaging_hits++;
         }
     }
     return static_cast<float>( damage_taken ) / static_cast<float>( damaging_hits );
@@ -89,7 +90,8 @@ static void check_lethality( const std::string &explosive_id, const int range, f
         }
         // Set off an explosion
         item grenade( explosive_id );
-        grenade.type->countdown_action.call( get_avatar(), grenade, false, origin );
+        grenade.charges = 0;
+        grenade.type->invoke( get_avatar(), grenade, origin );
         explosion_handler::process_explosions();
         // see how many monsters survive
         std::vector<Creature *> survivors = g->get_creatures_if( []( const Creature & critter ) {
@@ -153,7 +155,8 @@ static void check_vehicle_damage( const std::string &explosive_id, const std::st
 
     // Set off an explosion
     item grenade( explosive_id );
-    grenade.type->countdown_action.call( get_avatar(), grenade, false, origin );
+    grenade.charges = 0;
+    grenade.type->invoke( get_avatar(), grenade, origin );
     explosion_handler::process_explosions();
 
     std::vector<int> after_hp = get_part_hp( target_vehicle );

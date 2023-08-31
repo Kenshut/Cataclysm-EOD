@@ -4,12 +4,13 @@
 
 #include <iosfwd>
 #include <map>
-#include <optional>
 #include <set>
 
 #include "coordinates.h"
+#include "optional.h"
 
 class Character;
+class JsonIn;
 class JsonObject;
 class JsonOut;
 struct tripoint;
@@ -21,7 +22,7 @@ class teleporter_list
         std::map<tripoint_abs_omt, std::string> known_teleporters;
         // ui for selection of desired teleport location.
         // returns overmap tripoint, or nullopt if canceled
-        std::optional<tripoint_abs_omt> choose_teleport_location();
+        cata::optional<tripoint_abs_omt> choose_teleport_location();
         // returns true if a teleport is successful
         // does not do any loading or unloading
         bool place_avatar_overmap( Character &you, const tripoint_abs_omt &omt_pt ) const;

@@ -62,14 +62,14 @@
       "p": "t_pavement",
       "P": "t_pavement_y",
       "q": "t_null",
-      "Q": "t_fence_metal",
+      "Q": "t_rock_wall_half",
       "r": "t_null",
       "R": "t_null",
       "S": "t_null",
       "s": "t_sidewalk",
       "T": "t_grass",
       "t": "t_null",
-      "u": "t_rock_wall_half",
+      "u": "t_null",
       "U": "t_null",
       "V": "t_concrete",
       "v": "t_wood_stairs_down",
@@ -232,7 +232,7 @@
     "terrain": {
       " ": "t_open_air",
       "▤": "t_zebra",
-      "'": "t_laminated_glass",
+      "'": "t_reinforced_glass",
       "(": "t_null",
       "+": "t_linoleum_white",
       ">": "t_null",
@@ -315,7 +315,6 @@
       ",": "f_rack",
       ";": "f_sofa",
       "@": "f_desk",
-      "}": "f_room_divider",
       "_": "f_console",
       "₸": "f_pool_table",
       "*": "f_region_flower",
@@ -418,5 +417,10 @@
       "k": "f_sink"
     },
     "toilets": { "&": {  } }
+  },
+  {
+    "type": "palette",
+    "id": "retirement_community_sewer_palette",
+    "terrain": { ".": "t_sewage", "|": "t_sewage_pipe", "-": "t_grate", "w": "t_bridge", "<": "t_ladder_up" }
   }
 ]

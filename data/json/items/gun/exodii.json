@@ -10,7 +10,6 @@
     "volume": "2800 ml",
     "//": "barrel should be a bit shorter than the pamd71z as it's less accurate",
     "longest_side": "1000 mm",
-    "barrel_length": "508 mm",
     "price": 350000,
     "price_postapoc": 4000,
     "variant_type": "gun",
@@ -23,6 +22,7 @@
       }
     ],
     "to_hit": -3,
+    "bashing": 12,
     "material": [ "steel", "aluminum" ],
     "symbol": "(",
     "color": "dark_gray",
@@ -32,8 +32,7 @@
     "modes": [ [ "DEFAULT", "burst", 2 ], [ "SEMI", "semi-auto", 1 ], [ "AUTO", "auto", 5 ] ],
     "barrel_volume": "1200 ml",
     "faults": [ "fault_gun_dirt", "fault_gun_chamber_spent" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "exodiiBRmag" ] } ],
-    "melee_damage": { "bash": 12 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "exodiiBRmag" ] } ]
   },
   {
     "id": "pamd71z",
@@ -46,7 +45,6 @@
     "volume": "3 L",
     "//": "around the length of other long 30-06 rifles and heavier AR's",
     "longest_side": "1100 mm",
-    "barrel_length": "610 mm",
     "price": 80000,
     "price_postapoc": 3250,
     "variant_type": "gun",
@@ -59,6 +57,7 @@
       }
     ],
     "to_hit": -1,
+    "bashing": 12,
     "material": [ "steel", "aluminum" ],
     "color": "light_gray",
     "ammo": [ "123ln" ],
@@ -67,8 +66,7 @@
     "modes": [ [ "DEFAULT", "semi-auto", 1 ], [ "AUTO", "burst", 2 ] ],
     "barrel_volume": "250 ml",
     "faults": [ "fault_gun_dirt", "fault_gun_chamber_spent" ],
-    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "exodiiminimag" ] } ],
-    "melee_damage": { "bash": 12 }
+    "pocket_data": [ { "pocket_type": "MAGAZINE_WELL", "item_restriction": [ "exodiiminimag" ] } ]
   },
   {
     "id": "pamd68mountable",

@@ -22,6 +22,10 @@
     "melee_dice": 2,
     "melee_dice_sides": 4,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 12,
+    "armor_stab": 14,
+    "armor_acid": 15,
+    "armor_elec": 3,
     "bleed_rate": 30,
     "harvest": "exempt",
     "special_attacks": [ [ "FORMBLOB", 30 ] ],
@@ -30,8 +34,7 @@
       "corpse_type": "NO_CORPSE",
       "effect": { "id": "death_blobsplit", "hit_self": true }
     },
-    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ],
-    "armor": { "bash": 12, "stab": 14, "acid": 15, "electric": 3 }
+    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ]
   },
   {
     "id": "mon_blob_brain",
@@ -56,6 +59,8 @@
     "melee_dice": 2,
     "melee_dice_sides": 4,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 12,
+    "armor_elec": 5,
     "bleed_rate": 20,
     "harvest": "exempt",
     "special_attacks": [ [ "CALLBLOBS", 0 ] ],
@@ -65,8 +70,7 @@
       "effect": { "id": "death_blob_brain", "hit_self": true }
     },
     "death_drops": "slime_sample_huge",
-    "flags": [ "SEES", "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF", "QUEEN" ],
-    "armor": { "bash": 12, "electric": 5 }
+    "flags": [ "SEES", "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF", "QUEEN" ]
   },
   {
     "id": "mon_blob_large",
@@ -91,6 +95,12 @@
     "melee_dice": 2,
     "melee_dice_sides": 6,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 14,
+    "armor_cut": 4,
+    "armor_bullet": 3,
+    "armor_stab": 20,
+    "armor_acid": 20,
+    "armor_elec": 4,
     "bleed_rate": 30,
     "harvest": "exempt",
     "special_attacks": [ [ "FORMBLOB", 20 ] ],
@@ -99,8 +109,7 @@
       "corpse_type": "NO_CORPSE",
       "effect": { "id": "death_blobsplit_large", "hit_self": true }
     },
-    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ],
-    "armor": { "bash": 14, "cut": 4, "stab": 20, "acid": 20, "bullet": 3, "electric": 4 }
+    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ]
   },
   {
     "id": "mon_blob_small",
@@ -125,11 +134,14 @@
     "melee_dice": 1,
     "melee_dice_sides": 4,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 6,
+    "armor_stab": 10,
+    "armor_acid": 10,
+    "armor_elec": 2,
     "harvest": "exempt",
     "death_function": { "message": "The %s's body melts away.", "corpse_type": "NO_CORPSE" },
     "death_drops": "mon_blob_small_deathdrops",
-    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ],
-    "armor": { "bash": 6, "stab": 10, "acid": 10, "electric": 2 }
+    "flags": [ "HEARS", "GOODHEARING", "NOHEAD", "POISON", "NO_BREATHE", "ACIDPROOF" ]
   },
   {
     "id": "mon_gelatin",
@@ -149,15 +161,17 @@
     "color": "light_gray",
     "phase": "LIQUID",
     "morale": 100,
+    "melee_skill": 4,
     "melee_dice": 2,
     "melee_dice_sides": 3,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 10,
+    "armor_elec": 2,
     "harvest": "exempt",
     "death_drops": "slime_sample_small",
     "special_attacks": [ [ "FORMBLOB", 4 ] ],
     "death_function": { "corpse_type": "NO_CORPSE", "message": "The %s melts away." },
-    "flags": [ "SMELLS", "HEARS", "PLASTIC", "NO_BREATHE", "NOHEAD", "NOGIB" ],
-    "armor": { "bash": 10, "electric": 2 }
+    "flags": [ "SMELLS", "HEARS", "PLASTIC", "NO_BREATHE", "NOHEAD", "NOGIB" ]
   },
   {
     "id": "mon_player_blob",
@@ -183,6 +197,8 @@
     "melee_dice_sides": 4,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
     "dodge": 1,
+    "armor_bash": 12,
+    "armor_elec": 3,
     "vision_day": 16,
     "vision_night": 10,
     "harvest": "exempt",
@@ -193,8 +209,7 @@
       "effect": { "id": "death_slimespring", "min_level": 2 },
       "corpse_type": "NO_CORPSE"
     },
-    "flags": [ "SEES", "HEARS", "SMELLS", "GOODHEARING", "NOHEAD", "POISON", "VENOM", "WARM", "ACIDPROOF" ],
-    "armor": { "bash": 12, "electric": 3 }
+    "flags": [ "SEES", "HEARS", "SMELLS", "GOODHEARING", "NOHEAD", "POISON", "VENOM", "WARM", "ACIDPROOF" ]
   },
   {
     "id": "mon_slime_ocularium",
@@ -219,6 +234,8 @@
     "melee_dice": 4,
     "melee_dice_sides": 6,
     "melee_damage": [ { "damage_type": "cut", "amount": 0 } ],
+    "armor_bash": 20,
+    "armor_elec": 3,
     "vision_day": 30,
     "vision_night": 10,
     "harvest": "exempt",
@@ -228,7 +245,6 @@
       "effect": { "id": "death_slimespring", "min_level": 2 },
       "corpse_type": "NO_CORPSE"
     },
-    "flags": [ "IMMOBILE", "SEES", "NOHEAD", "POISON", "WARM", "ACIDPROOF" ],
-    "armor": { "bash": 20, "electric": 3 }
+    "flags": [ "IMMOBILE", "SEES", "NOHEAD", "POISON", "WARM", "ACIDPROOF" ]
   }
 ]

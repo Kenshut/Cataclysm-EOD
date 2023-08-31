@@ -16,6 +16,8 @@
 #include "vpart_position.h"
 #include "vpart_range.h"
 
+static const efftype_id effect_harnessed( "harnessed" );
+
 bool game::grabbed_veh_move( const tripoint &dp )
 {
     const optional_vpart_position grabbed_vehicle_vp = m.veh_at( u.pos() + u.grab_point );
@@ -30,11 +32,14 @@ bool game::grabbed_veh_move( const tripoint &dp )
         return false;
     }
     const int grabbed_part = grabbed_vehicle_vp->part_index();
-    if( monster *mon = grabbed_vehicle->get_harnessed_animal() ) {
-        add_msg( m_info, _( "You cannot move this vehicle whilst your %s is harnessed!" ),
-                 mon->get_name() );
-        u.grab( object_type::NONE );
-        return false;
+    for( const vpart_reference &vpr : grabbed_vehicle->get_all_parts() ) {
+        monster *mon = grabbed_vehicle->get_monster( vpr.part_index() );
+        if( mon != nullptr && mon->has_effect( effect_harnessed ) ) {
+            add_msg( m_info, _( "You cannot move this vehicle whilst your %s is harnessed!" ),
+                     mon->get_name() );
+            u.grab( object_type::NONE );
+            return false;
+        }
     }
     const vehicle *veh_under_player = veh_pointer_or_null( m.veh_at( u.pos() ) );
     if( grabbed_vehicle == veh_under_player ) {
@@ -72,55 +77,54 @@ bool game::grabbed_veh_move( const tripoint &dp )
     // Make sure the mass and pivot point are correct
     grabbed_vehicle->invalidate_mass();
 
-    int kg_per_str = 100;
+    //vehicle movement: strength check
+    int mc = 0;
+    int str_req = grabbed_vehicle->total_mass() / 25_kilogram; //strength required to move vehicle.
+    // ARM_STR governs dragging heavy things
+    int str = u.get_arm_str();
 
-    //if vehicle is rollable we modify kg_per_str based on a function of movecost per wheel.
+    //if vehicle is rollable we modify str_req based on a function of movecost per wheel.
+
+    // Vehicle just too big to grab & move; 41-45 lets folks have a bit of a window
+    // (Roughly 1.1K kg = danger zone; cube vans are about the max)
+    if( str_req > 45 ) {
+        add_msg( m_info, _( "The %s is too bulky for you to move by hand." ),
+                 grabbed_vehicle->name );
+        return true; // No shoving around an RV.
+    }
 
     const auto &wheel_indices = grabbed_vehicle->wheelcache;
     if( grabbed_vehicle->valid_wheel_config() ) {
         //determine movecost for terrain touching wheels
-        float avg_move_cost = 0.0f;
         const tripoint vehpos = grabbed_vehicle->global_pos3();
         for( int p : wheel_indices ) {
             const tripoint wheel_pos = vehpos + grabbed_vehicle->part( p ).precalc[0];
-            const float mapcost = m.move_cost( wheel_pos, grabbed_vehicle ) * 1.0f;
-            avg_move_cost += mapcost / wheel_indices.size();
+            const int mapcost = m.move_cost( wheel_pos, grabbed_vehicle );
+            mc += str_req / wheel_indices.size() * mapcost;
         }
         //set strength check threshold
         //if vehicle has many or only one wheel (shopping cart), it is as if it had four.
         if( wheel_indices.size() > 4 || wheel_indices.size() == 1 ) {
-            kg_per_str /= avg_move_cost / 2;
+            str_req = mc / 4 + 1;
         } else {
-            kg_per_str /= ( 4 / wheel_indices.size() ) / ( avg_move_cost / 2 );
+            str_req = mc / wheel_indices.size() + 1;
         }
-        //finally, adjust by the off-road coefficient (always 1.0 on a road, as low as 0.1 off road.)
-        kg_per_str *= grabbed_vehicle->k_traction( get_map().vehicle_wheel_traction( *grabbed_vehicle ) );
-        // Cap at 10 times worse than base; no matter how bad the terrain and the wheels can possibly be,
-        // having no wheels would never be better than having them, though it is an extremely unlikely scenario.
-        kg_per_str = std::max( 10, kg_per_str );
     } else {
-        kg_per_str /= 10;
-        //since it has no wheels assume it has the worst off roading possible (0.1)
+        str_req++;
+        //if vehicle has no wheels str_req make a noise.
+        if( str_req <= str ) {
+            sounds::sound( grabbed_vehicle->global_pos3(), str_req * 2, sounds::sound_t::movement,
+                           _( "a scraping noise." ), true, "misc", "scraping" );
+        }
     }
-    // TODO: take into account engines, if any; they cause rolling resistance beyond what their weight alone would assume.
-    // That would effectively add extra mass to the vehicle at this step, depending on engine power.
-    const int str_req = grabbed_vehicle->total_mass() / units::from_kilogram(
-                            kg_per_str ); //strength required to move vehicle.
-
-    // ARM_STR governs dragging heavy things
-    const int str = u.get_arm_str();
 
     //final strength check and outcomes
     ///\ARM_STR determines ability to drag vehicles
     if( str_req <= str ) {
         //calculate exertion factor and movement penalty
         ///\EFFECT_STR increases speed of dragging vehicles
-        u.moves -= 400 * str_req / std::max( 1, str );
-        ///\EFFECT_STR decreases stamina cost of dragging vehicles
-        u.mod_stamina( -200 * str_req / std::max( 1, str ) );
-        // TODO: make dragging vehicles raise the activity level upon moving depending on str to str_req ratio, causing weariness faster than simply walking.
-        // TODO: once this is done, make sure that dragging vehicles never results in activity level lower than moving with no vehicle would.
-        const int ex = dice( 1, 6 ) - 1 + str_req;
+        u.moves -= 100 * str_req / std::max( 1, str );
+        const int ex = dice( 1, 3 ) - 1 + str_req;
         if( ex > str + 1 ) {
             // Pain and movement penalty if exertion exceeds character strength
             add_msg( m_bad, _( "You strain yourself to move the %s!" ), grabbed_vehicle->name );
@@ -131,16 +135,9 @@ bool game::grabbed_veh_move( const tripoint &dp )
             add_msg( _( "It takes some time to move the %s." ), grabbed_vehicle->name );
             u.moves -= 200;
         }
-        if( !grabbed_vehicle->valid_wheel_config() ) {
-            //if vehicle has no wheels str_req make a noise.
-            // TODO: Probably should only happen on hard surfaces such as concrete, but not on soil.
-            sounds::sound( grabbed_vehicle->global_pos3(), str_req * 2, sounds::sound_t::movement,
-                           _( "a scraping noise." ), true, "misc", "scraping" );
-        }
     } else {
-        // No moves actually spent, because the move attempt can't succeed.
-        add_msg( m_info, _( "You need at least %d strength to move the %s." ), str_req,
-                 grabbed_vehicle->name );
+        u.moves -= 100;
+        add_msg( m_bad, _( "You lack the strength to move the %s." ), grabbed_vehicle->name );
         return true;
     }
 
@@ -188,7 +185,6 @@ bool game::grabbed_veh_move( const tripoint &dp )
     }
 
     if( final_dp_veh == tripoint_zero ) {
-        // TODO: this check should happen before strength check, so that time and effort are never wasted trying to push vehicle into an impassable tile, and sound of moving wheelless vehicle doesn't happen as well.
         add_msg( _( "The %s collides with %s." ), grabbed_vehicle->name, blocker_name );
         u.grab_point = prev_grab;
         return true;
@@ -197,7 +193,6 @@ bool game::grabbed_veh_move( const tripoint &dp )
     u.grab_point = next_grab;
 
     m.displace_vehicle( *grabbed_vehicle, final_dp_veh );
-    m.rebuild_vehicle_level_caches();
 
     if( grabbed_vehicle ) {
         m.level_vehicle( *grabbed_vehicle );

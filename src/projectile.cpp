@@ -28,7 +28,6 @@ static const ter_str_id ter_t_foamcrete_floor( "t_foamcrete_floor" );
 static const ter_str_id ter_t_foamcrete_wall( "t_foamcrete_wall" );
 
 static const trait_id trait_PYROMANIA( "PYROMANIA" );
-static const trait_id trait_PYROMANIA_GOOD( "PYROMANIA_GOOD" );
 
 projectile::projectile() :
     critical_multiplier( 2.0 ), drop( nullptr ), custom_explosion( nullptr )
@@ -139,16 +138,12 @@ static void foamcrete_build( const tripoint &p )
     }
 }
 
-void apply_ammo_effects( const Creature *source, const tripoint &p,
-                         const std::set<std::string> &effects )
+void apply_ammo_effects( const tripoint &p, const std::set<std::string> &effects )
 {
     map &here = get_map();
     Character &player_character = get_player_character();
 
     for( const ammo_effect &ae : ammo_effects::get_all() ) {
-        if( !one_in( ae.trigger_chance ) ) {
-            continue;
-        }
         if( effects.count( ae.id.str() ) > 0 ) {
             for( const tripoint &pt : here.points_in_radius( p, ae.aoe_radius, ae.aoe_radius_z ) ) {
                 if( x_in_y( ae.aoe_chance, 100 ) ) {
@@ -157,14 +152,14 @@ void apply_ammo_effects( const Creature *source, const tripoint &p,
                     if( check_sees && check_passable ) {
                         here.add_field( pt, ae.aoe_field_type, rng( ae.aoe_intensity_min, ae.aoe_intensity_max ) );
 
-                        if( player_character.has_trait( trait_PYROMANIA_GOOD ) ||
-                            player_character.has_trait( trait_PYROMANIA ) ) {
+                        if( player_character.has_trait( trait_PYROMANIA ) &&
+                            !player_character.has_morale( MORALE_PYROMANIA_STARTFIRE ) ) {
                             for( const auto &fd : here.field_at( pt ) ) {
                                 if( fd.first->has_fire ) {
-                                    if( player_character.handle_pyromania_morale( 15, 15, 8_hours, 6_hours ) ) {
-                                        player_character.add_msg_if_player( m_good,
-                                                                            _( "You feel a surge of euphoria as flames burst out!" ) );
-                                    }
+                                    player_character.add_msg_if_player( m_good,
+                                                                        _( "You feel a surge of euphoria as flames burst out!" ) );
+                                    player_character.add_morale( MORALE_PYROMANIA_STARTFIRE, 15, 15, 8_hours, 6_hours );
+                                    player_character.rem_morale( MORALE_PYROMANIA_NOFIRE );
                                     break;
                                 }
                             }
@@ -173,7 +168,7 @@ void apply_ammo_effects( const Creature *source, const tripoint &p,
                 }
             }
             if( ae.aoe_explosion_data.power > 0 ) {
-                explosion_handler::explosion( source, p, ae.aoe_explosion_data );
+                explosion_handler::explosion( p, ae.aoe_explosion_data );
             }
             if( ae.do_flashbang ) {
                 explosion_handler::flashbang( p );

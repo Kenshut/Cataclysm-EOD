@@ -7,6 +7,7 @@
 #include "rng.h"
 #include "units.h"
 
+
 shearing_roll shearing_entry::roll( const monster &mon ) const
 {
     shearing_roll roll;

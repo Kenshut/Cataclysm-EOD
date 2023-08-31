@@ -7,7 +7,6 @@
 #include "cata_utility.h"
 #include "character.h"
 #include "json.h"
-#include "options.h"
 #include "stomach.h"
 #include "units.h"
 #include "vitamin.h"
@@ -134,9 +133,9 @@ void stomach_contents::serialize( JsonOut &json ) const
     json.end_object();
 }
 
-static units::volume string_to_ml( const std::string_view str )
+static units::volume string_to_ml( const std::string &str )
 {
-    return units::from_milliliter( svto<int>( str.substr( 0, str.size() - 3 ) ) );
+    return units::from_milliliter( std::stoi( str.substr( 0, str.size() - 3 ) ) );
 }
 
 void stomach_contents::deserialize( const JsonObject &jo )
@@ -151,26 +150,11 @@ void stomach_contents::deserialize( const JsonObject &jo )
     jo.read( "contents", str );
     contents = string_to_ml( str );
     jo.read( "last_ate", last_ate );
-
-    // the next chunk deletes obsoleted vitamins
-    const auto predicate = []( const std::pair<vitamin_id, int> &pair ) {
-        if( !pair.first.is_valid() ) {
-            DebugLog( D_WARNING, DC_ALL )
-                    << "deleted '" << pair.first.str() << "' from stomach_contents::nutrients::vitamins";
-            return true;
-        }
-        return false;
-    };
-    std::map<vitamin_id, int>::iterator it = nutr.vitamins.begin();
-    while( ( it = std::find_if( it, nutr.vitamins.end(), predicate ) ) != nutr.vitamins.end() ) {
-        nutr.vitamins.erase( it++ );
-    }
 }
 
 units::volume stomach_contents::capacity( const Character &owner ) const
 {
-    return max_volume * owner.mutation_value( "stomach_size_multiplier" ) *
-           get_option<float>( "STOMACH_CAPACITY" );
+    return max_volume * owner.mutation_value( "stomach_size_multiplier" );
 }
 
 units::volume stomach_contents::stomach_remaining( const Character &owner ) const

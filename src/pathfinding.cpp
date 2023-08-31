@@ -5,7 +5,6 @@
 #include <cstdlib>
 #include <iterator>
 #include <memory>
-#include <optional>
 #include <queue>
 #include <set>
 #include <utility>
@@ -15,10 +14,10 @@
 #include "coordinates.h"
 #include "debug.h"
 #include "game.h"
-#include "gates.h"
 #include "line.h"
 #include "map.h"
 #include "mapdata.h"
+#include "optional.h"
 #include "point.h"
 #include "submap.h"
 #include "trap.h"
@@ -101,7 +100,7 @@ struct pathfinder {
         layer.gscore[index] = gscore;
         layer.parent[index] = from;
         layer.score [index] = score;
-        open.emplace( score, to );
+        open.push( std::make_pair( score, to ) );
     }
 
     void close_point( const tripoint &p ) {
@@ -207,14 +206,13 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
         return ret;
     }
 
-    const int max_length = settings.max_length;
-    const int bash = settings.bash_strength;
-    const int climb_cost = settings.climb_cost;
-    const bool doors = settings.allow_open_doors;
-    const bool locks = settings.allow_unlock_doors;
-    const bool trapavoid = settings.avoid_traps;
-    const bool roughavoid = settings.avoid_rough_terrain;
-    const bool sharpavoid = settings.avoid_sharp;
+    int max_length = settings.max_length;
+    int bash = settings.bash_strength;
+    int climb_cost = settings.climb_cost;
+    bool doors = settings.allow_open_doors;
+    bool trapavoid = settings.avoid_traps;
+    bool roughavoid = settings.avoid_rough_terrain;
+    bool sharpavoid = settings.avoid_sharp;
 
     const int pad = 16;  // Should be much bigger - low value makes pathfinders dumb!
     tripoint min( std::min( f.x, t.x ) - pad, std::min( f.y, t.y ) - pad, std::min( f.z, t.z ) );
@@ -319,8 +317,8 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
                         // Climbing fences
                         newg += climb_cost;
                     } else if( doors && ( terrain.open || furniture.open ) &&
-                               ( ( !terrain.has_flag( ter_furn_flag::TFLAG_OPENCLOSE_INSIDE ) &&
-                                   !furniture.has_flag( ter_furn_flag::TFLAG_OPENCLOSE_INSIDE ) ) ||
+                               ( !terrain.has_flag( ter_furn_flag::TFLAG_OPENCLOSE_INSIDE ) ||
+                                 !furniture.has_flag( ter_furn_flag::TFLAG_OPENCLOSE_INSIDE ) ||
                                  !is_outside( cur ) ) ) {
                         // Only try to open INSIDE doors from the inside
                         // To open and then move onto the tile
@@ -329,13 +327,11 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
                         const auto vpobst = vpart_position( const_cast<vehicle &>( *veh ), part ).obstacle_at_part();
                         part = vpobst ? vpobst->part_index() : -1;
                         int dummy = -1;
-                        const bool is_outside_veh = veh_at_internal( cur, dummy ) != veh;
-
-                        if( doors && veh->next_part_to_open( part, is_outside_veh ) ) {
+                        if( doors && veh->part_flag( part, VPFLAG_OPENABLE ) &&
+                            ( !veh->part_flag( part, "OPENCLOSE_INSIDE" ) ||
+                              veh_at_internal( cur, dummy ) == veh ) ) {
                             // Handle car doors, but don't try to path through curtains
                             newg += 10; // One turn to open, 4 to move there
-                        } else if( locks && veh->next_part_to_unlock( part, is_outside_veh ) ) {
-                            newg += 12; // 2 turns to open, 4 to move there
                         } else if( part >= 0 && bash > 0 ) {
                             // Car obstacle that isn't a door
                             // TODO: Account for armor
@@ -429,16 +425,13 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
         const ter_t &parent_terrain = parent_tile.get_ter_t();
         if( settings.allow_climb_stairs && cur.z > min.z &&
             parent_terrain.has_flag( ter_furn_flag::TFLAG_GOES_DOWN ) ) {
-            std::optional<tripoint> opt_dest = g->find_or_make_stairs( get_map(),
-                                               cur.z - 1, rope_ladder, false, cur );
+            cata::optional<tripoint> opt_dest = g->find_or_make_stairs( get_map(),
+                                                cur.z - 1, rope_ladder, false, cur );
             if( !opt_dest ) {
                 continue;
             }
             tripoint dest = opt_dest.value();
             if( vertical_move_destination( *this, ter_furn_flag::TFLAG_GOES_UP, dest ) ) {
-                if( !inbounds( dest ) ) {
-                    continue;
-                }
                 path_data_layer &layer = pf.get_layer( dest.z );
                 pf.add_point( layer.gscore[parent_index] + 2,
                               layer.score[parent_index] + 2 * rl_dist( dest, t ),
@@ -447,16 +440,13 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
         }
         if( settings.allow_climb_stairs && cur.z < max.z &&
             parent_terrain.has_flag( ter_furn_flag::TFLAG_GOES_UP ) ) {
-            std::optional<tripoint> opt_dest = g->find_or_make_stairs( get_map(),
-                                               cur.z + 1, rope_ladder, false, cur );
+            cata::optional<tripoint> opt_dest = g->find_or_make_stairs( get_map(),
+                                                cur.z + 1, rope_ladder, false, cur );
             if( !opt_dest ) {
                 continue;
             }
             tripoint dest = opt_dest.value();
             if( vertical_move_destination( *this, ter_furn_flag::TFLAG_GOES_DOWN, dest ) ) {
-                if( !inbounds( dest ) ) {
-                    continue;
-                }
                 path_data_layer &layer = pf.get_layer( dest.z );
                 pf.add_point( layer.gscore[parent_index] + 2,
                               layer.score[parent_index] + 2 * rl_dist( dest, t ),
@@ -468,9 +458,6 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
             path_data_layer &layer = pf.get_layer( cur.z + 1 );
             for( size_t it = 0; it < 8; it++ ) {
                 const tripoint above( cur.x + x_offset[it], cur.y + y_offset[it], cur.z + 1 );
-                if( !inbounds( above ) ) {
-                    continue;
-                }
                 pf.add_point( layer.gscore[parent_index] + 4,
                               layer.score[parent_index] + 4 + 2 * rl_dist( above, t ),
                               cur, above );
@@ -481,9 +468,6 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
             path_data_layer &layer = pf.get_layer( cur.z + 1 );
             for( size_t it = 0; it < 8; it++ ) {
                 const tripoint above( cur.x + x_offset[it], cur.y + y_offset[it], cur.z + 1 );
-                if( !inbounds( above ) ) {
-                    continue;
-                }
                 pf.add_point( layer.gscore[parent_index] + 4,
                               layer.score[parent_index] + 4 + 2 * rl_dist( above, t ),
                               cur, above );
@@ -494,9 +478,6 @@ std::vector<tripoint> map::route( const tripoint &f, const tripoint &t,
             path_data_layer &layer = pf.get_layer( cur.z - 1 );
             for( size_t it = 0; it < 8; it++ ) {
                 const tripoint below( cur.x + x_offset[it], cur.y + y_offset[it], cur.z - 1 );
-                if( !inbounds( below ) ) {
-                    continue;
-                }
                 pf.add_point( layer.gscore[parent_index] + 4,
                               layer.score[parent_index] + 4 + 2 * rl_dist( below, t ),
                               cur, below );

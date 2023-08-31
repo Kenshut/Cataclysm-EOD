@@ -31,12 +31,12 @@
     "type": "item_group",
     "id": "c4_box_part",
     "container-item": "box_compact_wood",
-    "items": [ { "item": "c4", "count": [ 1, 7 ] } ]
+    "items": [ { "item": "c4", "count": [ 1, 4 ] } ]
   },
   {
     "type": "item_group",
     "id": "c4_box_full",
     "container-item": "box_compact_wood",
-    "items": [ { "item": "c4", "count": 7 } ]
+    "items": [ { "item": "c4", "count": 4 } ]
   }
 ]

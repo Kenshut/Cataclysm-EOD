@@ -4,19 +4,8 @@
     "copy-from": "spice",
     "type": "COMESTIBLE",
     "name": { "str_sp": "chili powder" },
-    "description": "Chili P, yo!  Not edible on its own, but it could be used to make seasoning.",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
+    "description": "Chilly P, Yo!  Not edible on its own, but it could be used to make seasoning.",
     "color": "red"
-  },
-  {
-    "id": "garlic_powder",
-    "copy-from": "spice",
-    "type": "COMESTIBLE",
-    "name": { "str_sp": "garlic powder" },
-    "description": "Garlic that has been dehydrated and ground into a powder.  A must-have seasoning in any pantry.",
-    "weight": "1 g",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
-    "color": "white"
   },
   {
     "id": "hot_sauce",
@@ -24,7 +13,7 @@
     "type": "COMESTIBLE",
     "comestible_type": "DRINK",
     "name": { "str_sp": "hot sauce" },
-    "description": "Flamin' hot sauce.  It'd be a bad idea to drink it on its own.  You should probably wash your hands after handling it, too.",
+    "description": "Flamin' hot sauce.  Bad idea to eat on its own.  You should probably wash your hands after handling.",
     "weight": "6 g",
     "charges": 50,
     "volume": "250 ml",
@@ -35,7 +24,6 @@
     "color": "red",
     "primary_material": "water",
     "freezing_point": -30,
-    "flags": [ "WATER_DISSOLVE" ],
     "phase": "liquid"
   },
   {
@@ -44,7 +32,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "cinnamon" },
     "description": "Ground cinnamon bark with a sweet but slightly spicy aroma.",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "brown"
   },
   {
@@ -53,7 +40,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "curry powder" },
     "description": "A blend of spices meant to be used in some South Asian dishes.  Can't be eaten raw, why would you even try that?",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "red"
   },
   {
@@ -62,7 +48,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "black pepper" },
     "description": "Ground black spice berries with a pungent aroma.",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "dark_gray"
   },
   {
@@ -71,9 +56,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "salt" },
     "description": "Yuck!  You surely wouldn't want to eat this.  It's good for preserving meat and cooking, though.",
-    "ammo_data": { "ammo_type": "salt" },
-    "material": [ "salt" ],
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "white"
   },
   {
@@ -82,7 +64,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "Italian seasoning" },
     "description": "A fragrant mix of dried oregano, basil, thyme and other spices.",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "green"
   },
   {
@@ -91,8 +72,6 @@
     "type": "COMESTIBLE",
     "name": { "str_sp": "seasoned salt" },
     "description": "Salt mixed with a fragrant blend of secret herbs and spices.",
-    "material": [ "salt" ],
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
     "color": "brown"
   },
   {
@@ -111,7 +90,7 @@
     "primary_material": "powder",
     "volume": "250 ml",
     "calories": 19,
-    "flags": [ "EDIBLE_FROZEN", "NUTRIENT_OVERRIDE", "WATER_DISSOLVE" ],
+    "flags": [ "EDIBLE_FROZEN", "NUTRIENT_OVERRIDE" ],
     "//": "a tbsp is 4.2g of sugar, meaning the volume needed to be adjusted.",
     "charges": 71
   },
@@ -167,7 +146,6 @@
     "charges": 10,
     "fun": -15,
     "freezing_point": -30,
-    "flags": [ "WATER_DISSOLVE" ],
     "phase": "liquid"
   },
   {
@@ -192,8 +170,7 @@
     "copy-from": "spice",
     "type": "COMESTIBLE",
     "name": { "str_sp": "mustard powder" },
-    "description": "A fragrant yellow powder.  Not edible in this form.",
-    "extend": { "flags": [ "WATER_DISSOLVE" ] },
+    "description": "A fragnant yellow powder.  Not edible in this form.",
     "color": "red"
   },
   {

@@ -148,7 +148,7 @@ std::list<item> item_stack::use_charges( const itype_id &type, int &quantity, co
     std::list<item> ret;
     for( auto a = this->begin(); a != this->end() && quantity > 0; ) {
         // Liquid items on the ground could only be used if they're stored on terrain or furniture with LIQUIDCONT flag
-        if( ( ( !a->made_of( phase_id::LIQUID ) && !a->made_of( phase_id::GAS ) ) ||
+        if( ( !a->made_of( phase_id::LIQUID ) ||
               ( a->made_of( phase_id::LIQUID ) &&
                 get_map().has_flag( ter_furn_flag::TFLAG_LIQUIDCONT, pos ) ) ) &&
             a->use_charges( type, quantity, ret, pos, filter, nullptr, in_tools ) ) {

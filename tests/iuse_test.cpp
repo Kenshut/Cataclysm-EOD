@@ -10,7 +10,6 @@
 #include "item.h"
 #include "itype.h"
 #include "morale_types.h"
-#include "player_helpers.h"
 #include "type_id.h"
 #include "value_ptr.h"
 
@@ -47,8 +46,6 @@ static const itype_id itype_towel_wet( "towel_wet" );
 TEST_CASE( "eyedrops", "[iuse][eyedrops]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item eyedrops( "saline", calendar::turn_zero, item::default_charges_tag{} );
 
     int charges_before = eyedrops.charges;
@@ -59,7 +56,7 @@ TEST_CASE( "eyedrops", "[iuse][eyedrops]" )
         REQUIRE( dummy.has_effect( effect_boomered ) );
 
         WHEN( "they use eye drops" ) {
-            dummy.consume( eyedrops );
+            dummy.invoke_item( &eyedrops );
 
             THEN( "one dose is depleted" ) {
                 CHECK( eyedrops.charges == charges_before - 1 );
@@ -75,10 +72,10 @@ TEST_CASE( "eyedrops", "[iuse][eyedrops]" )
         dummy.set_underwater( true );
 
         WHEN( "they try to use eye drops" ) {
-            dummy.consume( eyedrops );
+            bool used = dummy.invoke_item( &eyedrops );
 
-            THEN( "None were used" ) {
-                CHECK( eyedrops.charges == charges_before );
+            THEN( "it can't be used underwater" ) {
+                CHECK_FALSE( used );
             }
         }
     }
@@ -87,8 +84,6 @@ TEST_CASE( "eyedrops", "[iuse][eyedrops]" )
 TEST_CASE( "antifungal", "[iuse][antifungal]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item antifungal( "antifungal", calendar::turn_zero, item::default_charges_tag{} );
 
     int charges_before = antifungal.charges;
@@ -99,7 +94,7 @@ TEST_CASE( "antifungal", "[iuse][antifungal]" )
         REQUIRE( dummy.has_effect( effect_fungus ) );
 
         WHEN( "they take an antifungal drug" ) {
-            dummy.consume( antifungal );
+            dummy.invoke_item( &antifungal );
 
             THEN( "one dose is depleted" ) {
                 CHECK( antifungal.charges == charges_before - 1 );
@@ -124,7 +119,7 @@ TEST_CASE( "antifungal", "[iuse][antifungal]" )
         REQUIRE( dummy.has_effect( effect_spores ) );
 
         WHEN( "they take an antifungal drug" ) {
-            dummy.consume( antifungal );
+            dummy.invoke_item( &antifungal );
 
             THEN( "one dose is depleted" ) {
                 CHECK( antifungal.charges == charges_before - 1 );
@@ -140,8 +135,6 @@ TEST_CASE( "antifungal", "[iuse][antifungal]" )
 TEST_CASE( "antiparasitic", "[iuse][antiparasitic]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item antiparasitic( "antiparasitic", calendar::turn_zero, item::default_charges_tag{} );
 
     int charges_before = antiparasitic.charges;
@@ -161,7 +154,7 @@ TEST_CASE( "antiparasitic", "[iuse][antiparasitic]" )
         REQUIRE( dummy.has_effect( effect_paincysts ) );
 
         WHEN( "they use an antiparasitic drug" ) {
-            dummy.consume( antiparasitic );
+            dummy.invoke_item( &antiparasitic );
 
             THEN( "one dose is depleted" ) {
                 CHECK( antiparasitic.charges == charges_before - 1 );
@@ -182,7 +175,7 @@ TEST_CASE( "antiparasitic", "[iuse][antiparasitic]" )
         REQUIRE( dummy.has_effect( effect_fungus ) );
 
         WHEN( "they use an antiparasitic drug" ) {
-            dummy.consume( antiparasitic );
+            dummy.invoke_item( &antiparasitic );
 
             THEN( "one dose is depleted" ) {
                 CHECK( antiparasitic.charges == charges_before - 1 );
@@ -198,8 +191,6 @@ TEST_CASE( "antiparasitic", "[iuse][antiparasitic]" )
 TEST_CASE( "anticonvulsant", "[iuse][anticonvulsant]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item anticonvulsant( "diazepam", calendar::turn_zero, item::default_charges_tag{} );
 
     int charges_before = anticonvulsant.charges;
@@ -210,7 +201,7 @@ TEST_CASE( "anticonvulsant", "[iuse][anticonvulsant]" )
         REQUIRE( dummy.has_effect( effect_shakes ) );
 
         WHEN( "they use an anticonvulsant drug" ) {
-            dummy.consume( anticonvulsant );
+            dummy.invoke_item( &anticonvulsant );
 
             THEN( "one dose is depleted" ) {
                 CHECK( anticonvulsant.charges == charges_before - 1 );
@@ -230,18 +221,12 @@ TEST_CASE( "anticonvulsant", "[iuse][anticonvulsant]" )
 }
 
 // test the `iuse::oxygen_bottle` function
-TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
+TEST_CASE( "oxygen tank", "[iuse][oxygen_bottle]" )
 {
     avatar dummy;
-
-    dummy.normalize();
-
-    item oxygen( "oxygen_mask" );
-    item oxygentank( "oxygen_tank" );
-
+    item oxygen( "oxygen_tank" );
     itype_id o2_ammo( "oxygen" );
-    oxygentank.ammo_set( o2_ammo );
-    oxygen.put_in( oxygentank, item_pocket::pocket_type::MAGAZINE_WELL );
+    oxygen.ammo_set( o2_ammo );
 
     int charges_before = oxygen.ammo_remaining();
     REQUIRE( charges_before > 0 );
@@ -256,7 +241,7 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 
         THEN( "a dose of oxygen relieves the smoke inhalation" ) {
             dummy.invoke_item( &oxygen );
-            CHECK( oxygen.ammo_remaining() == charges_before - 2 );
+            CHECK( oxygen.ammo_remaining() == charges_before - 1 );
             CHECK_FALSE( dummy.has_effect( effect_smoke ) );
 
             AND_THEN( "it acts as a mild painkiller" ) {
@@ -271,7 +256,7 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 
         THEN( "a dose of oxygen relieves the effects of tear gas" ) {
             dummy.invoke_item( &oxygen );
-            CHECK( oxygen.ammo_remaining() == charges_before - 2 );
+            CHECK( oxygen.ammo_remaining() == charges_before - 1 );
             CHECK_FALSE( dummy.has_effect( effect_teargas ) );
 
             AND_THEN( "it acts as a mild painkiller" ) {
@@ -286,7 +271,7 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 
         THEN( "a dose of oxygen relieves the effects of asthma" ) {
             dummy.invoke_item( &oxygen );
-            CHECK( oxygen.ammo_remaining() == charges_before - 2 );
+            CHECK( oxygen.ammo_remaining() == charges_before - 1 );
             CHECK_FALSE( dummy.has_effect( effect_asthma ) );
 
             AND_THEN( "it acts as a mild painkiller" ) {
@@ -306,7 +291,7 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 
             THEN( "a dose of oxygen is stimulating" ) {
                 dummy.invoke_item( &oxygen );
-                CHECK( oxygen.ammo_remaining() == charges_before - 2 );
+                CHECK( oxygen.ammo_remaining() == charges_before - 1 );
                 // values should match iuse function `oxygen_bottle`
                 CHECK( dummy.get_stim() == 8 );
 
@@ -326,7 +311,7 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 
             THEN( "a dose of oxygen has no additional stimulation effects" ) {
                 dummy.invoke_item( &oxygen );
-                CHECK( oxygen.ammo_remaining() == charges_before - 2 );
+                CHECK( oxygen.ammo_remaining() == charges_before - 1 );
                 CHECK( dummy.get_stim() == max_stim );
 
                 AND_THEN( "it acts as a mild painkiller" ) {
@@ -338,10 +323,9 @@ TEST_CASE( "oxygen_tank", "[iuse][oxygen_bottle]" )
 }
 
 // test the `iuse::caff` and `iuse::atomic_caff` functions
-TEST_CASE( "caffeine_and_atomic_caffeine", "[iuse][caff][atomic_caff]" )
+TEST_CASE( "caffeine and atomic caffeine", "[iuse][caff][atomic_caff]" )
 {
     avatar dummy;
-    dummy.normalize();
 
     // Baseline fatigue level before caffeinating
     int fatigue_before = 200;
@@ -371,8 +355,7 @@ TEST_CASE( "caffeine_and_atomic_caffeine", "[iuse][caff][atomic_caff]" )
 TEST_CASE( "towel", "[iuse][towel]" )
 {
     avatar dummy;
-    dummy.normalize();
-
+    dummy.set_body();
     item towel( "towel", calendar::turn_zero, item::default_charges_tag{} );
 
     GIVEN( "avatar is wet" ) {
@@ -492,9 +475,7 @@ TEST_CASE( "towel", "[iuse][towel]" )
 TEST_CASE( "thorazine", "[iuse][thorazine]" )
 {
     avatar dummy;
-    dummy.normalize();
     dummy.set_fatigue( 0 );
-
     item thorazine( "thorazine", calendar::turn_zero, item::default_charges_tag{} );
 
     int charges_before = thorazine.charges;
@@ -509,7 +490,7 @@ TEST_CASE( "thorazine", "[iuse][thorazine]" )
         REQUIRE( dummy.has_effect( effect_high ) );
 
         WHEN( "they take some thorazine" ) {
-            dummy.consume( thorazine );
+            dummy.invoke_item( &thorazine );
 
             THEN( "it relieves all those effects with a single dose" ) {
                 CHECK( thorazine.charges == charges_before - 1 );
@@ -525,12 +506,12 @@ TEST_CASE( "thorazine", "[iuse][thorazine]" )
     }
 
     GIVEN( "avatar has already taken some thorazine" ) {
-        dummy.consume( thorazine );
+        dummy.invoke_item( &thorazine );
         REQUIRE( thorazine.charges == charges_before - 1 );
         REQUIRE( dummy.has_effect( effect_took_thorazine ) );
 
         WHEN( "they take more thorazine" ) {
-            dummy.consume( thorazine );
+            dummy.invoke_item( &thorazine );
 
             THEN( "it only causes more fatigue" ) {
                 CHECK( thorazine.charges == charges_before - 2 );
@@ -543,15 +524,13 @@ TEST_CASE( "thorazine", "[iuse][thorazine]" )
 TEST_CASE( "prozac", "[iuse][prozac]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item prozac( "prozac", calendar::turn_zero, item::default_charges_tag{} );
 
     SECTION( "prozac gives prozac and visible prozac effect" ) {
         REQUIRE_FALSE( dummy.has_effect( effect_took_prozac ) );
         REQUIRE_FALSE( dummy.has_effect( effect_took_prozac_visible ) );
 
-        dummy.consume( prozac );
+        dummy.invoke_item( &prozac );
         CHECK( dummy.has_effect( effect_took_prozac ) );
         CHECK( dummy.has_effect( effect_took_prozac_visible ) );
     }
@@ -559,31 +538,26 @@ TEST_CASE( "prozac", "[iuse][prozac]" )
     SECTION( "taking prozac twice gives a stimulant effect" ) {
         dummy.set_stim( 0 );
 
-        dummy.consume( prozac );
-        CHECK( dummy.get_stim() == -5 ); // The iuse action gives +0 and item itself -5
-        dummy.consume( prozac );
-        CHECK( dummy.get_stim() == -7 ); // Second iuse gives +3
+        dummy.invoke_item( &prozac );
+        CHECK( dummy.get_stim() == 0 );
+        dummy.invoke_item( &prozac );
+        CHECK( dummy.get_stim() > 0 );
     }
 }
 
 TEST_CASE( "inhaler", "[iuse][inhaler]" )
 {
-    clear_avatar();
-    avatar &dummy = get_avatar();
-    dummy.oxygen = 0;
+    avatar dummy;
     item inhaler( "inhaler" );
     inhaler.ammo_set( itype_albuterol );
     REQUIRE( inhaler.ammo_remaining() > 0 );
-
-    item_location inhaler_loc = dummy.i_add( inhaler );
-    REQUIRE( dummy.has_item( *inhaler_loc ) );
 
     GIVEN( "avatar is suffering from smoke inhalation" ) {
         dummy.add_effect( effect_smoke, 1_hours );
         REQUIRE( dummy.has_effect( effect_smoke ) );
 
         THEN( "inhaler relieves it" ) {
-            dummy.use( inhaler_loc );
+            dummy.invoke_item( &inhaler );
             CHECK_FALSE( dummy.has_effect( effect_smoke ) );
         }
     }
@@ -593,7 +567,7 @@ TEST_CASE( "inhaler", "[iuse][inhaler]" )
         REQUIRE( dummy.has_effect( effect_asthma ) );
 
         THEN( "inhaler relieves the effects of asthma" ) {
-            dummy.use( inhaler_loc );
+            dummy.invoke_item( &inhaler );
             CHECK_FALSE( dummy.has_effect( effect_asthma ) );
         }
     }
@@ -603,7 +577,7 @@ TEST_CASE( "inhaler", "[iuse][inhaler]" )
 
         THEN( "inhaler reduces fatigue" ) {
             dummy.set_fatigue( 10 );
-            dummy.use( inhaler_loc );
+            dummy.invoke_item( &inhaler );
             CHECK( dummy.get_fatigue() < 10 );
         }
     }
@@ -612,8 +586,6 @@ TEST_CASE( "inhaler", "[iuse][inhaler]" )
 TEST_CASE( "panacea", "[iuse][panacea]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item panacea( "panacea", calendar::turn_zero, item::default_charges_tag{} );
 
     SECTION( "panacea gives cure-all effect" ) {
@@ -627,15 +599,13 @@ TEST_CASE( "panacea", "[iuse][panacea]" )
 TEST_CASE( "xanax", "[iuse][xanax]" )
 {
     avatar dummy;
-    dummy.normalize();
-
     item xanax( "xanax", calendar::turn_zero, item::default_charges_tag{} );
 
     SECTION( "xanax gives xanax and visible xanax effects" ) {
         REQUIRE_FALSE( dummy.has_effect( effect_took_xanax ) );
         REQUIRE_FALSE( dummy.has_effect( effect_took_xanax_visible ) );
 
-        dummy.consume( xanax );
+        dummy.invoke_item( &xanax );
         CHECK( dummy.has_effect( effect_took_xanax ) );
         CHECK( dummy.has_effect( effect_took_xanax_visible ) );
     }
