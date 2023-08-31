@@ -165,42 +165,6 @@ jobs:
           msbuild -m -p:Configuration=Release -p:Platform=${{ matrix.arch }} "-target:Cataclysm-vcpkg-static;JsonFormatter-vcpkg-static" msvc-full-features\Cataclysm-vcpkg-static.sln
           .\build-scripts\windist.ps1
           mv cataclysmdda-0.F.zip eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.zip
-      - name: Build C:EOD (osx)
-        if: runner.os == 'macOS'
-        run: |
-          make -j3 TILES=${{ matrix.tiles }} SOUND=${{ matrix.tiles }} RELEASE=1 LOCALIZE=1 LANGUAGES=all BACKTRACE=0 PCH=0 USE_HOME_DIR=1 FRAMEWORK=1 UNIVERSAL_BINARY=1 dmgdist
-          mv Cataclysm.dmg eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.dmg
-      - name: Set up JDK 8 (android)
-        if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'adopt'   
-      - name: Setup Build and Dependencies (android)
-        if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
-        run: |
-          sudo apt-get update
-          sudo apt-get install gettext          
-      - name: Build C:EOD (android)
-        if: runner.os == 'Linux' && matrix.android != 'none' && matrix.mxe == 'none'
-        working-directory: ./android
-        run: | 
-          keytool -genkey -keystore /tmp/a.keystore -keyalg RSA -keysize 2048 -validity 10000 -alias a -dname "cn=a, ou=a, o=a, c=a" -storepass 123456 -keypass 123456
-          echo -e "keyPassword=123456\nkeyAlias=a\nstorePassword=123456\nstoreFile=/tmp/a.keystore" > keystore.properties
-          chmod +x gradlew
-          if [ ${{ matrix.android }} = arm64 ]
-          then
-               ./gradlew -Pj=$((`nproc`+0)) -Pabi_arm_32=false assembleExperimentalRelease
-               mv ./app/build/outputs/apk/experimental/release/*.apk ../eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.apk
-          elif [ ${{ matrix.android }} = arm32 ]
-          then
-               ./gradlew -Pj=$((`nproc`+0)) -Pabi_arm_64=false assembleExperimentalRelease
-               mv ./app/build/outputs/apk/experimental/release/*.apk ../eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.apk 
-          elif [ ${{ matrix.android }} = bundle ]
-          then
-               ./gradlew -Pj=$((`nproc`+0)) bundleExperimentalRelease
-               mv ./app/build/outputs/bundle/experimentalRelease/*.aab ../eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.aab     
-          fi
       - run: |
           gh release upload eod-experimental-${{ needs.release.outputs.timestamp }} eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.${{ matrix.ext }}
       - name: Trigger GitHub pages rebuild
