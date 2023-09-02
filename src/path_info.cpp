@@ -514,6 +514,23 @@ std::string PATH_INFO::title( const holiday current_holiday )
     }
     return find_translated_file( theme_basepath, theme_extension, theme_fallback );
 }
+std::string PATH_INFO::anim()
+{
+    return find_translated_file( datadir_value + "title/", ".anim",
+                                 datadir_value + "title/" + "en.anim" );
+}
+
+std::string PATH_INFO::anim_small()
+{
+    return find_translated_file( datadir_value + "title/", ".anim_small",
+                                 datadir_value + "title/" + "en.anim_small" );
+}
+
+std::string PATH_INFO::anim_tiny()
+ {
+    return find_translated_file( datadir_value + "title/", ".anim_tiny",
+                                 datadir_value + "title/" + "en.anim_tiny" );
+}
 
 cata_path PATH_INFO::names()
 {
