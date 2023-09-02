@@ -145,6 +145,7 @@ static const trait_id trait_WEB_WEAVER( "WEB_WEAVER" );
 static const trait_id trait_WHISKERS( "WHISKERS" );
 static const trait_id trait_WHISKERS_RAT( "WHISKERS_RAT" );
 static const proficiency_id proficiency_prof_dodge_basic( "prof_dodge_basic" );
+static const proficiency_id proficiency_prof_dodge_expert( "prof_dodge_expert" );
 
 avatar::avatar()
 {
@@ -1068,6 +1069,9 @@ void avatar::reset_stats()
         mod_dodge_bonus( -4 );
     }
 	if( has_proficiency(proficiency_prof_dodge_basic) ) {
+        mod_dodge_bonus( +1 );
+    }
+    if( has_proficiency(proficiency_prof_dodge_expert) ) {
         mod_dodge_bonus( +1 );
     }
     // Spider hair is basically a full-body set of whiskers, once you get the brain for it
