@@ -3,7 +3,7 @@ concurrency: release
 on:
   push:
     branches:
-      - master
+      - krakva
     paths:
       - '.github/workflows/release.yml'
       - 'android/**'
