@@ -3063,6 +3063,10 @@ void options_manager::add_options_world_default()
          to_translation( "Multiplier for experience gained from practicing skills and reading books.  0.5 is half as fast as default, 2 is twice as fast, 0 disables skill training except for NPC training.  Higher value makes characters train skills faster." ),
          0.00f, 100.00f, 1.00f, 0.01f
        );
+    add( "PROFICIENCY_TRAINING_SPEED", "world_default", to_translation( "Proficiency training speed" ),
+         to_translation( "Scales experience gained from practicing proficiencies.  0.5 is half as fast as default, 2.0 is twice as fast, 0.0 disables proficiency training except for NPC training." ),
+         0.0, 100.0, 1.0, 0.1
+       );
 
     add( "SKILL_RUST", "world_default", to_translation( "Skill rust" ),
          to_translation( "Set the type of skill rust.  Vanilla: Skill rust can decrease levels.  - Capped: Skill rust cannot decrease levels.  - Off: None at all." ),
