@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - krakva
+      - stalker
     paths:
       - '.github/workflows/release.yml'
       - 'android/**'
