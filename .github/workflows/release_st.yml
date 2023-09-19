@@ -281,7 +281,7 @@ jobs:
                mv ./app/build/outputs/bundle/experimentalRelease/*.aab ../stalker-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.aab     
           fi
       - run: |
-          gh release upload stalker-experimental-${{ needs.release.outputs.timestamp }} stalker-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.${{ matrix.ext }}
+          gh release upload eod-experimental-${{ needs.release.outputs.timestamp }} eod-${{ matrix.artifact }}-${{ needs.release.outputs.timestamp }}.${{ matrix.ext }}
       - name: Trigger GitHub pages rebuild
         if: github.repository == 'CleverRaven/Cataclysm-DDA'
         shell: bash
