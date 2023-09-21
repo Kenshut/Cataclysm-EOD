@@ -36,11 +36,12 @@ jobs:
       - name: Generate environmental variables
         id: generate_env_vars
         run: |
-          echo "tag_name=STALKER-experimental-${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
-          echo "release_name=Cataclysm-STALKER experimental build ${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
+          echo "tag_name=Stalker-experimental-${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
+          echo "release_name=Cataclysm-EOD experimental build ${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
       - run: |
           gh release create ${{ steps.generate_env_vars.outputs.tag_name }} --generate-notes --prerelease --title "${{ steps.generate_env_vars.outputs.release_name }}"
+
   builds:
     needs: release
     strategy:
