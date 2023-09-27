@@ -36,7 +36,7 @@ jobs:
       - name: Generate environmental variables
         id: generate_env_vars
         run: |
-          echo "tag_name=Stalker-experimental-${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
+          echo "tag_name=eod-experimental-${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
           echo "release_name=Cataclysm-EOD experimental build ${{ steps.get-timestamp.outputs.time }}" >> $GITHUB_OUTPUT
       - uses: actions/checkout@v3
       - run: |
@@ -289,4 +289,5 @@ jobs:
           curl --fail --request POST \
             --url https://api.github.com/repos/${{ github.repository }}/pages/builds \
             --header "Authorization: Bearer ${{ secrets.USER_TOKEN }}" \
+            --header "Accept: application/vnd.github.v3+json"
             --header "Accept: application/vnd.github.v3+json"
