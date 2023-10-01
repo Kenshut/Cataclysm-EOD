@@ -5,6 +5,19 @@
     "condition": "ALWAYS",
     "modified_bodyparts": [ { "gain": "debug_tail" } ]
   },
+{
+    "type": "enchantment",
+    "id": "ENCH_NO_LEGS",
+    "condition": "ALWAYS",
+    "modified_bodyparts": [
+      { "lose": "leg_l" },
+      { "lose": "leg_r" },
+      { "lose": "foot_r" },
+      { "lose": "foot_l" },
+      { "gain": "leg_stub_l" },
+      { "gain": "leg_stub_r" }
+    ]
+  },
   {
     "type": "enchantment",
     "id": "ENCH_DEBUG_ONLY_HEAD",
