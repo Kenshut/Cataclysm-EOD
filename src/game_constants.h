@@ -67,9 +67,9 @@ constexpr int MM_REG_SIZE = 8;
 constexpr int PICKUP_RANGE = 6;
 
 // Number of z-levels below 0 (not including 0).
-constexpr int OVERMAP_DEPTH = 10;
+constexpr int OVERMAP_DEPTH = 0;
 // Number of z-levels above 0 (not including 0).
-constexpr int OVERMAP_HEIGHT = 10;
+constexpr int OVERMAP_HEIGHT = 0;
 // Total number of z-levels.
 constexpr int OVERMAP_LAYERS = 1 + OVERMAP_DEPTH + OVERMAP_HEIGHT;
 
