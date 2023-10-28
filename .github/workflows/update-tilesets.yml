@@ -11,7 +11,7 @@ env:
 
 jobs:
   pull-updates:
-    if: github.repository == 'CleverRaven/Cataclysm-DDA'
+    if: github.repository == 'Kenshut/Cataclysm-EOD'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
