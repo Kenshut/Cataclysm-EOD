@@ -1,5 +1,5 @@
 # This workflow runs at 23:00 UTC sundays
-name: "Pull Tileset Updates"
+name: "А ну работай"
 
 on:
   schedule:
