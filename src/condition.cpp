@@ -3388,6 +3388,10 @@ conditional_t::conditional_t( const JsonObject &jo )
         set_has_wielded_with_flag( jo, "u_has_wielded_with_flag" );
     } else if( jo.has_member( "npc_has_wielded_with_flag" ) ) {
         set_has_wielded_with_flag( jo, "npc_has_wielded_with_flag", is_npc );
+    } else if( jo.has_member( "u_has_wielded_with_weapon_category" ) ) {
+        set_has_wielded_with_weapon_category( jo, "u_has_wielded_with_weapon_category" );
+    } else if( jo.has_member( "npc_has_wielded_with_weapon_category" ) ) {
+        set_has_wielded_with_weapon_category( jo, "npc_has_wielded_with_weapon_category", is_npc );
     } else if( jo.has_member( "u_is_on_terrain" ) ) {
         set_is_on_terrain( jo, "u_is_on_terrain" );
     } else if( jo.has_member( "npc_is_on_terrain" ) ) {
