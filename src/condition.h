@@ -31,7 +31,7 @@ const std::unordered_set<std::string> simple_string_conds = { {
     }
 };
 const std::unordered_set<std::string> complex_conds = { {
-        "u_has_any_trait", "npc_has_any_trait", "u_has_trait", "npc_has_trait",
+        "u_has_any_trait","u_has_wielded_with_weapon_category", "npc_has_wielded_with_weapon_category", "npc_has_any_trait", "u_has_trait", "npc_has_trait",
         "u_has_flag", "npc_has_flag", "u_has_species", "npc_has_species", "u_bodytype", "npc_bodytype", "npc_has_class", "u_has_mission", "u_monsters_in_direction", "u_safe_mode_trigger",
         "u_has_strength", "npc_has_strength", "u_has_dexterity", "npc_has_dexterity",
         "u_has_intelligence", "npc_has_intelligence", "u_has_perception", "npc_has_perception",
@@ -130,6 +130,7 @@ struct conditional_t {
         void set_is_on_terrain_with_flag( const JsonObject &jo, const std::string &member,
                                           bool is_npc = false );
         void set_is_in_field( const JsonObject &jo, const std::string &member, bool is_npc = false );
+        void set_has_wielded_with_weapon_category( const JsonObject &jo, const std::string &member, bool is_npc = false );
         void set_one_in_chance( const JsonObject &jo, const std::string &member );
         void set_query( const JsonObject &jo, const std::string &member, bool is_npc = false );
         void set_x_in_y_chance( const JsonObject &jo, std::string_view member );
