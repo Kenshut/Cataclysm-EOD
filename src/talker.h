@@ -528,6 +528,9 @@ class talker
         virtual double armor_at( damage_type_id &, bodypart_id & ) const {
             return 0;
         }
+        virtual bool wielded_with_weapon_category( const weapon_category_id & ) const {
+            return false;
+        }
         virtual bool worn_with_flag( const flag_id &, const bodypart_id & ) const {
             return false;
         }
