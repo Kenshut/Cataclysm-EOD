@@ -1,9 +1,9 @@
-name: "Experimental Release"
+name: "Experimental Release1"
 concurrency: release
 on:
   push:
     branches:
-      - master
+      - что
     paths:
       - '.github/workflows/release.yml'
       - 'android/**'
