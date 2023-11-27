@@ -93,6 +93,7 @@
 #include "vpart_range.h"
 #include "weather.h"
 #include "weather_type.h"
+#include "options.h"
 
 static const activity_id ACT_FIRSTAID( "ACT_FIRSTAID" );
 static const activity_id ACT_REPAIR_ITEM( "ACT_REPAIR_ITEM" );
