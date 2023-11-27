@@ -4202,7 +4202,8 @@ ret_val<void> install_bionic_actor::can_use( const Character &p, const item &it,
         return ret_val<void>::make_failure( _( "You can't install bionics while mounted." ) );
     }
     const bionic_id &bid = it.type->bionic->id;
-    if( !p.has_trait( trait_DEBUG_BIONICS ) ) {
+     if( !get_option<bool>( "MANUAL_BIONIC_INSTALLATION" ) &&
+        !p.has_trait( trait_DEBUG_BIONICS ) ) {
         if( bid->installation_requirement.is_empty() ) {
             return ret_val<void>::make_failure( _( "This bionic can't be self-installed." ) );
         } else  if( it.has_flag( flag_FILTHY ) ) {
