@@ -2987,7 +2987,6 @@ void options_manager::add_options_world_default()
          to_translation( "If true, you can manually install CBMs, If false, to install CBMs, you need autodoc" ),
          false
        );
-    CAN_MANUAL_INSTALL
     add_empty_line();
 
     add( "ENABLE_ROBOT_RESPONSE", "world_default", to_translation( "Robot alarm response" ),
