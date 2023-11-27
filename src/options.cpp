@@ -2980,9 +2980,14 @@ void options_manager::add_options_world_default()
          false
        );
     add( "SHOW_MUTATION_SELECTOR", "world_default", to_translation( "Mutation Selector" ),
-         to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random.." ),
+         to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random." ),
          false
        );
+    add( "CAN_MANUAL_INSTALL", "world_default", to_translation( "Manual installation of CBMs" ),
+         to_translation( "If true, you can manually install CBMs, If false, to install CBMs, you need autodoc" ),
+         false
+       );
+    CAN_MANUAL_INSTALL
     add_empty_line();
 
     add( "ENABLE_ROBOT_RESPONSE", "world_default", to_translation( "Robot alarm response" ),
