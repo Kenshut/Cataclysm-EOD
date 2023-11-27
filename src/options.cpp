@@ -2983,6 +2983,10 @@ void options_manager::add_options_world_default()
          to_translation( "If true, when mutating, allows you to pick from a list of possible mutations instead of getting one at random.." ),
          false
        );
+    add( "MANUAL_BIONIC_INSTALLATION", "world_default", to_translation( "Manual bionic installation" ),
+         to_translation( "If true, you can manual install bionic." ),
+         false
+       );
     add_empty_line();
 
     add( "ENABLE_ROBOT_RESPONSE", "world_default", to_translation( "Robot alarm response" ),
