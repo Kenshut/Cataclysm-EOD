@@ -2349,7 +2349,7 @@ bool Character::can_install_bionics( const itype &type, Character &installer, bo
         debugmsg( "Tried to install NULL bionic" );
         return false;
     }
-    if( has_trait( trait_DEBUG_BIONICS ) ) {
+    if( has_trait( trait_DEBUG_BIONICS ) || get_option<bool>( "CAN_MANUAL_INSTALL" ) ) {
         return true;
     }
     if( is_mounted() ) {
