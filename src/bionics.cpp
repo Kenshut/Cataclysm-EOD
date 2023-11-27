@@ -2352,6 +2352,9 @@ bool Character::can_install_bionics( const itype &type, Character &installer, bo
     if( has_trait( trait_DEBUG_BIONICS ) ) {
         return true;
     }
+    if( !get_option<bool>( "MANUAL_BIONIC_INSTALLATION" ) ) {
+        return true;
+    }
     if( is_mounted() ) {
         return false;
     }
