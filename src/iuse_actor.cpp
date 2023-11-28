@@ -4181,7 +4181,8 @@ std::optional<int> install_bionic_actor::use( Character &p, item &it, bool,
         const tripoint & ) const
 {
     if( p.can_install_bionics( *it.type, p, false ) ) {
-        if( !p.has_trait( trait_DEBUG_BIONICS ) ) {
+        if( !get_option<bool>( "MANUAL_BIONIC_INSTALLATION" ) &&
+        !p.has_trait( trait_DEBUG_BIONICS ) ) {
             p.consume_installation_requirement( it.type->bionic->id );
             p.consume_anesth_requirement( *it.type, p );
         }
