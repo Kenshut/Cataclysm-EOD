@@ -115,7 +115,7 @@ constexpr units::temperature boiling = units::from_celsius( 100 ); // 100 Celsiu
 constexpr int MAX_AIM_COST = 10;
 
 // Maximum (effective) level for a skill.
-constexpr int MAX_SKILL = get_option<int>( "max_skills" );;
+int MAX_SKILL = get_option<int>( "max_skills" );;
 
 // Maximum (effective) level for a stat.
 constexpr int MAX_STAT = 14;
