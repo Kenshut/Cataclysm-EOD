@@ -3041,6 +3041,12 @@ void options_manager::add_options_world_default()
          to_translation( "Multiplier for experience gained from practicing skills and reading books.  0.5 is half as fast as default, 2 is twice as fast, 0 disables skill training except for NPC training.  Higher value makes characters train skills faster." ),
          0.00f, 100.00f, 1.00f, 0.01f
        );
+
+    add( "max_skills", "world_default",
+         to_translation( "max levels skills" ),
+         to_translation( "Max levels skills. default 10" ),
+         1, 1000, 10
+       );
     
     add( "PROFICIENCY_TRAINING_SPEED", "world_default", to_translation( "Proficiency training speed" ),
          to_translation( "Scales experience gained from practicing proficiencies.  0.5 is half as fast as default, 2.0 is twice as fast, 0.0 disables proficiency training except for NPC training." ),
