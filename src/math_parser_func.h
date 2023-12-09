@@ -32,6 +32,11 @@ inline double abs( std::vector<double> const &params )
     return std::abs( params[0] );
 }
 
+inline double modf( std::vector<double> const &params )
+{
+    return std::modf( params[0] );
+}
+
 inline double max( std::vector<double> const &params )
 {
     if( params.empty() ) {
@@ -137,8 +142,9 @@ inline double fahrenheit_to_kelvin( std::vector<double> const &params )
     return units::to_kelvin( units::from_fahrenheit( params[0] ) );
 }
 
-constexpr std::array<math_func, 20> functions{
+constexpr std::array<math_func, 21> functions{
     math_func{ "abs", 1, abs },
+    math_func{ "modf", 1, modf },
     math_func{ "max", -1, max },
     math_func{ "min", -1, min },
     math_func{ "clamp", 3, clamp },
