@@ -114,10 +114,10 @@ constexpr units::temperature boiling = units::from_celsius( 100 ); // 100 Celsiu
 constexpr int MAX_AIM_COST = 10;
 
 // Maximum (effective) level for a skill.
-constexpr int MAX_SKILL = 10;
+constexpr int MAX_SKILL = 1000;
 
 // Maximum (effective) level for a stat.
-constexpr int MAX_STAT = 14;
+constexpr int MAX_STAT = 1400;
 
 // Maximum range at which ranged attacks can be executed.
 constexpr int RANGE_HARD_CAP = 60;
