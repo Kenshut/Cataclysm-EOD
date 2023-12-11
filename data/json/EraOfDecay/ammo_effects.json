@@ -1,7 +1,0 @@
-[
-  {
-    "id": "AMMO_25MM_HEI",
-    "type": "ammo_effect",
-    "explosion": { "power": 54, "shrapnel": { "casing_mass": 153, "fragment_mass": 0.08 } }
-  }
-]

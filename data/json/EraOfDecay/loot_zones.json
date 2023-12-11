@@ -1,9 +1,0 @@
-[
-  {
-    "id": "LOOT_MA_MANUALS",
-    "type": "LOOT_ZONE",
-    "name": "Loot: Martial arts manuals",
-    "can_be_personal": true,
-    "description": "Destination for manuals for martial arts."
-  }
-]

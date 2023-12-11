@@ -1,8 +1,0 @@
-[
-  {
-    "id": "milling_machine_tool",
-    "type": "TOOL",
-    "copy-from": "fake_appliance_tool",
-    "name": { "str": "milling machine" }
-  }
-]
